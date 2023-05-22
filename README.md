@@ -4,6 +4,8 @@
   <img src="https://img.shields.io/github/license/ika-rwth-aachen/docker-ros-ml-images"/>
   <img src="https://img.shields.io/badge/ROS-noetic-blueviolet"/>
   <img src="https://img.shields.io/badge/ROS 2-foxy|humble|rolling-blueviolet"/>
+  <img src="https://img.shields.io/badge/PyTorch-1.11-red"/>
+  <img src="https://img.shields.io/badge/TensorFlow-2.9-orange"/>
   <a href="https://github.com/ika-rwth-aachen/docker-ros-ml-images"><img src="https://img.shields.io/github/stars/ika-rwth-aachen/docker-ros-ml-images?style=social"/></a>
 </p>
 
@@ -11,7 +13,7 @@
 
 ### ROS
 
-#### ROS: [`rwthika/ros1`](https://hub.docker.com/r/rwthika/ros1)
+#### [`rwthika/ros1`](https://hub.docker.com/r/rwthika/ros1) (ROS)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -28,7 +30,7 @@
 </details>
 </blockquote>
 
-#### ROS + CUDA: [`rwthika/ros1-cuda`](https://hub.docker.com/r/rwthika/ros1-cuda)
+#### [`rwthika/ros1-cuda`](https://hub.docker.com/r/rwthika/ros1-cuda) (ROS + CUDA)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -45,7 +47,7 @@
 </details>
 </blockquote>
 
-#### ROS + PyTorch: [`rwthika/ros1-torch`](https://hub.docker.com/r/rwthika/ros1-torch)
+#### [`rwthika/ros1-torch`](https://hub.docker.com/r/rwthika/ros1-torch) (ROS + PyTorch)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -74,7 +76,7 @@
 </details>
 </blockquote>
 
-#### ROS + TensorFlow: [`rwthika/ros1-tf`](https://hub.docker.com/r/rwthika/ros1-tf)
+#### [`rwthika/ros1-tf`](https://hub.docker.com/r/rwthika/ros1-tf) (ROS + TensorFlow)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -103,7 +105,7 @@
 </details>
 </blockquote>
 
-#### ROS + PyTorch + TensorFlow: [`rwthika/ros1-ml`](https://hub.docker.com/r/rwthika/ros1-ml)
+#### [`rwthika/ros1-ml`](https://hub.docker.com/r/rwthika/ros1-ml) (ROS + PyTorch + TensorFlow)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -122,7 +124,7 @@
 
 ### ROS 2
 
-#### ROS 2: [`rwthika/ros2`](https://hub.docker.com/r/rwthika/ros2)
+#### [`rwthika/ros2`](https://hub.docker.com/r/rwthika/ros2) (ROS 2)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -146,7 +148,7 @@
 </details>
 </blockquote>
 
-#### ROS 2 + CUDA: [`rwthika/ros2-cuda`](https://hub.docker.com/r/rwthika/ros2-cuda)
+#### [`rwthika/ros2-cuda`](https://hub.docker.com/r/rwthika/ros2-cuda) (ROS 2 + CUDA)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -165,7 +167,7 @@
 </details>
 </blockquote>
 
-#### ROS 2 + PyTorch: [`rwthika/ros2-torch`](https://hub.docker.com/r/rwthika/ros2-torch)
+#### [`rwthika/ros2-torch`](https://hub.docker.com/r/rwthika/ros2-torch) (ROS 2 + PyTorch)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -200,7 +202,7 @@
 </details>
 </blockquote>
 
-#### ROS 2 + TensorFlow: [`rwthika/ros2-tf`](https://hub.docker.com/r/rwthika/ros2-tf)
+#### [`rwthika/ros2-tf`](https://hub.docker.com/r/rwthika/ros2-tf) (ROS 2 + TensorFlow)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -235,7 +237,7 @@
 </details>
 </blockquote>
 
-#### ROS 2 + PyTorch + TensorFlow: [`rwthika/ros2-ml`](https://hub.docker.com/r/rwthika/ros2-ml)
+#### [`rwthika/ros2-ml`](https://hub.docker.com/r/rwthika/ros2-ml) (ROS 2 + PyTorch + TensorFlow)
 
 <blockquote>
 <details><summary>Click to expand</summary>
