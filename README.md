@@ -16,6 +16,14 @@ We recommend to use *docker-ros-ml-images* in combination with our other tools f
 - [*docker-run*](https://github.com/ika-rwth-aachen/docker-run) is a CLI tool for simplified interaction with container images during development <a href="https://github.com/ika-rwth-aachen/docker-run"><img src="https://img.shields.io/github/stars/ika-rwth-aachen/docker-run?style=social"/></a>
 
 
+## Quick Start
+
+```bash
+docker run --rm rwthika/ros1-ml:latest \
+  python -c 'import os; import tensorflow as tf; import torch; e="ROS_DISTRO"; print(f"Hello from ROS {os.environ[e]}, PyTorch {torch.__version__}, and TensorFlow {tf.__version__}!")'
+```
+
+
 ## Variations
 
 With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch machine learning-enabled ROS Docker images. Each of the provided Docker images includes support for popular machine learning frameworks in addition to a ROS distribution. Currently, the supported machine learning frameworks are [*PyTorch*](https://pytorch.org/) and [*TensorFlow*](https://www.tensorflow.org/). Since robotic applications are often implemented in C++ instead of Python for performance reasons, we also offer the C++ APIs of both frameworks. Combining the components listed the table below, we have built more than 100 multi-arch images and make them publicly available on DockerHub. In addition to the provided images, we also publish the [generic Dockerfile](./Dockerfile) used to flexibly build images combining the different components.
