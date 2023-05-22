@@ -1,8 +1,20 @@
-# *docker-base* - Docker image building pipeline for ML-enabled ROS images
+# *docker-ros-ml-images* – Machine Learning-Enabled ROS Docker Images
+
+<p align="center">
+  <img src="https://img.shields.io/github/license/ika-rwth-aachen/docker-ros-ml-images"/>
+  <img src="https://img.shields.io/badge/ROS-noetic-blueviolet"/>
+  <img src="https://img.shields.io/badge/ROS 2-foxy|humble|rolling-blueviolet"/>
+  <a href="https://github.com/ika-rwth-aachen/docker-ros-ml-images"><img src="https://img.shields.io/github/stars/ika-rwth-aachen/docker-ros-ml-images?style=social"/></a>
+</p>
 
 ## Available Images
 
-<details open><summary><b>ros1</b></summary>
+### ROS
+
+#### ROS: [`rwthika/ros1`](https://hub.docker.com/r/rwthika/ros1)
+
+<blockquote>
+<details><summary>Click to expand</summary>
 
 | Tag                                   |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  | CUDA  | cuDNN | TensorRT | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
 | ------------------------------------- | :------------: | :-----: | :----: | :----: | :----------: | :----: | :---: | :---: | :------: | :------------: | :---------: | :---------------: | :------------: |
@@ -14,8 +26,12 @@
 | `noetic-desktop-full`                 | amd64<br>arm64 | 20.04.5 | 3.8.10 | noetic | desktop-full | 3.16.3 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 
 </details>
+</blockquote>
 
-<details open><summary><b>ros1-cuda</b></summary>
+#### ROS + CUDA: [`rwthika/ros1-cuda`](https://hub.docker.com/r/rwthika/ros1-cuda)
+
+<blockquote>
+<details><summary>Click to expand</summary>
 
 | Tag                                   |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
 | ------------------------------------- | :------------: | :-----: | :----: | :----: | :----------: | :----: | :------------------: | :------------: | :------------: | :------------: | :---------: | :---------------: | :------------: |
@@ -27,8 +43,12 @@
 | `noetic-desktop-full`                 | amd64<br>arm64 | 20.04.5 | 3.8.10 | noetic | desktop-full | 3.16.3 | 11.3.109<br>11.4.239 | 8.2.1<br>8.4.1 | 7.2.3<br>8.4.1 |       -        |      -      |    -<br>2.9.1     |       -        |
 
 </details>
+</blockquote>
 
-<details open><summary><b>ros1-torch</b></summary>
+#### ROS + PyTorch: [`rwthika/ros1-torch`](https://hub.docker.com/r/rwthika/ros1-torch)
+
+<blockquote>
+<details><summary>Click to expand</summary>
 
 | Tag                                                           |      Arch      |    Ubuntu    |   Python    |     ROS     |   ROS Packages    |    CMake    |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
 | ------------------------------------------------------------- | :------------: | :----------: | :---------: | :---------: | :---------------: | :---------: | :------------------: | :------------: | :------------: | :------------: | :---------: | :---------------: | :------------: |
@@ -52,8 +72,12 @@
 | `noetic-desktop-full-torch1.11.0-cpp`                         |   amd64<br>-   | 20.04.5<br>- | 3.8.10<br>- | noetic<br>- | desktop-full<br>- | 3.16.3<br>- |    11.3.109<br>-     |   8.2.1<br>-   |   7.2.3<br>-   |       -        | 1.11.0<br>- |         -         |       -        |
 
 </details>
+</blockquote>
 
-<details open><summary><b>ros1-tf</b></summary>
+#### ROS + TensorFlow: [`rwthika/ros1-tf`](https://hub.docker.com/r/rwthika/ros1-tf)
+
+<blockquote>
+<details><summary>Click to expand</summary>
 
 | Tag                                                   |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
 | ----------------------------------------------------- | :------------: | :-----: | :----: | :----: | :----------: | :----: | :------------------: | :------------: | :------------: | :------------: | :---------: | :---------------: | :------------: |
@@ -77,8 +101,12 @@
 | `noetic-desktop-full-tf2.9.2-cpp`                     | amd64<br>arm64 | 20.04.5 | 3.8.10 | noetic | desktop-full | 3.16.3 | 11.3.109<br>11.4.239 | 8.2.1<br>8.4.1 | 7.2.3<br>8.4.1 |       -        |      -      |    -<br>2.9.1     |     2.9.2      |
 
 </details>
+</blockquote>
 
-<details open><summary><b>ros1-ml</b></summary>
+#### ROS + PyTorch + TensorFlow: [`rwthika/ros1-ml`](https://hub.docker.com/r/rwthika/ros1-ml)
+
+<blockquote>
+<details><summary>Click to expand</summary>
 
 | Tag                                                                           |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
 | ----------------------------------------------------------------------------- | :------------: | :-----: | :----: | :----: | :----------: | :----: | :------------------: | :------------: | :------------: | :------------: | :---------: | :---------------: | :------------: |
@@ -90,8 +118,14 @@
 | `noetic-desktop-full-tf2.9.2-torch1.11.0`                                     | amd64<br>arm64 | 20.04.5 | 3.8.10 | noetic | desktop-full | 3.16.3 | 11.3.109<br>11.4.239 | 8.2.1<br>8.4.1 | 7.2.3<br>8.4.1 |     1.11.0     | 1.11.0<br>- |  2.9.2<br>2.9.1   |     2.9.2      |
 
 </details>
+</blockquote>
 
-<details open><summary><b>ros2</b></summary>
+### ROS 2
+
+#### ROS 2: [`rwthika/ros2`](https://hub.docker.com/r/rwthika/ros2)
+
+<blockquote>
+<details><summary>Click to expand</summary>
 
 | Tag                                     |      Arch      | Ubuntu  | Python |   ROS   | ROS Packages | CMake  | CUDA  | cuDNN | TensorRT | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
 | --------------------------------------- | :------------: | :-----: | :----: | :-----: | :----------: | :----: | :---: | :---: | :------: | :------------: | :---------: | :---------------: | :------------: |
@@ -110,8 +144,12 @@
 | `foxy-desktop`                          | amd64<br>arm64 | 20.04.5 | 3.8.10 |  foxy   |   desktop    | 3.16.3 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 
 </details>
+</blockquote>
 
-<details open><summary><b>ros2-cuda</b></summary>
+#### ROS 2 + CUDA: [`rwthika/ros2-cuda`](https://hub.docker.com/r/rwthika/ros2-cuda)
+
+<blockquote>
+<details><summary>Click to expand</summary>
 
 | Tag                                     |      Arch      | Ubuntu  | Python |   ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
 | --------------------------------------- | :------------: | :-----: | :----: | :-----: | :----------: | :----: | :------------------: | :------------: | :------------: | :------------: | :---------: | :---------------: | :------------: |
@@ -125,8 +163,12 @@
 | `foxy-desktop`                          | amd64<br>arm64 | 20.04.5 | 3.8.10 |  foxy   |   desktop    | 3.16.3 | 11.3.109<br>11.4.239 | 8.2.1<br>8.4.1 | 7.2.3<br>8.4.1 |       -        |      -      |    -<br>2.9.1     |       -        |
 
 </details>
+</blockquote>
 
-<details open><summary><b>ros2-torch</b></summary>
+#### ROS 2 + PyTorch: [`rwthika/ros2-torch`](https://hub.docker.com/r/rwthika/ros2-torch)
+
+<blockquote>
+<details><summary>Click to expand</summary>
 
 | Tag                                                             |      Arch      |    Ubuntu    |   Python    |     ROS      |   ROS Packages    |    CMake    |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
 | --------------------------------------------------------------- | :------------: | :----------: | :---------: | :----------: | :---------------: | :---------: | :------------------: | :------------: | :------------: | :------------: | :---------: | :---------------: | :------------: |
@@ -156,8 +198,12 @@
 | `foxy-desktop-torch1.11.0-cpp`                                  |   amd64<br>-   | 20.04.5<br>- | 3.8.10<br>- |  foxy<br>-   |   desktop<br>-    | 3.16.3<br>- |    11.3.109<br>-     |   8.2.1<br>-   |   7.2.3<br>-   |       -        | 1.11.0<br>- |         -         |       -        |
 
 </details>
+</blockquote>
 
-<details open><summary><b>ros2-tf</b></summary>
+#### ROS 2 + TensorFlow: [`rwthika/ros2-tf`](https://hub.docker.com/r/rwthika/ros2-tf)
+
+<blockquote>
+<details><summary>Click to expand</summary>
 
 | Tag                                                     |      Arch      | Ubuntu  | Python |   ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
 | ------------------------------------------------------- | :------------: | :-----: | :----: | :-----: | :----------: | :----: | :------------------: | :------------: | :------------: | :------------: | :---------: | :---------------: | :------------: |
@@ -187,8 +233,12 @@
 | `foxy-desktop-tf2.9.2-cpp`                              | amd64<br>arm64 | 20.04.5 | 3.8.10 |  foxy   |   desktop    | 3.16.3 | 11.3.109<br>11.4.239 | 8.2.1<br>8.4.1 | 7.2.3<br>8.4.1 |       -        |      -      |    -<br>2.9.1     |     2.9.2      |
 
 </details>
+</blockquote>
 
-<details open><summary><b>ros2-ml</b></summary>
+#### ROS 2 + PyTorch + TensorFlow: [`rwthika/ros2-ml`](https://hub.docker.com/r/rwthika/ros2-ml)
+
+<blockquote>
+<details><summary>Click to expand</summary>
 
 | Tag                                                                             |      Arch      | Ubuntu  | Python |   ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
 | ------------------------------------------------------------------------------- | :------------: | :-----: | :----: | :-----: | :----------: | :----: | :------------------: | :------------: | :------------: | :------------: | :---------: | :---------------: | :------------: |
@@ -202,3 +252,4 @@
 | `foxy-desktop-tf2.9.2-torch1.11.0`                                              | amd64<br>arm64 | 20.04.5 | 3.8.10 |  foxy   |   desktop    | 3.16.3 | 11.3.109<br>11.4.239 | 8.2.1<br>8.4.1 | 7.2.3<br>8.4.1 |     1.11.0     | 1.11.0<br>- |  2.9.2<br>2.9.1   |     2.9.2      |
 
 </details>
+</blockquote>
