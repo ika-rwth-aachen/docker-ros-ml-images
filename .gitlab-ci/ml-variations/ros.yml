@@ -1,0 +1,10 @@
+include: .gitlab-ci/ml-variations/.template.yml
+
+variables:
+  BUILD_VERSION:              ""
+  IMAGE_REPO:                 ${IMAGE_BASE}/ros${ROS_VERSION}
+  TAG:                        ${ROS_DISTRO}-${ROS_PACKAGE}
+  TAG_DEFAULT_ROS_PACKAGE:    ${ROS_DISTRO}
+  IMAGE:                      ${IMAGE_REPO}:${TAG}
+  IMAGE_CI:                   ${IMAGE_REPO}:${CI_COMMIT_REF_SLUG}_${TAG}_ci
+  IMAGE_CI_CACHE:             ${IMAGE_CI}

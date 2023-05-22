@@ -1,0 +1,9 @@
+include:
+  - .gitlab-ci/ml-variations/ros-cuda.yml
+  - .gitlab-ci/ml-variations/.tf.yml
+
+variables:
+  IMAGE_REPO:               ${IMAGE_BASE}/ros${ROS_VERSION}-tf
+  TAG:                      ${ROS_DISTRO}-${ROS_PACKAGE}-tf${TF_VERSION}
+  TAG_DEFAULT_ROS_PACKAGE:  ${ROS_DISTRO}-tf${TF_VERSION}
+  IMAGE_CI_CACHE:           ${IMAGE_BASE}/ros${ROS_VERSION}-cuda:${CI_COMMIT_REF_SLUG}_${ROS_DISTRO}-${ROS_PACKAGE}_ci

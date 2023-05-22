@@ -1,0 +1,4 @@
+variables:
+  UBUNTU_VERSION: "20.04"
+  ROS_VERSION: 2
+  ROS_DISTRO: rolling

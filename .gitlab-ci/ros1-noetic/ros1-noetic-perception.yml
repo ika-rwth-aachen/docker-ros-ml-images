@@ -1,0 +1,7 @@
+include:
+  - .gitlab-ci/.template.yml
+  - .gitlab-ci/ros1-noetic/.ros1-noetic.yml
+  - .gitlab-ci/ros-packages/.perception.yml
+
+variables:
+  PUSH_AS_LATEST: 'true'

@@ -1,0 +1,10 @@
+include:
+  - .gitlab-ci/.template.yml
+  - .gitlab-ci/ros2-humble/.ros2-humble.yml
+  - .gitlab-ci/ros-packages/.desktop.yml
+
+variables:
+  DISABLE_CUDA: 'true'
+  DISABLE_TORCH: 'true'
+  DISABLE_TF: 'true'
+  DISABLE_ML: 'true'

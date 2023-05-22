@@ -1,0 +1,158 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_COMMIT_BRANCH
+
+
+stages:
+  - ROS 1 Noetic
+  - ROS 2 Foxy
+  - ROS 2 Humble
+  - ROS 2 Iron
+  - ROS 2 Rolling
+
+
+ros1-noetic-ros-core:
+  stage: ROS 1 Noetic
+  needs: []
+  trigger:
+    include: .gitlab-ci/ros1-noetic/ros1-noetic-ros-core.yml
+    strategy: depend
+
+ros1-noetic-ros-base:
+  stage: ROS 1 Noetic
+  needs: [ros1-noetic-ros-core]
+  trigger:
+    include: .gitlab-ci/ros1-noetic/ros1-noetic-ros-base.yml
+    strategy: depend
+
+ros1-noetic-robot:
+  stage: ROS 1 Noetic
+  needs: [ros1-noetic-ros-base]
+  trigger:
+    include: .gitlab-ci/ros1-noetic/ros1-noetic-robot.yml
+    strategy: depend
+
+ros1-noetic-perception:
+  stage: ROS 1 Noetic
+  needs: [ros1-noetic-robot]
+  trigger:
+    include: .gitlab-ci/ros1-noetic/ros1-noetic-perception.yml
+    strategy: depend
+
+ros1-noetic-desktop:
+  stage: ROS 1 Noetic
+  needs: [ros1-noetic-perception]
+  trigger:
+    include: .gitlab-ci/ros1-noetic/ros1-noetic-desktop.yml
+    strategy: depend
+
+ros1-noetic-desktop-full:
+  stage: ROS 1 Noetic
+  needs: [ros1-noetic-desktop]
+  trigger:
+    include: .gitlab-ci/ros1-noetic/ros1-noetic-desktop-full.yml
+    strategy: depend
+
+
+ros2-foxy-ros-core:
+  stage: ROS 2 Foxy
+  needs: []
+  trigger:
+    include: .gitlab-ci/ros2-foxy/ros2-foxy-ros-core.yml
+    strategy: depend
+
+ros2-foxy-ros-base:
+  stage: ROS 2 Foxy
+  needs: [ros2-foxy-ros-core]
+  trigger:
+    include: .gitlab-ci/ros2-foxy/ros2-foxy-ros-base.yml
+    strategy: depend
+
+ros2-foxy-desktop:
+  stage: ROS 2 Foxy
+  needs: [ros2-foxy-ros-base]
+  trigger:
+    include: .gitlab-ci/ros2-foxy/ros2-foxy-desktop.yml
+    strategy: depend
+
+
+ros2-humble-ros-core:
+  stage: ROS 2 Humble
+  needs: []
+  trigger:
+    include: .gitlab-ci/ros2-humble/ros2-humble-ros-core.yml
+    strategy: depend
+
+ros2-humble-ros-base:
+  stage: ROS 2 Humble
+  needs: [ros2-humble-ros-core]
+  trigger:
+    include: .gitlab-ci/ros2-humble/ros2-humble-ros-base.yml
+    strategy: depend
+
+ros2-humble-perception:
+  stage: ROS 2 Humble
+  needs: [ros2-humble-ros-base]
+  trigger:
+    include: .gitlab-ci/ros2-humble/ros2-humble-perception.yml
+    strategy: depend
+
+ros2-humble-desktop:
+  stage: ROS 2 Humble
+  needs: [ros2-humble-perception]
+  trigger:
+    include: .gitlab-ci/ros2-humble/ros2-humble-desktop.yml
+    strategy: depend
+
+ros2-humble-desktop-full:
+  stage: ROS 2 Humble
+  needs: [ros2-humble-desktop]
+  trigger:
+    include: .gitlab-ci/ros2-humble/ros2-humble-desktop-full.yml
+    strategy: depend
+
+
+ros2-iron-ros-core:
+  stage: ROS 2 Iron
+  needs: []
+  trigger:
+    include: .gitlab-ci/ros2-iron/ros2-iron-ros-core.yml
+    strategy: depend
+
+
+ros2-rolling-ros-core:
+  stage: ROS 2 Rolling
+  needs: []
+  trigger:
+    include: .gitlab-ci/ros2-rolling/ros2-rolling-ros-core.yml
+    strategy: depend
+
+ros2-rolling-ros-base:
+  stage: ROS 2 Rolling
+  needs: [ros2-rolling-ros-core]
+  trigger:
+    include: .gitlab-ci/ros2-rolling/ros2-rolling-ros-base.yml
+    strategy: depend
+
+ros2-rolling-perception:
+  stage: ROS 2 Rolling
+  needs: [ros2-rolling-ros-base]
+  trigger:
+    include: .gitlab-ci/ros2-rolling/ros2-rolling-perception.yml
+    strategy: depend
+
+ros2-rolling-desktop:
+  stage: ROS 2 Rolling
+  needs: [ros2-rolling-perception]
+  trigger:
+    include: .gitlab-ci/ros2-rolling/ros2-rolling-desktop.yml
+    strategy: depend
+
+ros2-rolling-desktop-full:
+  stage: ROS 2 Rolling
+  needs: [ros2-rolling-desktop]
+  trigger:
+    include: .gitlab-ci/ros2-rolling/ros2-rolling-desktop-full.yml
+    strategy: depend

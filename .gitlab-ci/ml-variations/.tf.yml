@@ -1,0 +1,4 @@
+variables:
+  TF_VERSION: 2.9.2
+  TF_VERSION_PY: ${TF_VERSION}
+  TF_VERSION_CPP: ${TF_VERSION}

@@ -1,0 +1,94 @@
+stages:
+  - Build
+  - Test
+  - Push
+
+
+default:
+  image: docker:20.10.22-git
+  services:
+    - docker:20.10.22-dind
+  tags:
+    - privileged
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: /certs
+  GIT_SUBMODULE_STRATEGY: recursive
+  IMAGE_BASE: gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-base
+
+
+.docker-build:
+  script:
+    - >
+        docker buildx build
+        --pull
+        --push
+        --cache-from type=registry,ref=$IMAGE_CACHE
+        --cache-to type=inline
+        --platform $PLATFORM
+        --build-arg BUILD_VERSION=$BUILD_VERSION
+        --build-arg UBUNTU_VERSION=$UBUNTU_VERSION
+        --build-arg ROS_VERSION=$ROS_VERSION
+        --build-arg ROS_DISTRO=$ROS_DISTRO
+        --build-arg ROS_PACKAGE=$ROS_PACKAGE
+        --build-arg TORCH_VERSION_PY=$TORCH_VERSION_PY
+        --build-arg TORCH_VERSION_CPP=$TORCH_VERSION_CPP
+        --build-arg TF_VERSION_PY=$TF_VERSION_PY
+        --build-arg TF_VERSION_CPP=$TF_VERSION_CPP
+        --tag $IMAGE .
+
+.docker-push-manifest:
+  script:
+    - docker manifest create ${IMAGE} --amend ${IMAGE_CI}-amd64 --amend ${IMAGE_CI}-arm64
+    - docker manifest push ${IMAGE}
+
+
+build-amd64:
+  stage: Build
+  tags: [privileged, amd64]
+  script:
+    - !reference [.docker-build, script]
+  variables:
+    PLATFORM: linux/amd64
+    IMAGE: ${IMAGE_CI}-amd64
+    IMAGE_CACHE: ${IMAGE_CI_CACHE}-amd64
+
+build-arm64:
+  stage: Build
+  tags: [privileged, arm64]
+  script:
+    - !reference [.docker-build, script]
+  variables:
+    PLATFORM: linux/arm64
+    IMAGE: ${IMAGE_CI}-arm64
+    IMAGE_CACHE: ${IMAGE_CI_CACHE}-arm64
+
+
+push:
+  stage: Push
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - !reference [.docker-push-manifest, script]
+
+push-default-ros-package:
+  stage: Push
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $PUSH_AS_DEFAULT_ROS_PACKAGE == 'true'
+  script:
+    - !reference [.docker-push-manifest, script]
+  variables:
+    IMAGE: ${IMAGE_REPO}:${TAG_DEFAULT_ROS_PACKAGE}
+
+push-latest:
+  stage: Push
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $PUSH_AS_LATEST == 'true' && $DISABLE_PUSH_AS_LATEST != 'true'
+  script:
+    - !reference [.docker-push-manifest, script]
+  variables:
+    IMAGE: ${IMAGE_REPO}:latest

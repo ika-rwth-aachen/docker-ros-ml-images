@@ -1,0 +1,7 @@
+include:
+  - .gitlab-ci/.template.yml
+  - .gitlab-ci/ros2-rolling/.ros2-rolling.yml
+  - .gitlab-ci/ros-packages/.ros-core.yml
+
+variables:
+  PUSH_AS_LATEST: 'true'

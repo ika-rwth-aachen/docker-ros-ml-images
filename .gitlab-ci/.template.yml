@@ -1,0 +1,114 @@
+stages:
+  - Image Variations
+
+
+plain:
+  stage: Image Variations
+  trigger:
+    include: .gitlab-ci/ml-variations/ros.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_PLAIN == 'true'
+    when: never
+  - when: on_success
+
+cuda:
+  stage: Image Variations
+  trigger:
+    include: .gitlab-ci/ml-variations/ros-cuda.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_CUDA == 'true'
+    when: never
+  - when: on_success
+
+torch:
+  stage: Image Variations
+  needs:
+    - job: cuda
+      optional: true
+  trigger:
+    include: .gitlab-ci/ml-variations/ros-torch.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_TORCH == 'true'
+    when: never
+  - when: on_success
+
+torch-py:
+  stage: Image Variations
+  needs:
+    - job: torch
+      optional: true
+  trigger:
+    include: .gitlab-ci/ml-variations/ros-torch-py.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_TORCH == 'true' || $DISABLE_TORCH_PY == 'true'
+    when: never
+  - when: on_success
+
+torch-cpp:
+  stage: Image Variations
+  needs:
+    - job: torch
+      optional: true
+  trigger:
+    include: .gitlab-ci/ml-variations/ros-torch-cpp.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_TORCH == 'true' || $DISABLE_TORCH_CPP == 'true'
+    when: never
+  - when: on_success
+
+tf:
+  stage: Image Variations
+  needs:
+    - job: cuda
+      optional: true
+  trigger:
+    include: .gitlab-ci/ml-variations/ros-tf.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_TF == 'true'
+    when: never
+  - when: on_success
+
+tf-py:
+  stage: Image Variations
+  needs:
+    - job: tf
+      optional: true
+  trigger:
+    include: .gitlab-ci/ml-variations/ros-tf-py.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_TF == 'true' || $DISABLE_TF_PY == 'true'
+    when: never
+  - when: on_success
+
+tf-cpp:
+  stage: Image Variations
+  needs:
+    - job: tf
+      optional: true
+  trigger:
+    include: .gitlab-ci/ml-variations/ros-tf-cpp.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_TF == 'true' || $DISABLE_TF_CPP == 'true'
+    when: never
+  - when: on_success
+
+ml:
+  stage: Image Variations
+  needs:
+    - job: torch
+      optional: true
+  trigger:
+    include: .gitlab-ci/ml-variations/ros-ml.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_ML == 'true'
+    when: never
+  - when: on_success

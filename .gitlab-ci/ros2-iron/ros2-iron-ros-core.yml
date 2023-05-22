@@ -1,0 +1,4 @@
+include:
+  - .gitlab-ci/.template.yml
+  - .gitlab-ci/ros2-iron/.ros2-iron.yml
+  - .gitlab-ci/ros-packages/.ros-core.yml
