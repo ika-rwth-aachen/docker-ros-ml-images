@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/github/license/ika-rwth-aachen/docker-ros-ml-images"/>
   <img src="https://img.shields.io/badge/ROS-noetic-blueviolet"/>
-  <img src="https://img.shields.io/badge/ROS 2-foxy|humble|rolling-blueviolet"/>
+  <img src="https://img.shields.io/badge/ROS 2-foxy|humble|iron|rolling-blueviolet"/>
   <img src="https://img.shields.io/badge/PyTorch-1.11-red"/>
   <img src="https://img.shields.io/badge/TensorFlow-2.9-orange"/>
   <a href="https://github.com/ika-rwth-aachen/docker-ros-ml-images"><img src="https://img.shields.io/github/stars/ika-rwth-aachen/docker-ros-ml-images?style=social"/></a>
@@ -30,7 +30,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 
 | Component | Variations |
 | --- | --- |
-| ROS Distribution | noetic, foxy, humble, rolling |
+| ROS Distribution | noetic, foxy, humble, iron, rolling |
 | ROS Components | core, base, robot, perception, desktop, desktop-full |
 | ML Framework | CUDA, PyTorch Python, PyTorch C++, TensorFlow Python, TensorFlow C++ |
 | Architecture | amd64, arm64 |
@@ -163,6 +163,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 | `rolling-perception`                    | amd64<br>arm64 | 20.04.5 | 3.8.10 | rolling |  perception  | 3.16.3 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `rolling-desktop`                       | amd64<br>arm64 | 20.04.5 | 3.8.10 | rolling |   desktop    | 3.16.3 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `rolling-desktop-full`                  | amd64<br>arm64 | 20.04.5 | 3.8.10 | rolling | desktop-full | 3.16.3 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
+| `iron`, `iron-ros-core`                 | amd64<br>arm64 | 22.04.1 | 3.10.6 | iron    |   ros-core   | 3.22.1 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `latest`, `humble`, `humble-ros-core`   | amd64<br>arm64 | 22.04.1 | 3.10.6 | humble  |   ros-core   | 3.22.1 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `humble-ros-base`                       | amd64<br>arm64 | 22.04.1 | 3.10.6 | humble  |   ros-base   | 3.22.1 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `humble-perception`                     | amd64<br>arm64 | 22.04.1 | 3.10.6 | humble  |  perception  | 3.22.1 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
