@@ -18,7 +18,7 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: /certs
   GIT_SUBMODULE_STRATEGY: recursive
-  IMAGE_BASE: gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-base
+  IMAGE_BASE: gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images
 
 
 .docker-build:
