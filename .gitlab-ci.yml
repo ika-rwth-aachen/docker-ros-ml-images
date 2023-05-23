@@ -13,46 +13,46 @@ stages:
   - ROS 2 Rolling
 
 
-ros1-noetic-ros-core:
+ros-noetic-ros-core:
   stage: ROS 1 Noetic
   needs: []
   trigger:
-    include: .gitlab-ci/ros1-noetic/ros1-noetic-ros-core.yml
+    include: .gitlab-ci/ros-noetic/ros-noetic-ros-core.yml
     strategy: depend
 
-ros1-noetic-ros-base:
+ros-noetic-ros-base:
   stage: ROS 1 Noetic
-  needs: [ros1-noetic-ros-core]
+  needs: [ros-noetic-ros-core]
   trigger:
-    include: .gitlab-ci/ros1-noetic/ros1-noetic-ros-base.yml
+    include: .gitlab-ci/ros-noetic/ros-noetic-ros-base.yml
     strategy: depend
 
-ros1-noetic-robot:
+ros-noetic-robot:
   stage: ROS 1 Noetic
-  needs: [ros1-noetic-ros-base]
+  needs: [ros-noetic-ros-base]
   trigger:
-    include: .gitlab-ci/ros1-noetic/ros1-noetic-robot.yml
+    include: .gitlab-ci/ros-noetic/ros-noetic-robot.yml
     strategy: depend
 
-ros1-noetic-perception:
+ros-noetic-perception:
   stage: ROS 1 Noetic
-  needs: [ros1-noetic-robot]
+  needs: [ros-noetic-robot]
   trigger:
-    include: .gitlab-ci/ros1-noetic/ros1-noetic-perception.yml
+    include: .gitlab-ci/ros-noetic/ros-noetic-perception.yml
     strategy: depend
 
-ros1-noetic-desktop:
+ros-noetic-desktop:
   stage: ROS 1 Noetic
-  needs: [ros1-noetic-perception]
+  needs: [ros-noetic-perception]
   trigger:
-    include: .gitlab-ci/ros1-noetic/ros1-noetic-desktop.yml
+    include: .gitlab-ci/ros-noetic/ros-noetic-desktop.yml
     strategy: depend
 
-ros1-noetic-desktop-full:
+ros-noetic-desktop-full:
   stage: ROS 1 Noetic
-  needs: [ros1-noetic-desktop]
+  needs: [ros-noetic-desktop]
   trigger:
-    include: .gitlab-ci/ros1-noetic/ros1-noetic-desktop-full.yml
+    include: .gitlab-ci/ros-noetic/ros-noetic-desktop-full.yml
     strategy: depend
 
 

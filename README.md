@@ -19,7 +19,7 @@ We recommend to use *docker-ros-ml-images* in combination with our other tools f
 ## Quick Start
 
 ```bash
-docker run --rm rwthika/ros1-ml:latest \
+docker run --rm rwthika/ros-ml:latest \
   python -c 'import os; import tensorflow as tf; import torch; e="ROS_DISTRO"; print(f"Hello from ROS {os.environ[e]}, PyTorch {torch.__version__}, and TensorFlow {tf.__version__}!")'
 ```
 
@@ -40,7 +40,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 
 ### ROS
 
-#### [`rwthika/ros1`](https://hub.docker.com/r/rwthika/ros1) (ROS)
+#### [`rwthika/ros`](https://hub.docker.com/r/rwthika/ros) (ROS)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -57,7 +57,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 </details>
 </blockquote>
 
-#### [`rwthika/ros1-cuda`](https://hub.docker.com/r/rwthika/ros1-cuda) (ROS + CUDA)
+#### [`rwthika/ros-cuda`](https://hub.docker.com/r/rwthika/ros-cuda) (ROS + CUDA)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -74,7 +74,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 </details>
 </blockquote>
 
-#### [`rwthika/ros1-torch`](https://hub.docker.com/r/rwthika/ros1-torch) (ROS + PyTorch)
+#### [`rwthika/ros-torch`](https://hub.docker.com/r/rwthika/ros-torch) (ROS + PyTorch)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -103,7 +103,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 </details>
 </blockquote>
 
-#### [`rwthika/ros1-tf`](https://hub.docker.com/r/rwthika/ros1-tf) (ROS + TensorFlow)
+#### [`rwthika/ros-tf`](https://hub.docker.com/r/rwthika/ros-tf) (ROS + TensorFlow)
 
 <blockquote>
 <details><summary>Click to expand</summary>
@@ -132,7 +132,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 </details>
 </blockquote>
 
-#### [`rwthika/ros1-ml`](https://hub.docker.com/r/rwthika/ros1-ml) (ROS + PyTorch + TensorFlow)
+#### [`rwthika/ros-ml`](https://hub.docker.com/r/rwthika/ros-ml) (ROS + PyTorch + TensorFlow)
 
 <blockquote>
 <details><summary>Click to expand</summary>

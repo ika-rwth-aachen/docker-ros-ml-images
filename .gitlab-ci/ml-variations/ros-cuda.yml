@@ -2,4 +2,4 @@ include: .gitlab-ci/ml-variations/ros.yml
 
 variables:
   BUILD_VERSION: "-ml"
-  IMAGE_REPO:    ${IMAGE_BASE}/ros${ROS_VERSION}-cuda
+  IMAGE_REPO:    ${IMAGE_BASE}/${ROS_VERSION_NAME}-cuda

@@ -1,4 +1,5 @@
 variables:
   UBUNTU_VERSION: "22.04"
   ROS_VERSION: 2
+  ROS_VERSION_NAME: "ros2"
   ROS_DISTRO: iron
