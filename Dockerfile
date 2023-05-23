@@ -54,6 +54,7 @@ RUN apt-get update && \
         git \
         gnupg2 \
         gosu \
+        iputils-ping \
         less \
         libglvnd-dev \
         libssl-dev \
