@@ -121,6 +121,27 @@ ros2-iron-ros-core:
     include: .gitlab-ci/ros2-iron/ros2-iron-ros-core.yml
     strategy: depend
 
+ros2-iron-ros-base:
+  stage: ROS 2 Iron
+  needs: [ros2-iron-ros-core]
+  trigger:
+    include: .gitlab-ci/ros2-iron/ros2-iron-ros-base.yml
+    strategy: depend
+
+ros2-iron-perception:
+  stage: ROS 2 Iron
+  needs: [ros2-iron-ros-base]
+  trigger:
+    include: .gitlab-ci/ros2-iron/ros2-iron-perception.yml
+    strategy: depend
+
+ros2-iron-desktop:
+  stage: ROS 2 Iron
+  needs: [ros2-iron-perception]
+  trigger:
+    include: .gitlab-ci/ros2-iron/ros2-iron-desktop.yml
+    strategy: depend
+
 
 ros2-rolling-ros-core:
   stage: ROS 2 Rolling
