@@ -36,6 +36,19 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 | Architecture     | amd64, arm64                                                         |
 
 
+## Image Configuration
+
+### User Setup
+
+Containers of the provided images start with `root` user by default. If the two environment variables `DOCKER_UID` and `DOCKER_GID` are passed, a new user with the corresponding UID/GID is created on the fly. Most importantly, this features allows to mount and edit files of the host user in the container without having to deal with permission issues.
+
+```bash
+docker run --rm -it -e DOCKER_UID=$(id -u) -e DOCKER_GID=$(id -g) -e DOCKER_USER=$(id -un) rwthika/ros:latest
+```
+
+The password of the custom user is set to its username (`dockeruser:dockeruser` by default).
+
+
 ## Available Images
 
 ### ROS
@@ -286,3 +299,5 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 
 </details>
 </blockquote>
+
+# TODO: document dockerusser:dockeruser?
