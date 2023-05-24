@@ -55,7 +55,11 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 #### [`rwthika/ros`](https://hub.docker.com/r/rwthika/ros) (ROS)
 
+
 <blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros"><img src="https://img.shields.io/docker/pulls/rwthika/ros"/></a>
+
 <details><summary>Click to expand</summary>
 
 | Tag                                   |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  | CUDA  | cuDNN | TensorRT | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
@@ -73,6 +77,9 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 #### [`rwthika/ros-cuda`](https://hub.docker.com/r/rwthika/ros-cuda) (ROS + CUDA)
 
 <blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros-cuda"><img src="https://img.shields.io/docker/pulls/rwthika/ros-cuda"/></a>
+
 <details><summary>Click to expand</summary>
 
 | Tag                                   |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
@@ -90,6 +97,9 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 #### [`rwthika/ros-torch`](https://hub.docker.com/r/rwthika/ros-torch) (ROS + PyTorch)
 
 <blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros-torch"><img src="https://img.shields.io/docker/pulls/rwthika/ros-torch"/></a>
+
 <details><summary>Click to expand</summary>
 
 | Tag                                                           |      Arch      |    Ubuntu    |   Python    |     ROS     |   ROS Packages    |    CMake    |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
@@ -119,6 +129,9 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 #### [`rwthika/ros-tf`](https://hub.docker.com/r/rwthika/ros-tf) (ROS + TensorFlow)
 
 <blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros-tf"><img src="https://img.shields.io/docker/pulls/rwthika/ros-tf"/></a>
+
 <details><summary>Click to expand</summary>
 
 | Tag                                                   |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
@@ -148,6 +161,9 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 #### [`rwthika/ros-ml`](https://hub.docker.com/r/rwthika/ros-ml) (ROS + PyTorch + TensorFlow)
 
 <blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros-ml"><img src="https://img.shields.io/docker/pulls/rwthika/ros-ml"/></a>
+
 <details><summary>Click to expand</summary>
 
 | Tag                                                                           |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
@@ -167,6 +183,9 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 #### [`rwthika/ros2`](https://hub.docker.com/r/rwthika/ros2) (ROS 2)
 
 <blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros2"><img src="https://img.shields.io/docker/pulls/rwthika/ros2"/></a>
+
 <details><summary>Click to expand</summary>
 
 | Tag                                   |      Arch      | Ubuntu  | Python |   ROS   | ROS Packages | CMake  | CUDA  | cuDNN | TensorRT | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
@@ -195,6 +214,9 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 #### [`rwthika/ros2-cuda`](https://hub.docker.com/r/rwthika/ros2-cuda) (ROS 2 + CUDA)
 
 <blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros2-cuda"><img src="https://img.shields.io/docker/pulls/rwthika/ros2-cuda"/></a>
+
 <details><summary>Click to expand</summary>
 
 | Tag                           |      Arch      | Ubuntu  | Python |   ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
@@ -214,6 +236,9 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 #### [`rwthika/ros2-torch`](https://hub.docker.com/r/rwthika/ros2-torch) (ROS 2 + PyTorch)
 
 <blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros2-torch"><img src="https://img.shields.io/docker/pulls/rwthika/ros2-torch"/></a>
+
 <details><summary>Click to expand</summary>
 
 | Tag                                                           |      Arch      |    Ubuntu    |   Python    |     ROS      |   ROS Packages    |    CMake    |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
@@ -249,6 +274,9 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 #### [`rwthika/ros2-tf`](https://hub.docker.com/r/rwthika/ros2-tf) (ROS 2 + TensorFlow)
 
 <blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros2-tf"><img src="https://img.shields.io/docker/pulls/rwthika/ros2-tf"/></a>
+
 <details><summary>Click to expand</summary>
 
 | Tag                                                   |      Arch      | Ubuntu  | Python |   ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
@@ -284,6 +312,9 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 #### [`rwthika/ros2-ml`](https://hub.docker.com/r/rwthika/ros2-ml) (ROS 2 + PyTorch + TensorFlow)
 
 <blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros2-ml"><img src="https://img.shields.io/docker/pulls/rwthika/ros2-ml"/></a>
+
 <details><summary>Click to expand</summary>
 
 | Tag                                                                   |      Arch      | Ubuntu  | Python |   ROS   | ROS Packages | CMake  |         CUDA         |     cuDNN      |    TensorRT    | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
@@ -299,5 +330,3 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 </details>
 </blockquote>
-
-# TODO: document dockerusser:dockeruser?
