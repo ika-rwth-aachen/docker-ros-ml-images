@@ -1,3 +1,4 @@
 variables:
   ROS_PACKAGE: ros-base
   PUSH_AS_DEFAULT_ROS_PACKAGE: 'true'
+  TAG_DEFAULT_ROS_PACKAGE:  ${ROS_DISTRO}

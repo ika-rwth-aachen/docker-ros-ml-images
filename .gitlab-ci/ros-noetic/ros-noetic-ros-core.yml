@@ -2,6 +2,3 @@ include:
   - .gitlab-ci/.template.yml
   - .gitlab-ci/ros-noetic/.ros-noetic.yml
   - .gitlab-ci/ros-packages/.ros-core.yml
-
-variables:
-  PUSH_AS_LATEST: 'true'

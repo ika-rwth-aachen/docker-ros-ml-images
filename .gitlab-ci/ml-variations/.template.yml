@@ -80,7 +80,7 @@ push:
 push-default-ros-package:
   stage: Push
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $PUSH_AS_DEFAULT_ROS_PACKAGE == 'true'
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $PUSH_AS_DEFAULT_ROS_PACKAGE == 'true' && $DISABLE_PUSH_AS_DEFAULT_ROS_PACKAGE != 'true'
   script:
     - !reference [.docker-push-manifest, script]
   variables:

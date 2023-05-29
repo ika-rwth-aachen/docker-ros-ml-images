@@ -4,7 +4,6 @@ include:
   - .gitlab-ci/ros-packages/.ros-core.yml
 
 variables:
-  PUSH_AS_LATEST: 'true'
   DISABLE_CUDA: 'true'
   DISABLE_TORCH: 'true'
   DISABLE_TF: 'true'

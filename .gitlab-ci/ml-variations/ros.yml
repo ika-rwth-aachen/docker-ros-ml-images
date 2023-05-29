@@ -5,7 +5,6 @@ variables:
   IMAGE_REPO:                 ${IMAGE_BASE}/${ROS_VERSION_NAME}
   IMAGE_REPO_CI:              ${IMAGE_BASE_CI}/${ROS_VERSION_NAME}
   TAG:                        ${ROS_DISTRO}-${ROS_PACKAGE}
-  TAG_DEFAULT_ROS_PACKAGE:    ${ROS_DISTRO}
   IMAGE:                      ${IMAGE_REPO}:${TAG}
   IMAGE_CI:                   ${IMAGE_REPO_CI}:${CI_COMMIT_REF_SLUG}_${TAG}_ci
   IMAGE_CI_CACHE:             ${IMAGE_CI}
