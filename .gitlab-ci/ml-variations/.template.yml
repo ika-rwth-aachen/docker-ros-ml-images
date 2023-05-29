@@ -19,7 +19,7 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: /certs
   GIT_SUBMODULE_STRATEGY: recursive
-  IMAGE_BASE: registry.hub.docker.com/rwthika
+  IMAGE_BASE: $REGISTRY_IMAGE
   IMAGE_BASE_CI: $CI_REGISTRY_IMAGE
 
 
