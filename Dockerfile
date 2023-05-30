@@ -120,6 +120,10 @@ ARG ROS_DISTRO
 ENV ROS_DISTRO=${ROS_DISTRO}
 ARG ROS_PACKAGE=ros-core
 RUN apt-get update && \
+    if [ "$TARGETARCH" = "arm64" ]; then \
+        apt-get upgrade -y && \
+        apt-get purge -y '*opencv*' ; \
+    fi && \
     apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-${ROS_PACKAGE} && \
     rm -rf /var/lib/apt/lists/*
 
