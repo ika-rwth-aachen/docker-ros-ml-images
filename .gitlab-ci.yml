@@ -157,23 +157,9 @@ ros2-rolling-ros-base:
     include: .gitlab-ci/ros2-rolling/ros2-rolling-ros-base.yml
     strategy: depend
 
-ros2-rolling-perception:
+ros2-rolling-desktop:
   stage: ROS 2 Rolling
   needs: [ros2-rolling-ros-base]
   trigger:
-    include: .gitlab-ci/ros2-rolling/ros2-rolling-perception.yml
-    strategy: depend
-
-ros2-rolling-desktop:
-  stage: ROS 2 Rolling
-  needs: [ros2-rolling-perception]
-  trigger:
     include: .gitlab-ci/ros2-rolling/ros2-rolling-desktop.yml
-    strategy: depend
-
-ros2-rolling-desktop-full:
-  stage: ROS 2 Rolling
-  needs: [ros2-rolling-desktop]
-  trigger:
-    include: .gitlab-ci/ros2-rolling/ros2-rolling-desktop-full.yml
     strategy: depend
