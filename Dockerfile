@@ -117,6 +117,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # install ROS
+ARG UBUNTU_VERSION
 ARG ROS_DISTRO
 ENV ROS_DISTRO=${ROS_DISTRO}
 ARG ROS_PACKAGE=ros-core
