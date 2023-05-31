@@ -84,6 +84,7 @@ ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPA
 
 # --- install and setup ROS ----------------------------------------------------
 FROM dependencies as ros
+ARG TARGETARCH
 
 # setup keys and sources.list
 ARG ROS_VERSION
