@@ -197,6 +197,7 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `iron`, `iron-ros-base`               | amd64<br>arm64 | 22.04.1 | 3.10.6 |  iron   |   ros-base   | 3.22.1 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `iron-perception`                     | amd64<br>arm64 | 22.04.1 | 3.10.6 |  iron   |  perception  | 3.22.1 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `iron-desktop`                        | amd64<br>arm64 | 22.04.1 | 3.10.6 |  iron   |   desktop    | 3.22.1 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
+| `iron-desktop-full`                   | amd64<br>arm64 | 22.04.1 | 3.10.6 |  iron   | desktop-full | 3.22.1 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `humble-ros-core`                     | amd64<br>arm64 | 22.04.1 | 3.10.6 | humble  |   ros-core   | 3.22.1 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `latest`, `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.1 | 3.10.6 | humble  |   ros-base   | 3.22.1 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `humble-perception`                   | amd64<br>arm64 | 22.04.1 | 3.10.6 | humble  |  perception  | 3.22.1 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |

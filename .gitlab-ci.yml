@@ -142,6 +142,13 @@ ros2-iron-desktop:
     include: .gitlab-ci/ros2-iron/ros2-iron-desktop.yml
     strategy: depend
 
+ros2-iron-desktop-full:
+  stage: ROS 2 Iron
+  needs: [ros2-iron-desktop]
+  trigger:
+    include: .gitlab-ci/ros2-iron/ros2-iron-desktop-full.yml
+    strategy: depend
+
 
 ros2-rolling-ros-core:
   stage: ROS 2 Rolling
