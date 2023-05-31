@@ -89,10 +89,10 @@ ARG TARGETARCH
 # setup keys and sources.list
 ARG ROS_VERSION
 ENV ROS_VERSION=${ROS_VERSION}
-RUN if [ "$ROS_VERSION" = "1" ]; then \
+RUN if [[ "$ROS_VERSION" == "1" ]]; then \
         apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
         echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros1-latest.list ; \
-    elif [ "$ROS_VERSION" = "2" ]; then \
+    elif [[ "$ROS_VERSION" == "2" ]]; then \
         curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
         echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null ; \
     fi
@@ -107,10 +107,10 @@ RUN apt-get update && \
 
 # install essential ROS CLI tools
 RUN apt-get update && \
-    if [ "$ROS_VERSION" == "1" ]; then \
+    if [[ "$ROS_VERSION" == "1" ]]; then \
         apt-get install -y \
             python3-catkin-tools ; \
-    elif [ "$ROS_VERSION" == "2" ]; then \
+    elif [[ "$ROS_VERSION" == "2" ]]; then \
         apt-get install -y \
             python3-colcon-common-extensions ; \
     fi \
@@ -121,7 +121,7 @@ ARG ROS_DISTRO
 ENV ROS_DISTRO=${ROS_DISTRO}
 ARG ROS_PACKAGE=ros-core
 RUN apt-get update && \
-    if [ "$TARGETARCH" = "arm64" ]; then \
+    if [[ "$TARGETARCH" == "arm64" ]]; then \
         apt-get upgrade -y && \
         apt-get purge -y '*opencv*' ; \
     fi && \
@@ -134,10 +134,10 @@ ARG TARGETARCH
 
 # install PyTorch
 ARG TORCH_VERSION_PY
-RUN if ! [ -z $TORCH_VERSION_PY ]; then \
-        if [ "$TARGETARCH" = "amd64" ]; then \
+RUN if [[ -n $TORCH_VERSION_PY ]]; then \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
             pip install torch==${TORCH_VERSION_PY}+cu113 -f https://download.pytorch.org/whl/torch_stable.html ; \
-        elif [ "$TARGETARCH" = "arm64" ]; then \
+        elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             wget -q -O /tmp/torch-${TORCH_VERSION_PY}-cp38-cp38-linux_aarch64.whl https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl && \
             pip install /tmp/torch-${TORCH_VERSION_PY}-cp38-cp38-linux_aarch64.whl && \
@@ -150,8 +150,8 @@ RUN if ! [ -z $TORCH_VERSION_PY ]; then \
 
 # install PyTorch C++ API (not available for arm64)
 ARG TORCH_VERSION_CPP
-RUN if ! [ -z $TORCH_VERSION_CPP ]; then \
-        if [ "$TARGETARCH" = "amd64" ]; then \
+RUN if [[ -n $TORCH_VERSION_CPP ]]; then \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
             wget -q -O /tmp/libtorch111.zip "https://download.pytorch.org/libtorch/cu113/libtorch-cxx11-abi-shared-with-deps-${TORCH_VERSION_CPP}%2Bcu113.zip" && \
             unzip /tmp/libtorch111.zip -d /opt/ && \
             rm /tmp/libtorch111.zip ; \
@@ -160,7 +160,7 @@ RUN if ! [ -z $TORCH_VERSION_CPP ]; then \
 
 # install TensorFlow C++ API incl. protobuf
 ARG TF_VERSION_CPP
-RUN if ! [ -z $TF_VERSION_CPP ]; then \
+RUN if [[ -n $TF_VERSION_CPP ]]; then \
         wget -q -O /tmp/libtensorflow-cc.deb "https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_CPP}/libtensorflow-cc_${TF_VERSION_CPP}-gpu_${TARGETARCH}.deb" && \
         dpkg -i /tmp/libtensorflow-cc.deb && \
         ldconfig && \
@@ -169,8 +169,8 @@ RUN if ! [ -z $TF_VERSION_CPP ]; then \
 
 # install TensorFlow (included in arm64-base)
 ARG TF_VERSION_PY
-RUN if ! [ -z $TF_VERSION_PY ]; then \
-        if [ "$TARGETARCH" = "amd64" ]; then \
+RUN if [[ -n $TF_VERSION_PY ]]; then \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
             pip install tensorflow==${TF_VERSION_PY} ; \
         fi ; \
     fi
