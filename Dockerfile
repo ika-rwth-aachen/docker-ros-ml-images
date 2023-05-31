@@ -121,7 +121,7 @@ ARG ROS_DISTRO
 ENV ROS_DISTRO=${ROS_DISTRO}
 ARG ROS_PACKAGE=ros-core
 RUN apt-get update && \
-    if [[ "$TARGETARCH" == "arm64" ]]; then \
+    if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "20.04" ]]; then \
         apt-get upgrade -y && \
         apt-get purge -y '*opencv*' ; \
     fi && \
