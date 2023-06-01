@@ -19,7 +19,7 @@ We recommend to use *docker-ros-ml-images* in combination with our other tools f
 ## Quick Start
 
 ```bash
-docker run --rm rwthika/ros-ml:rolling \
+docker run --rm rwthika/ros2-ml:rolling \
   python -c 'import os; import tensorflow as tf; import torch; e="ROS_DISTRO"; print(f"Hello from ROS {os.environ[e]}, PyTorch {torch.__version__}, and TensorFlow {tf.__version__}!")'
 ```
 
