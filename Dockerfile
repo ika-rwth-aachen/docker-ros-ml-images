@@ -192,6 +192,9 @@ RUN echo "source /.version_information.sh" >> ~/.bashrc
 COPY .version_information.sh /
 
 # container startup setup
+ENV WORKSPACE=/docker-ros/ws
+WORKDIR $WORKSPACE
+RUN mkdir src
 COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]
