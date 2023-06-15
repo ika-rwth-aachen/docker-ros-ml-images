@@ -26,14 +26,14 @@ FROM --platform=arm64 "ubuntu:${UBUNTU_VERSION}" as base-arm64
 # includes: https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:21.06-py3 as base-amd64-ml
 
-# === base-ml-arm64 ===============================================================
-# includes: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-tensorflow
-FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorflow:r35.1.0-tf2.9-py3 as base-arm64-ml
-
-# remove cmake 3.14 installation
+# remove cmake 3.14 installation, 3.16.3 will be installed during ROS installation
 RUN rm -rf /usr/local/bin/cmake  \
            /usr/local/lib/cmake/ \
            /usr/local/share/cmake/
+
+# === base-ml-arm64 ===============================================================
+# includes: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-tensorflow
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorflow:r35.1.0-tf2.9-py3 as base-arm64-ml
 
 # === dependencies =============================================================
 FROM "base-${TARGETARCH}${BUILD_VERSION}" as dependencies
@@ -129,6 +129,9 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-${ROS_PACKAGE} && \
     rm -rf /var/lib/apt/lists/*
 
+# source ROS
+RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
+
 # --- install ML stuff ----------------------------------------------------
 FROM ros as ros-ml
 ARG TARGETARCH
@@ -189,6 +192,8 @@ RUN echo "source /.version_information.sh" >> ~/.bashrc
 COPY .version_information.sh /
 
 # container startup setup
+ENV WORKSPACE=/docker-ros/ws
+WORKDIR $WORKSPACE
 COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["bash"]
