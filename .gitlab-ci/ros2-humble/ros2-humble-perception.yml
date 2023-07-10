@@ -4,7 +4,6 @@ include:
   - .gitlab-ci/ros-packages/.perception.yml
 
 variables:
-  DISABLE_CUDA: 'true'
   DISABLE_TORCH: 'true'
   DISABLE_TF: 'true'
   DISABLE_ML: 'true'

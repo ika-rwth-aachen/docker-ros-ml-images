@@ -4,7 +4,7 @@ workflow:
 
 
 variables:
-  ROS_DISTROS: noetic,foxy,humble,iron,rolling
+  ROS_DISTROS: humble
 
 
 stages:
