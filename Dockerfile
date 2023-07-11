@@ -52,7 +52,7 @@ RUN rm -rf /usr/local/bin/cmake  \
 
 # === base-ml-arm64-22.04 =========================================================
 # includes: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-tensorflow
-FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorflow:r35.3.1-tf2.11-py3 as base-arm64-ml-22.04
+FROM --platform=arm64 ubuntu:22.04 as base-arm64-ml-22.04
 
 # === dependencies =============================================================
 FROM "base-${TARGETARCH}${BUILD_VERSION}-${UBUNTU_VERSION}" as dependencies
