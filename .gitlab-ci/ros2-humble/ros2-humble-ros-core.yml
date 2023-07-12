@@ -4,6 +4,4 @@ include:
   - .gitlab-ci/ros-packages/.ros-core.yml
 
 variables:
-  DISABLE_TORCH: 'true'
-  DISABLE_TF: 'true'
   DISABLE_ML: 'true'
