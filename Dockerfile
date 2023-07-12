@@ -17,7 +17,7 @@ ARG BUILD_VERSION
 ARG UBUNTU_VERSION="20.04"
 
 # === base-amd64 ===============================================================
-FROM --platform=amd64 ubuntu:${UBUNTU_VERSION} as base-amd64-20.04-${UBUNTU_VERSION}
+FROM --platform=amd64 ubuntu:20.04 as base-amd64-20.04
 
 # === base-arm64 ===============================================================
 FROM --platform=arm64 ubuntu:20.04 as base-arm64-20.04
