@@ -17,7 +17,7 @@ ARG BUILD_VERSION
 ARG UBUNTU_VERSION="20.04"
 
 # === base-amd64 ===============================================================
-FROM --platform=amd64 ubuntu:20.04 as base-amd64-20.04
+FROM --platform=amd64 ubuntu:${UBUNTU_VERSION} as base-amd64-20.04-${UBUNTU_VERSION}
 
 # === base-arm64 ===============================================================
 FROM --platform=arm64 ubuntu:20.04 as base-arm64-20.04
@@ -52,7 +52,8 @@ RUN rm -rf /usr/local/bin/cmake  \
 
 # === base-ml-arm64-22.04 =========================================================
 # includes: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-tensorflow
-FROM --platform=arm64 ubuntu:22.04 as base-arm64-ml-22.04
+# TODO: change to l4t ubuntu 22.04 base image  
+# FROM --platform=arm64 ubuntu:22.04 as base-arm64-ml-22.04
 
 # === dependencies =============================================================
 FROM "base-${TARGETARCH}${BUILD_VERSION}-${UBUNTU_VERSION}" as dependencies
