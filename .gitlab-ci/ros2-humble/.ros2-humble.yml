@@ -3,4 +3,4 @@ variables:
   ROS_VERSION: 2
   ROS_VERSION_NAME: "ros2"
   ROS_DISTRO: humble
-  DISABLE_ARM64: "true"
+  DISABLE_ML_ARM64: "true"
