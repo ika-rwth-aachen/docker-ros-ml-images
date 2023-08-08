@@ -30,25 +30,15 @@ FROM --platform=arm64 ubuntu:22.04 as base-arm64-22.04
 
 # === base-ml-amd64 ===============================================================
 # includes: https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:21.06-py3 as base-amd64-ml
-
-# remove cmake 3.14 installation, 3.16.3 will be installed during ROS installation
-RUN rm -rf /usr/local/bin/cmake  \
-           /usr/local/lib/cmake/ \
-           /usr/local/share/cmake/
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.04-py3 as base-amd64-ml-20.04
 
 # === base-ml-arm64 ===============================================================
 # includes: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-tensorflow
-FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorflow:r35.1.0-tf2.9-py3 as base-arm64-ml
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorflow:r35.3.1-tf2.11-py3 as base-arm64-ml-20.04
 
 # === base-ml-amd64-22.04 =========================================================
 # includes: https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.06-py3 as base-amd64-ml-22.04
-
-# remove cmake 3.14 installation, 3.16.3 will be installed during ROS installation
-RUN rm -rf /usr/local/bin/cmake  \
-           /usr/local/lib/cmake/ \
-           /usr/local/share/cmake/
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.07-py3 as base-amd64-ml-22.04
 
 # === base-ml-arm64-22.04 =========================================================
 # includes: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-tensorflow
