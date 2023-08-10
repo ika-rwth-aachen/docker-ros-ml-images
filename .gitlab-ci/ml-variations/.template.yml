@@ -96,7 +96,7 @@ push:
 push-version-tag:
   stage: Push
   rules:
-    - if: ${VERSION_TAG} != ''
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && ${VERSION_TAG} != ''
   script:
     - !reference [.docker-push-manifest, script]
   variables:
