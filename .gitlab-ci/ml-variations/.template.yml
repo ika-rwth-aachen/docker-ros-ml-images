@@ -83,15 +83,6 @@ push:
   script:
     - !reference [.docker-push-manifest, script]
 
-push-version-tag:
-  stage: Push
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && ${VERSION_TAG} != ''
-  script:
-    - !reference [.docker-push-manifest, script]
-  variables:
-    IMAGE: ${IMAGE_REPO}:${TAG}-${VERSION_TAG}
-
 push-default-ros-package:
   stage: Push
   rules:
