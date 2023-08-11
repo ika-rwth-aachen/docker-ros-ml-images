@@ -51,6 +51,8 @@ build-amd64:
 build-arm64:
   stage: Build
   tags: [privileged, arm64]
+  rules:
+    - if: $UBUNTU_VERSION != '22.04'
   script:
     - !reference [.docker-build, script]
   variables:
