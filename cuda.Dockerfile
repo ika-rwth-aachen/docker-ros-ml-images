@@ -28,6 +28,7 @@ FROM --platform=amd64 ubuntu:22.04 as base-amd64-22.04
 FROM "base-${TARGETARCH}-${UBUNTU_VERSION}" as dependencies
 ARG TARGETARCH
 ENV DEBIAN_FRONTEND=noninteractive
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,video,graphics
 
 ARG UBUNTU_VERSION
 ARG TYPE=run
