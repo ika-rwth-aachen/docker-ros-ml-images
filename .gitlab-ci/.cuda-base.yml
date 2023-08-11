@@ -1,0 +1,46 @@
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: /certs
+  GIT_SUBMODULE_STRATEGY: recursive
+  IMAGE_BASE: gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/cuda
+  UBUNTU_VERSION: 20.04
+  TYPE: run
+  CUDA_VERSION: 11.8
+  CUDNN_VERSION: 8.6.0.163-1
+  LIBNVINFER_VERSION: 8.5.3-1
+  IMAGE_CI: ${IMAGE_BASE}:${CUDA_VERSION}-ubuntu${UBUNTU_VERSION}-cudnn${CUDNN_VERSION}-trt${LIBNVINFER_VERSION}
+
+
+.docker-build:
+  script:
+    - >
+        docker buildx build
+        --pull
+        --push
+        --platform $PLATFORM
+        --build-arg UBUNTU_VERSION=$UBUNTU_VERSION
+        --build-arg TYPE=$TYPE
+        --build-arg CUDA=$CUDA_VERSION
+        --build-arg CUDNN=$CUDNN_VERSION
+        --build-arg LIBNVINFER=$LIBNVINFER_VERSION
+        --tag $IMAGE
+        -f cuda.Dockerfile
+        .
+
+build-amd64:
+  stage: Build
+  tags: [privileged, amd64]
+  script:
+    - !reference [.docker-build, script]
+  variables:
+    PLATFORM: linux/amd64
+    IMAGE: ${IMAGE_CI}-amd64
+
+build-arm64:
+  stage: Build
+  tags: [privileged, arm64]
+  script:
+    - !reference [.docker-build, script]
+  variables:
+    PLATFORM: linux/arm64
+    IMAGE: ${IMAGE_CI}-arm64
