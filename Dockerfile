@@ -152,13 +152,13 @@ RUN if [[ -n $TORCH_VERSION_PY ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
             if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then export pt_package_name=1.11.0+cu113; \
             elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then export pt_package_name=2.0.1+cu118; \
-            else export pt_package_name=${TORCH_VERSION_PY}+cpu; fi \
+            else export pt_package_name=${TORCH_VERSION_PY}+cpu; fi && \
             pip install torch==${pt_package_name} -f https://download.pytorch.org/whl/torch_stable.html ; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then export whl_url=https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl; \
             elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then export whl_url=https://nvidia.box.com/shared/static/i8pukc49h3lhak4kkn67tg9j4goqm0m7.whl; \
-            else export whl_url=""; fi \
+            else export whl_url=""; fi && \
             wget -q -O /tmp/torch-${TORCH_VERSION_PY}-cp38-cp38-linux_aarch64.whl ${whl_url} && \
             pip install /tmp/torch-${TORCH_VERSION_PY}-cp38-cp38-linux_aarch64.whl && \
             rm /tmp/torch-${TORCH_VERSION_PY}-cp38-cp38-linux_aarch64.whl && \
@@ -174,7 +174,7 @@ RUN if [[ -n $TORCH_VERSION_CPP ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
             if [[ "$TORCH_VERSION_CPP" = "1.11.0" ]]; then export pt_cpp_url=https://download.pytorch.org/libtorch/cu113/libtorch-cxx11-abi-shared-with-deps-1.11.0%2Bcu113.zip; \
             elif [[ "$TORCH_VERSION_CPP" = "2.0.1" ]]; then export pt_cpp_url=https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip; \
-            else export pt_cpp_url=""; fi \
+            else export pt_cpp_url=""; fi && \
             wget -q -O /tmp/libtorch.zip ${pt_cpp_url} && \
             unzip /tmp/libtorch.zip -d /opt/ && \
             rm /tmp/libtorch.zip ; \
