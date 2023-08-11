@@ -63,6 +63,7 @@ build-amd64:
       when: never
     - if: $DISABLE_ML_AMD64 == 'true' && $BUILD_VERSION == '-ml'
       when: never
+    - when: on_success
   script:
     - !reference [.docker-build, script]
   variables:
@@ -78,6 +79,7 @@ build-arm64:
       when: never
     - if: $DISABLE_ML_ARM64 == 'true' && $BUILD_VERSION == '-ml'
       when: never
+    - when: on_success
   script:
     - !reference [.docker-build, script]
   variables:
