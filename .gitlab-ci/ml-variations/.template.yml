@@ -58,12 +58,6 @@ variables:
 build-amd64:
   stage: Build
   tags: [privileged, amd64]
-  rules:
-    - if: $DISABLE_AMD64 == 'true'
-      when: never
-    - if: $DISABLE_ML_AMD64 == 'true' && $BUILD_VERSION == '-ml'
-      when: never
-    - when: on_success
   script:
     - !reference [.docker-build, script]
   variables:
@@ -74,12 +68,6 @@ build-amd64:
 build-arm64:
   stage: Build
   tags: [privileged, arm64]
-  rules:
-    - if: $DISABLE_ARM64 == 'true'
-      when: never
-    - if: $DISABLE_ML_ARM64 == 'true' && $BUILD_VERSION == '-ml'
-      when: never
-    - when: on_success
   script:
     - !reference [.docker-build, script]
   variables:
