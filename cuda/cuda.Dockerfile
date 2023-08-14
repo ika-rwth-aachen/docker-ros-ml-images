@@ -41,16 +41,15 @@ ARG LIBNVINFER_MAJOR_VERSION=8
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all
 
-# Needed for string substitution
 SHELL ["/bin/bash", "-c"]
 
-# essentials
+# install essentials
 RUN apt-get update && apt-get install -y \
         wget \
         gnupg2 && \
-        if [[ "$TYPE" == "dev" ]]; then apt-get install -y build-essential; fi
+    if [[ "$TYPE" == "dev" ]]; then apt-get install -y build-essential; fi
 
-# CUDA
+# set up CUDA apt repositories
 RUN if [[ "$TARGETARCH" == "amd64" ]]; then \
         wget -q -O /tmp/cuda-keyring_1.0-1_all.deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION/./}/x86_64/cuda-keyring_1.0-1_all.deb; \     
     elif [[ "$TARGETARCH" == "arm64" ]]; then \
@@ -59,7 +58,7 @@ RUN if [[ "$TARGETARCH" == "amd64" ]]; then \
     dpkg -i /tmp/cuda-keyring_1.0-1_all.deb && \
     rm -rf /tmp/cuda-keyring_1.0-1_all.deb
 
-# l4t stuff
+# set up L4T apt repositories (NVIDIA Jetson)
 RUN if [[ "$TARGETARCH" == "arm64" ]]; then \
         echo "deb https://repo.download.nvidia.com/jetson/common r35.4 main" >> /etc/apt/sources.list && \
         echo "deb https://repo.download.nvidia.com/jetson/t194 r35.4 main" >> /etc/apt/sources.list && \
@@ -68,7 +67,7 @@ RUN if [[ "$TARGETARCH" == "arm64" ]]; then \
         touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall; \
     fi
 
-# install CUDA and its dependencies (includes l4t stuff)
+# install CUDA
 RUN apt-get update && \
     if [[ "$TARGETARCH" == "amd64" ]]; then \
         apt-get install -y cuda-libraries-${CUDA/./-}; \
@@ -78,7 +77,7 @@ RUN apt-get update && \
     fi
 RUN echo "export PATH=/usr/local/cuda/bin:$PATH" >> ~/.bashrc
 
-# libcudnn8 - make sure you have the correct .deb
+# install cuDNN
 COPY cudnn-local-repo-${TARGETARCH}.deb /cudnn-local-repo.deb
 RUN gpg_key=$(dpkg -i cudnn-local-repo.deb | grep -oP "(?<=cp )[^ ]+(?= )") && \
     cp ${gpg_key} /usr/share/keyrings/ && \
@@ -89,7 +88,7 @@ RUN gpg_key=$(dpkg -i cudnn-local-repo.deb | grep -oP "(?<=cp )[^ ]+(?= )") && \
     fi
 RUN rm -rf cudnn-local-repo.deb
 
-# libnvinfer8 (TensorRT) - make sure you have the correct .deb
+# install TensorRT
 COPY nv-tensorrt-local-repo-${TARGETARCH}.deb /nv-tensorrt-local-repo.deb
 RUN gpg_key=$(dpkg -i nv-tensorrt-local-repo.deb | grep -oP "(?<=cp )[^ ]+(?= )") && \
     cp ${gpg_key} /usr/share/keyrings/ && \
