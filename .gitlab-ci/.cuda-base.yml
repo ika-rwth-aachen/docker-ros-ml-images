@@ -25,6 +25,7 @@ variables:
 
 .docker-build:
   script:
+    - cd cuda
     - >
         docker buildx build
         --pull
