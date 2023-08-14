@@ -14,14 +14,14 @@
 #     .
 
 ARG BUILD_VERSION
-ARG UBUNTU_VERSION="20.04"
+ARG UBUNTU_VERSION="20"
 ARG CUDA_VERSION=11.8
 
 # === base (multiarch) ===============================================================
-FROM ubuntu:${UBUNTU_VERSION} as base
+FROM ubuntu:${UBUNTU_VERSION}.04 as base
 
 # === base-ml (multiarch) ============================================================
-FROM rwthika/cuda:${CUDA}-cudnn-trt-ubuntu${UBUNTU_VERSION%%.*} as base-ml
+FROM rwthika/cuda:${CUDA_VERSION}-cudnn-trt-ubuntu${UBUNTU_VERSION} as base-ml
 
 # === dependencies ===================================================================
 FROM "base${BUILD_VERSION}" as dependencies
@@ -106,7 +106,7 @@ ARG ROS_DISTRO
 ENV ROS_DISTRO=${ROS_DISTRO}
 ARG ROS_PACKAGE=ros-core
 RUN apt-get update && \
-    if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "20.04" ]]; then \
+    if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "20" ]]; then \
         apt-get upgrade -y && \
         apt-get purge -y '*opencv*' ; \
     fi && \
