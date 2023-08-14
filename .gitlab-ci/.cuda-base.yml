@@ -37,7 +37,7 @@ variables:
         --build-arg CUDNN=$CUDNN_VERSION
         --build-arg LIBNVINFER=$LIBNVINFER_VERSION
         --tag $IMAGE
-        -f cuda.Dockerfile
+        -f Dockerfile
         .
 
 build-amd64:
