@@ -34,9 +34,7 @@ ARG TYPE=run
 
 ARG CUDA=11.8
 ARG CUDNN=8.6.0.163-1
-ARG CUDNN_MAJOR_VERSION=8
 ARG LIBNVINFER=8.5.3-1
-ARG LIBNVINFER_MAJOR_VERSION=8
 
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all
@@ -74,24 +72,26 @@ RUN apt-get update && \
         if [[ "$TYPE" == "dev" ]]; then apt-get install -y cuda-toolkit-${CUDA/./-} cuda-demo-suite-${CUDA/./-}; fi \
     elif [[ "$TARGETARCH" == "arm64" ]]; then \
         echo "N" | apt-get install -y cuda-${CUDA/./-}; \
-    fi
-RUN echo "export PATH=/usr/local/cuda/bin:$PATH" >> ~/.bashrc
+    fi && \
+    echo "export PATH=/usr/local/cuda/bin:$PATH" >> ~/.bashrc
 
 # install cuDNN
 COPY cudnn-local-repo-${TARGETARCH}.deb /cudnn-local-repo.deb
 RUN gpg_key=$(dpkg -i cudnn-local-repo.deb | grep -oP "(?<=cp )[^ ]+(?= )") && \
     cp ${gpg_key} /usr/share/keyrings/ && \
+    CUDNN_MAJOR_VERSION=${CUDNN%%.*} && \
     apt-get update && \
     apt-get install -y libcudnn${CUDNN_MAJOR_VERSION}=${CUDNN}+cuda${CUDA} && \
     if [[ "$TYPE" == "dev" ]]; then \
         apt-get install -y libcudnn${CUDNN_MAJOR_VERSION}-dev=${CUDNN}+cuda${CUDA}; \
-    fi
-RUN rm -rf cudnn-local-repo.deb
+    fi && \
+    rm -rf cudnn-local-repo.deb
 
 # install TensorRT
 COPY nv-tensorrt-local-repo-${TARGETARCH}.deb /nv-tensorrt-local-repo.deb
 RUN gpg_key=$(dpkg -i nv-tensorrt-local-repo.deb | grep -oP "(?<=cp )[^ ]+(?= )") && \
     cp ${gpg_key} /usr/share/keyrings/ && \
+    LIBNVINFER_MAJOR_VERSION=${LIBNVINFER%%.*} && \
     apt-get update && \
     apt-get install -y \
         libnvinfer${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda${CUDA} \
@@ -100,8 +100,8 @@ RUN gpg_key=$(dpkg -i nv-tensorrt-local-repo.deb | grep -oP "(?<=cp )[^ ]+(?= )"
         apt-get install -y \
         libnvinfer-dev=${LIBNVINFER}+cuda${CUDA} \
         libnvinfer-plugin-dev=${LIBNVINFER}+cuda${CUDA}; \
-    fi
-RUN rm -rf nv-tensorrt-local-repo.deb
+    fi && \
+    rm -rf nv-tensorrt-local-repo.deb
 
 # container startup setup
 CMD ["bash"]
