@@ -66,10 +66,6 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
     apt-get install git-lfs && \
     rm -rf /var/lib/apt/lists/*
 
-# enable nvidia-docker OpenGL support
-ENV NVIDIA_VISIBLE_DEVICES ${NVIDIA_VISIBLE_DEVICES:-all}
-ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
-
 # --- install and setup ROS ----------------------------------------------------
 FROM dependencies as ros
 ARG TARGETARCH
