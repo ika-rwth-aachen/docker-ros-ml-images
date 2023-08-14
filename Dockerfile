@@ -21,7 +21,7 @@ ARG CUDA_VERSION=11.8
 FROM ubuntu:${UBUNTU_VERSION} as base
 
 # === base-ml (multiarch) ============================================================
-FROM gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/cuda:${CUDA}-cudnn-trt-ubuntu${UBUNTU_VERSION%%.*} as base-ml
+FROM rwthika/cuda:${CUDA}-cudnn-trt-ubuntu${UBUNTU_VERSION%%.*} as base-ml
 
 # === dependencies ===================================================================
 FROM "base${BUILD_VERSION}" as dependencies
