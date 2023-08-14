@@ -46,7 +46,10 @@ ENV NVIDIA_DRIVER_CAPABILITIES all
 SHELL ["/bin/bash", "-c"]
 
 # essentials
-RUN apt-get update && apt-get install -y wget gnupg2
+RUN apt-get update && apt-get install -y \
+        wget \
+        gnupg2 && \
+        if [[ "$TYPE" == "dev" ]]; then apt-get install -y build-essential; fi
 
 # CUDA
 RUN if [[ "$TARGETARCH" == "amd64" ]]; then \
