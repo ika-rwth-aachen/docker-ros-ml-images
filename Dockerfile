@@ -17,20 +17,14 @@ ARG BUILD_VERSION
 ARG UBUNTU_VERSION="20.04"
 ARG CUDA_VERSION=11.8
 
-# === base-amd64 ===============================================================
-FROM --platform=amd64 ubuntu:${UBUNTU_VERSION} as base-amd64
+# === base (multiarch) ===============================================================
+FROM ubuntu:${UBUNTU_VERSION} as base
 
-# === base-arm64 ===============================================================
-FROM --platform=arm64 ubuntu:${UBUNTU_VERSION} as base-arm64
+# === base-ml (multiarch) ============================================================
+FROM gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/cuda:${CUDA}-cudnn-trt-ubuntu${UBUNTU_VERSION%%.*} as base-ml
 
-# === base-ml-amd64 ===============================================================
-FROM --platform=amd64 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/cuda:${CUDA}-ubuntu${UBUNTU_VERSION}-cudnn8.6.0.163-1-trt8.5.3-1-amd64 as base-amd64-ml
-
-# === base-ml-arm64 ===============================================================
-FROM --platform=arm64 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/cuda:${CUDA}-ubuntu${UBUNTU_VERSION}-cudnn8.6.0.163-1-trt8.5.3-1-arm64 as base-arm64-ml
-
-# === dependencies =============================================================
-FROM "base-${TARGETARCH}${BUILD_VERSION}" as dependencies
+# === dependencies ===================================================================
+FROM "base${BUILD_VERSION}" as dependencies
 
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
