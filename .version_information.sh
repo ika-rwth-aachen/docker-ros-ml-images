@@ -5,23 +5,9 @@ eval $(cat /etc/os-release | grep ^VERSION=)
 
 ARCH=$(uname -m)
 
-if [[ $(command -v nvcc) ]]; then
-  CUDA_VERSION=$(nvcc --version | grep ^Cuda | awk '{print $6}' | sed 's/V//')
-fi 
-
-if [[ -f /usr/include/cudnn_version.h ]]; then
-  CUDNN_MAJOR=$(cat /usr/include/cudnn_version.h | grep "#define CUDNN_MAJOR" | sed "s/#define CUDNN_MAJOR //")
-  CUDNN_MINOR=$(cat /usr/include/cudnn_version.h | grep "#define CUDNN_MINOR" | sed "s/#define CUDNN_MINOR //")
-  CUDNN_PATCH=$(cat /usr/include/cudnn_version.h | grep "#define CUDNN_PATCHLEVEL" | sed "s/#define CUDNN_PATCHLEVEL //")
-  CUDNN_VERSION=$CUDNN_MAJOR.$CUDNN_MINOR.$CUDNN_PATCH
-fi
-
-if [[ -f /usr/include/${ARCH}-linux-gnu/NvInferVersion.h ]]; then
-  TENSORRT_MAJOR=$(cat /usr/include/${ARCH}-linux-gnu/NvInferVersion.h | grep "#define NV_TENSORRT_MAJOR" | sed "s/#define NV_TENSORRT_MAJOR //" | sed "s#//.*##" | sed "s/ //")
-  TENSORRT_MINOR=$(cat /usr/include/${ARCH}-linux-gnu/NvInferVersion.h | grep "#define NV_TENSORRT_MINOR" | sed "s/#define NV_TENSORRT_MINOR //" | sed "s#//.*##" | sed "s/ //")
-  TENSORRT_PATCH=$(cat /usr/include/${ARCH}-linux-gnu/NvInferVersion.h | grep "#define NV_TENSORRT_PATCH" | sed "s/#define NV_TENSORRT_PATCH //" | sed "s#//.*##" | sed "s/ //")
-  TENSORRT_VERSION=$TENSORRT_MAJOR.$TENSORRT_MINOR.$TENSORRT_PATCH
-fi
+CUDA_VERSION=$(dpkg -l 2> /dev/null | grep -E "cuda-cudart" | awk '{ print $3 }')
+CUDNN_VERSION=$(dpkg -l 2> /dev/null | grep -E "libcudnn.? " | awk '{ print $3 }')
+TENSORRT_VERSION=$(dpkg -l 2> /dev/null | grep -E "libnvinfer.? " | awk '{ print $3 }')
 
 PYTHON_VERSION=$(python --version | awk '{print $2}')
 TF_PIP_VERSION=$(python -c "exec(\"try:\n  import os; os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'; import tensorflow as tf; print(tf.__version__);\n\rexcept ImportError:\n  pass\")")
