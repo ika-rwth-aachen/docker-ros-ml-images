@@ -1,13 +1,12 @@
 # docker buildx build \
 #     --load \
 #     --platform $(uname)/$(uname -m) \
-#     --build-arg UBUNTU_VERSION=22.04 \
-#     --build-arg TYPE=run \
-#     --build-arg CUDA=11.8 \
-#     --build-arg CUDNN=8.6.0.163-1 \
-#     --build-arg LIBNVINFER=8.5.3-1 \
+#     --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
+#     --build-arg CUDA_VERSION=$CUDA_VERSION \
+#     --build-arg CUDNN_VERSION=$CUDNN_VERSION \
+#     --build-arg TENSORRT_VERSION=$TENSORRT_VERSION \
+#     --build-arg INSTALL_AS_DEV=$INSTALL_AS_DEV \
 #     --tag $IMAGE \
-#     -f cuda.Dockerfile
 #     .
 
 ARG UBUNTU_VERSION=20.04
@@ -30,11 +29,10 @@ ARG TARGETARCH
 ENV DEBIAN_FRONTEND=noninteractive
 
 ARG UBUNTU_VERSION
-ARG TYPE=run
-
-ARG CUDA=11.8
-ARG CUDNN=8.6.0.163-1
-ARG LIBNVINFER=8.5.3-1
+ARG CUDA_VERSION=11.8
+ARG CUDNN_VERSION=8.6.0.163-1
+ARG TENSORRT_VERSION=8.5.3-1
+ARG INSTALL_AS_DEV=0
 
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all
@@ -45,7 +43,7 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-get update && apt-get install -y \
         wget \
         gnupg2 && \
-    if [[ "$TYPE" == "dev" ]]; then apt-get install -y build-essential; fi
+    if [[ "$INSTALL_AS_DEV" == "1" ]]; then apt-get install -y build-essential; fi
 
 # set up CUDA apt repositories
 RUN if [[ "$TARGETARCH" == "amd64" ]]; then \
@@ -68,10 +66,10 @@ RUN if [[ "$TARGETARCH" == "arm64" ]]; then \
 # install CUDA
 RUN apt-get update && \
     if [[ "$TARGETARCH" == "amd64" ]]; then \
-        apt-get install -y cuda-libraries-${CUDA/./-}; \
-        if [[ "$TYPE" == "dev" ]]; then apt-get install -y cuda-toolkit-${CUDA/./-} cuda-demo-suite-${CUDA/./-}; fi \
+        apt-get install -y cuda-libraries-${CUDA_VERSION/./-}; \
+        if [[ "$INSTALL_AS_DEV" == "1" ]]; then apt-get install -y cuda-toolkit-${CUDA_VERSION/./-} cuda-demo-suite-${CUDA_VERSION/./-}; fi \
     elif [[ "$TARGETARCH" == "arm64" ]]; then \
-        echo "N" | apt-get install -y cuda-${CUDA/./-}; \
+        echo "N" | apt-get install -y cuda-${CUDA_VERSION/./-}; \
     fi && \
     echo "export PATH=/usr/local/cuda/bin:$PATH" >> ~/.bashrc
 
@@ -79,11 +77,11 @@ RUN apt-get update && \
 COPY cudnn-local-repo-${TARGETARCH}.deb /cudnn-local-repo.deb
 RUN gpg_key=$(dpkg -i cudnn-local-repo.deb | grep -oP "(?<=cp )[^ ]+(?= )") && \
     cp ${gpg_key} /usr/share/keyrings/ && \
-    CUDNN_MAJOR_VERSION=${CUDNN%%.*} && \
+    CUDNN_MAJOR_VERSION=${CUDNN_VERSION%%.*} && \
     apt-get update && \
-    apt-get install -y libcudnn${CUDNN_MAJOR_VERSION}=${CUDNN}+cuda${CUDA} && \
-    if [[ "$TYPE" == "dev" ]]; then \
-        apt-get install -y libcudnn${CUDNN_MAJOR_VERSION}-dev=${CUDNN}+cuda${CUDA}; \
+    apt-get install -y libcudnn${CUDNN_MAJOR_VERSION}=${CUDNN_VERSION}+cuda${CUDA_VERSION} && \
+    if [[ "$INSTALL_AS_DEV" == "1" ]]; then \
+        apt-get install -y libcudnn${CUDNN_MAJOR_VERSION}-dev=${CUDNN_VERSION}+cuda${CUDA_VERSION}; \
     fi && \
     rm -rf cudnn-local-repo.deb
 
@@ -91,15 +89,15 @@ RUN gpg_key=$(dpkg -i cudnn-local-repo.deb | grep -oP "(?<=cp )[^ ]+(?= )") && \
 COPY nv-tensorrt-local-repo-${TARGETARCH}.deb /nv-tensorrt-local-repo.deb
 RUN gpg_key=$(dpkg -i nv-tensorrt-local-repo.deb | grep -oP "(?<=cp )[^ ]+(?= )") && \
     cp ${gpg_key} /usr/share/keyrings/ && \
-    LIBNVINFER_MAJOR_VERSION=${LIBNVINFER%%.*} && \
+    TENSORRT_MAJOR_VERSION=${TENSORRT_VERSION%%.*} && \
     apt-get update && \
     apt-get install -y \
-        libnvinfer${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda${CUDA} \
-        libnvinfer-plugin${LIBNVINFER_MAJOR_VERSION}=${LIBNVINFER}+cuda${CUDA} && \
-    if [[ "$TYPE" == "dev" ]]; then \
+        libnvinfer${TENSORRT_MAJOR_VERSION}=${TENSORRT_VERSION}+cuda${CUDA_VERSION} \
+        libnvinfer-plugin${TENSORRT_MAJOR_VERSION}=${TENSORRT_VERSION}+cuda${CUDA_VERSION} && \
+    if [[ "$INSTALL_AS_DEV" == "1" ]]; then \
         apt-get install -y \
-        libnvinfer-dev=${LIBNVINFER}+cuda${CUDA} \
-        libnvinfer-plugin-dev=${LIBNVINFER}+cuda${CUDA}; \
+        libnvinfer-dev=${TENSORRT_VERSION}+cuda${CUDA_VERSION} \
+        libnvinfer-plugin-dev=${TENSORRT_VERSION}+cuda${CUDA_VERSION}; \
     fi && \
     rm -rf nv-tensorrt-local-repo.deb
 
