@@ -47,13 +47,13 @@ variables:
 .docker-push-manifest:
   script:
     - |-
-      if [[ "${DISABLE_AMD64}" == "true" || ( "${DISABLE_ML_AMD64}" == "true" && "${BUILD_VERSION}" == "-ml" ) ]]; then
+      if [[ "${DISABLE_AMD64}" != "true" ]] || [[ "${DISABLE_ML_AMD64}" != "true" && "${BUILD_VERSION}" == "-ml" ]]; then
         docker pull ${IMAGE_CI}-amd64
         docker tag ${IMAGE_CI}-amd64 ${IMAGE}-amd64
         docker push ${IMAGE}-amd64
         AMD64_IS_ENABLED="true"
       fi
-      if [[ "${DISABLE_ARM64}" == "true" || ( "${DISABLE_ML_ARM64}" == "true" && "${BUILD_VERSION}" == "-ml" ) ]]; then
+      if [[ "${DISABLE_ARM64}" != "true" ]] || [[ "${DISABLE_ML_ARM64}" != "true" && "${BUILD_VERSION}" == "-ml" ]]; then
         docker pull ${IMAGE_CI}-arm64
         docker tag ${IMAGE_CI}-arm64 ${IMAGE}-arm64
         docker push ${IMAGE}-arm64
