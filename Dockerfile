@@ -2,6 +2,7 @@
 #     --load \
 #     --platform $(uname)/$(uname -m) \
 #     --build-arg BUILD_VERSION=$BUILD_VERSION \
+#     --build-arg CUDA_VERSION=$CUDA_VERSION \
 #     --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
 #     --build-arg ROS_VERSION=$ROS_VERSION \
 #     --build-arg ROS_DISTRO=$ROS_DISTRO \
@@ -15,28 +16,16 @@
 
 ARG BUILD_VERSION
 ARG UBUNTU_VERSION="20.04"
+ARG CUDA_VERSION=11.8
 
-# === base-amd64 ===============================================================
-FROM --platform=amd64 "ubuntu:${UBUNTU_VERSION}" as base-amd64
+# === base (multiarch) ===============================================================
+FROM ubuntu:${UBUNTU_VERSION} as base
 
-# === base-arm64 ===============================================================
-FROM --platform=arm64 "ubuntu:${UBUNTU_VERSION}" as base-arm64
+# === base-ml (multiarch) ============================================================
+FROM rwthika/cuda:${CUDA_VERSION}-cudnn-trt-ubuntu${UBUNTU_VERSION} as base-ml
 
-# === base-ml-amd64 ===============================================================
-# includes: https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:21.06-py3 as base-amd64-ml
-
-# remove cmake 3.14 installation, 3.16.3 will be installed during ROS installation
-RUN rm -rf /usr/local/bin/cmake  \
-           /usr/local/lib/cmake/ \
-           /usr/local/share/cmake/
-
-# === base-ml-arm64 ===============================================================
-# includes: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-tensorflow
-FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorflow:r35.1.0-tf2.9-py3 as base-arm64-ml
-
-# === dependencies =============================================================
-FROM "base-${TARGETARCH}${BUILD_VERSION}" as dependencies
+# === dependencies ===================================================================
+FROM "base${BUILD_VERSION}" as dependencies
 
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
@@ -77,10 +66,6 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
     apt-get update && \
     apt-get install git-lfs && \
     rm -rf /var/lib/apt/lists/*
-
-# enable nvidia-docker OpenGL support
-ENV NVIDIA_VISIBLE_DEVICES ${NVIDIA_VISIBLE_DEVICES:-all}
-ENV NVIDIA_DRIVER_CAPABILITIES ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
 
 # --- install and setup ROS ----------------------------------------------------
 FROM dependencies as ros
@@ -140,12 +125,17 @@ ARG TARGETARCH
 ARG TORCH_VERSION_PY
 RUN if [[ -n $TORCH_VERSION_PY ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
-            pip install torch==${TORCH_VERSION_PY}+cu113 -f https://download.pytorch.org/whl/torch_stable.html ; \
+            if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then PT_PACKAGE_NAME=1.11.0+cu113; \
+            elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then PT_PACKAGE_NAME=2.0.1+cu118; \
+            else PT_PACKAGE_NAME=${TORCH_VERSION_PY}+cpu; fi && \
+            pip install torch==${PT_PACKAGE_NAME} -f https://download.pytorch.org/whl/torch_stable.html ; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
-            wget -q -O /tmp/torch-${TORCH_VERSION_PY}-cp38-cp38-linux_aarch64.whl https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl && \
-            pip install /tmp/torch-${TORCH_VERSION_PY}-cp38-cp38-linux_aarch64.whl && \
-            rm /tmp/torch-${TORCH_VERSION_PY}-cp38-cp38-linux_aarch64.whl && \
+            # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
+            if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then TORCH_INSTALL=https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl; \
+            elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then TORCH_INSTALL=https://developer.download.nvidia.cn/compute/redist/jp/v511/pytorch/torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl; \
+            else TORCH_INSTALL=""; fi && \
+            python3 -m pip install --no-cache $TORCH_INSTALL && \
             apt-get update && \
             apt-get install -y libopenblas-base && \
             rm -rf /var/lib/apt/lists/* ; \
@@ -156,27 +146,30 @@ RUN if [[ -n $TORCH_VERSION_PY ]]; then \
 ARG TORCH_VERSION_CPP
 RUN if [[ -n $TORCH_VERSION_CPP ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
-            wget -q -O /tmp/libtorch111.zip "https://download.pytorch.org/libtorch/cu113/libtorch-cxx11-abi-shared-with-deps-${TORCH_VERSION_CPP}%2Bcu113.zip" && \
-            unzip /tmp/libtorch111.zip -d /opt/ && \
-            rm /tmp/libtorch111.zip ; \
+            if [[ "$TORCH_VERSION_CPP" = "1.11.0" ]]; then PT_CPP_URL=https://download.pytorch.org/libtorch/cu113/libtorch-cxx11-abi-shared-with-deps-1.11.0%2Bcu113.zip; \
+            elif [[ "$TORCH_VERSION_CPP" = "2.0.1" ]]; then PT_CPP_URL=https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip; \
+            else PT_CPP_URL=""; fi && \
+            wget -q -O /tmp/libtorch.zip ${PT_CPP_URL} && \
+            unzip /tmp/libtorch.zip -d /opt/ && \
+            rm /tmp/libtorch.zip ; \
         fi ; \
     fi
 
 # install TensorFlow C++ API incl. protobuf
 ARG TF_VERSION_CPP
 RUN if [[ -n $TF_VERSION_CPP ]]; then \
-        wget -q -O /tmp/libtensorflow-cc.deb "https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_CPP}/libtensorflow-cc_${TF_VERSION_CPP}-gpu_${TARGETARCH}.deb" && \
+        wget -q -O /tmp/libtensorflow-cc.deb "https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_CPP/+*/}/libtensorflow-cc_${TF_VERSION_CPP}-gpu_${TARGETARCH}.deb" && \
         dpkg -i /tmp/libtensorflow-cc.deb && \
         ldconfig && \
         rm /tmp/libtensorflow-cc.deb ; \
     fi
 
-# install TensorFlow (included in arm64-base)
+# install TensorFlow
 ARG TF_VERSION_PY
 RUN if [[ -n $TF_VERSION_PY ]]; then \
-        if [[ "$TARGETARCH" == "amd64" ]]; then \
-            pip install tensorflow==${TF_VERSION_PY} ; \
-        fi ; \
+        PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}' | cut -d. -f1,2 | tr -d .) && \
+        ARCH=$(uname -m) && \
+        python3 -m pip install --no-cache https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_PY/+*/}/tensorflow-${TF_VERSION_PY}-cp${PYTHON_VERSION}-cp${PYTHON_VERSION}-linux_${ARCH}.whl; \
     fi
 
 # === final ====================================================================

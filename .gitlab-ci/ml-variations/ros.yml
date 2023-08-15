@@ -8,3 +8,4 @@ variables:
   IMAGE:                      ${IMAGE_REPO}:${TAG}
   IMAGE_CI:                   ${IMAGE_REPO_CI}:${CI_COMMIT_REF_SLUG}_${TAG}_ci
   IMAGE_CI_CACHE:             ${IMAGE_CI}
+  CUDA_VERSION:               "11.8"  # only used for variable substitution in the base-ml image (build fails otherwise)

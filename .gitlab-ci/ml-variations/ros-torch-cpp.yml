@@ -6,3 +6,4 @@ variables:
   TORCH_VERSION_PY:                     ""
   DISABLE_PUSH_AS_LATEST:               'true'
   DISABLE_PUSH_AS_DEFAULT_ROS_PACKAGE:  'true'
+  DISABLE_ARM64:                        'true'

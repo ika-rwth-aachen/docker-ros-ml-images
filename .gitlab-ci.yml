@@ -8,12 +8,28 @@ variables:
 
 
 stages:
+  # - CUDA
   - ROS 1 Noetic
   - ROS 2 Foxy
   - ROS 2 Humble
   - ROS 2 Iron
   - ROS 2 Rolling
 
+# build-cuda-ubuntu20:
+#   stage: CUDA
+#   trigger:
+#     include: .gitlab-ci/.cuda-base.yml
+#     strategy: depend
+#   variables:
+#     UBUNTU_VERSION: "20.04"
+
+# build-cuda-ubuntu22:
+#   stage: CUDA
+#   trigger:
+#     include: .gitlab-ci/.cuda-base.yml
+#     strategy: depend
+#   variables:
+#     UBUNTU_VERSION: "22.04"
 
 ros-noetic-ros-core:
   stage: ROS 1 Noetic
