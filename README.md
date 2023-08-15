@@ -193,7 +193,7 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `rolling-ros-core`                    | amd64<br>arm64 | 20.04.6 | 3.8.10  | rolling |   ros-core   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `rolling`, `rolling-ros-base`         | amd64<br>arm64 | 20.04.6 | 3.8.10  | rolling |   ros-base   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `rolling-desktop`                     | amd64<br>arm64 | 20.04.6 | 3.8.10  | rolling |   desktop    | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `iron-ros-core`                       |   amd64<br>-   | 22.04.2 | 3.10.12 |  iron   |   ros-core   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
+| `iron-ros-core`                       | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   |   ros-core   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `iron`, `iron-ros-base`               | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   |   ros-base   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `iron-perception`                     | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   |  perception  | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `iron-desktop`                        | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   |   desktop    | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
@@ -218,24 +218,24 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                   |      Arch      | Ubuntu  | Python  |   ROS   | ROS Packages | CMake  |  CUDA   | cuDNN | TensorRT | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
-| ------------------------------------- | :------------: | :-----: | :-----: | :-----: | :----------: | :----: | :-----: | :---: | :------: | :------------: | :---------: | :---------------: | :------------: |
-| `rolling-ros-core`                    | amd64<br>arm64 | 20.04.6 | 3.8.10  | rolling |   ros-core   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `rolling`, `rolling-ros-base`         | amd64<br>arm64 | 20.04.6 | 3.8.10  | rolling |   ros-base   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `rolling-desktop`                     | amd64<br>arm64 | 20.04.6 | 3.8.10  | rolling |   desktop    | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `iron-ros-core`                       | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   |   ros-core   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `iron`, `iron-ros-base`               | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   |   ros-base   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `iron-perception`                     | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   |  perception  | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `iron-desktop`                        | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   |   desktop    | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `iron-desktop-full`                   | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   | desktop-full | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `humble-ros-core`                     | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  |   ros-core   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `latest`, `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  |   ros-base   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `humble-perception`                   | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  |  perception  | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `humble-desktop`                      | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  |   desktop    | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `humble-desktop-full`                 | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  | desktop-full | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `foxy-ros-core`                       | amd64<br>arm64 | 20.04.6 | 3.8.10  |  foxy   |   ros-core   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `foxy`, `foxy-ros-base`               | amd64<br>arm64 | 20.04.6 | 3.8.10  |  foxy   |   ros-base   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `foxy-desktop`                        | amd64<br>arm64 | 20.04.6 | 3.8.10  |  foxy   |   desktop    | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
+| Tag                                   |      Arch      |    Ubuntu    |    Python    |     ROS     |   ROS Packages    |    CMake    |     CUDA     |   cuDNN    |  TensorRT  | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
+| ------------------------------------- | :------------: | :----------: | :----------: | :---------: | :---------------: | :---------: | :----------: | :--------: | :--------: | :------------: | :---------: | :---------------: | :------------: |
+| `rolling-ros-core`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
+| `rolling`, `rolling-ros-base`         | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
+| `rolling-desktop`                     | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
+| `iron-ros-core`                       |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
+| `iron`, `iron-ros-base`               |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
+| `iron-perception`                     |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |  perception<br>-  | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
+| `iron-desktop`                        |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
+| `iron-desktop-full`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
+| `humble-ros-core`                     |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
+| `latest`, `humble`, `humble-ros-base` |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
+| `humble-perception`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |  perception<br>-  | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
+| `humble-desktop`                      |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
+| `humble-desktop-full`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
+| `foxy-ros-core`                       | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
+| `foxy`, `foxy-ros-base`               | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
+| `foxy-desktop`                        | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
 
 </details>
 </blockquote>
