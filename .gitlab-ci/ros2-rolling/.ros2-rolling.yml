@@ -1,5 +1,5 @@
 variables:
-  UBUNTU_VERSION: "20"
+  UBUNTU_VERSION: "20.04"
   ROS_VERSION: 2
   ROS_VERSION_NAME: "ros2"
   ROS_DISTRO: rolling
