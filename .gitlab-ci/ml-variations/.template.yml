@@ -19,6 +19,7 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: /certs
   GIT_SUBMODULE_STRATEGY: recursive
+  VERSION_TAG: ""
   IMAGE_BASE: $REGISTRY_IMAGE
   IMAGE_BASE_CI: $CI_REGISTRY_IMAGE
 
@@ -95,6 +96,15 @@ push:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
     - !reference [.docker-push-manifest, script]
+
+push-version-tag:
+  stage: Push
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && ${VERSION_TAG} != ''
+  script:
+    - !reference [.docker-push-manifest, script]
+  variables:
+    IMAGE: ${IMAGE_REPO}:${TAG}-${VERSION_TAG}
 
 push-default-ros-package:
   stage: Push
