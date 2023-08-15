@@ -21,6 +21,7 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
   IMAGE_BASE: $REGISTRY_IMAGE
   IMAGE_BASE_CI: $CI_REGISTRY_IMAGE
+  VERSION_TAG: "23.08"
 
 
 .docker-build:
