@@ -15,6 +15,12 @@ NVIDIA releases official CUDA-related Docker images on both DockerHub (e.g., [`n
 
 ### Build
 
+1. Download a cuDNN installer deb-package from [NVIDIA's download page](https://developer.nvidia.com/rdp/cudnn-archive) (login required).
+2. Place the cuDNN installer deb-package in this directory and rename it to `cudnn-local-repo-$(dpkg --print-architecture).deb`.
+3. Download a TensorRT installer deb-package from [NVIDIA's download page](https://developer.nvidia.com/tensorrt-download) (login required).
+4. Place the cuDNN installer deb-package in this directory and rename it to `nv-tensorrt-local-repo-$(dpkg --print-architecture).deb`.
+5. Build the Docker image with below command.
+
 ```bash
 docker buildx build \
     --load \
