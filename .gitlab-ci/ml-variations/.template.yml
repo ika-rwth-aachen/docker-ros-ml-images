@@ -61,12 +61,16 @@ variables:
       fi
       if [[ "${AMD64_IS_ENABLED}" == "true" && "${ARM64_IS_ENABLED}" == "true" ]]; then
         docker manifest create ${IMAGE} --amend ${IMAGE}-amd64 --amend ${IMAGE}-arm64
+        if [[ ${TAGGED_IMAGE} ]]; then docker manifest create ${TAGGED_IMAGE} --amend ${IMAGE}-amd64 --amend ${IMAGE}-arm64; fi
       elif [[ "${AMD64_IS_ENABLED}" == "true" ]]; then
         docker manifest create ${IMAGE} --amend ${IMAGE}-amd64
+        if [[ ${TAGGED_IMAGE} ]]; then docker manifest create ${TAGGED_IMAGE} --amend ${IMAGE}-amd64; fi
       elif [[ "${ARM64_IS_ENABLED}" == "true" ]]; then
         docker manifest create ${IMAGE} --amend ${IMAGE}-arm64
+        if [[ ${TAGGED_IMAGE} ]]; then docker manifest create ${TAGGED_IMAGE} --amend ${IMAGE}-arm64; fi
       fi
     - docker manifest push ${IMAGE}
+    - if [[ ${TAGGED_IMAGE} ]]; then docker manifest push ${TAGGED_IMAGE}; fi
 
 
 build-amd64:
@@ -108,18 +112,8 @@ push:
     - if: $CI_COMMIT_TAG
   script:
     - !reference [.docker-push-manifest, script]
-
-push-version-tag:
-  stage: Push
-  needs:
-    - job: push
-      optional: true
-  rules:
-    - if: $CI_COMMIT_TAG
-  script:
-    - !reference [.docker-push-manifest, script]
   variables:
-    IMAGE: ${IMAGE_REPO}:${TAG}-v${CI_COMMIT_TAG}
+    TAGGED_IMAGE: ${IMAGE}-v${CI_COMMIT_TAG}
 
 push-default-ros-package:
   stage: Push
