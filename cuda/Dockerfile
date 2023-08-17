@@ -72,7 +72,8 @@ RUN apt-get update && \
         apt-get install -y cuda-libraries-${CUDA_VERSION/./-}; \
         if [[ "$INSTALL_AS_DEV" == "1" ]]; then apt-get install -y cuda-toolkit-${CUDA_VERSION/./-} cuda-demo-suite-${CUDA_VERSION/./-}; fi \
     elif [[ "$TARGETARCH" == "arm64" ]]; then \
-        echo "N" | apt-get install -y cuda-${CUDA_VERSION/./-}; \
+        echo "N" | apt-get install -y cuda-runtime-${CUDA_VERSION/./-}; \
+        if [[ "$INSTALL_AS_DEV" == "1" ]]; then apt-get install -y cuda-toolkit-${CUDA_VERSION/./-}; fi \
     fi && \
     echo "export PATH=/usr/local/cuda/bin:$PATH" >> ~/.bashrc && \
     rm -rf /var/lib/apt/lists/*
