@@ -97,7 +97,8 @@ RUN apt-get update && \
             python3-catkin-tools ; \
     elif [[ "$ROS_VERSION" == "2" ]]; then \
         apt-get install -y \
-            python3-colcon-common-extensions ; \
+            python3-colcon-common-extensions \
+        && pip install colcon-clean ; \
     fi \
     && rm -rf /var/lib/apt/lists/*
 
