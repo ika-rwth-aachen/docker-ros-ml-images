@@ -33,6 +33,7 @@ SHELL ["/bin/bash", "-c"]
 USER root
 
 # install essentials via apt
+ARG UBUNTU_VERSION
 RUN apt-get update && \
     apt-get install -y \
         bsdmainutils \
@@ -59,7 +60,7 @@ RUN apt-get update && \
         x11-apps \
         zip \
     && rm -rf /var/lib/apt/lists/*
-RUN pip3 install --upgrade pip
+RUN python -m pip install `if [[ $UBUNTU_VERSION == "24.04" ]]; then echo "--break-system-packages"; fi` --upgrade pip
 
 # install more essentials
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
@@ -70,6 +71,7 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
 # --- install and setup ROS ----------------------------------------------------
 FROM dependencies as ros
 ARG TARGETARCH
+ARG UBUNTU_VERSION
 
 # setup keys and sources.list
 ARG ROS_VERSION
@@ -98,12 +100,11 @@ RUN apt-get update && \
     elif [[ "$ROS_VERSION" == "2" ]]; then \
         apt-get install -y \
             python3-colcon-common-extensions \
-        && pip install colcon-clean ; \
+        && pip install `if [[ $UBUNTU_VERSION == "24.04" ]]; then echo "--break-system-packages"; fi` colcon-clean ; \
     fi \
     && rm -rf /var/lib/apt/lists/*
 
 # install ROS
-ARG UBUNTU_VERSION
 ARG ROS_DISTRO
 ENV ROS_DISTRO=${ROS_DISTRO}
 ARG ROS_PACKAGE=ros-core
@@ -121,6 +122,7 @@ RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
 # --- install ML stuff ----------------------------------------------------
 FROM ros as ros-ml
 ARG TARGETARCH
+ARG UBUNTU_VERSION
 
 # install PyTorch
 ARG TORCH_VERSION_PY
@@ -129,14 +131,14 @@ RUN if [[ -n $TORCH_VERSION_PY ]]; then \
             if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then PT_PACKAGE_NAME=1.11.0+cu113; \
             elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then PT_PACKAGE_NAME=2.0.1+cu118; \
             else PT_PACKAGE_NAME=${TORCH_VERSION_PY}+cpu; fi && \
-            pip install torch==${PT_PACKAGE_NAME} -f https://download.pytorch.org/whl/torch_stable.html ; \
+            pip install `if [[ $UBUNTU_VERSION == "24.04" ]]; then echo "--break-system-packages"; fi` torch==${PT_PACKAGE_NAME} -f https://download.pytorch.org/whl/torch_stable.html ; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
             if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then TORCH_INSTALL=https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl; \
             elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then TORCH_INSTALL=https://developer.download.nvidia.cn/compute/redist/jp/v511/pytorch/torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl; \
             else TORCH_INSTALL=""; fi && \
-            python3 -m pip install --no-cache $TORCH_INSTALL && \
+            pip install `if [[ $UBUNTU_VERSION == "24.04" ]]; then echo "--break-system-packages"; fi` --no-cache $TORCH_INSTALL && \
             apt-get update && \
             apt-get install -y libopenblas-base && \
             rm -rf /var/lib/apt/lists/* ; \
@@ -170,7 +172,7 @@ ARG TF_VERSION_PY
 RUN if [[ -n $TF_VERSION_PY ]]; then \
         PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}' | cut -d. -f1,2 | tr -d .) && \
         ARCH=$(uname -m) && \
-        python3 -m pip install --no-cache https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_PY/+*/}/tensorflow-${TF_VERSION_PY}-cp${PYTHON_VERSION}-cp${PYTHON_VERSION}-linux_${ARCH}.whl; \
+        pip install `if [[ $UBUNTU_VERSION == "24.04" ]]; then echo "--break-system-packages"; fi` --no-cache https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_PY/+*/}/tensorflow-${TF_VERSION_PY}-cp${PYTHON_VERSION}-cp${PYTHON_VERSION}-linux_${ARCH}.whl; \
     fi
 
 # === final ====================================================================
