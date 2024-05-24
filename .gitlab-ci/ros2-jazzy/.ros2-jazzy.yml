@@ -1,6 +1,9 @@
 variables:
   UBUNTU_VERSION: "24.04"
   ROS_VERSION: 2
-  ROS_VERSION_NAME: "ros2"
+  ROS_VERSION_NAME: ros2
   ROS_DISTRO: jazzy
-  DISABLE_ML_ARM64: "true"
+  DISABLE_CUDA: "true"
+  DISABLE_TORCH: "true"
+  DISABLE_TF: "true"
+  DISABLE_ML: "true"
