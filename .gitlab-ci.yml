@@ -53,17 +53,6 @@ ros-noetic-ros-base:
     include: .gitlab-ci/ros-noetic/ros-noetic-ros-base.yml
     strategy: depend
 
-ros-noetic-desktop:
-  stage: ROS 1 Noetic
-  rules:
-    - if: $ROS_DISTROS =~ /.*noetic.*/
-  needs:
-    - job: ros-noetic-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros-noetic/ros-noetic-desktop.yml
-    strategy: depend
-
 ros-noetic-desktop-full:
   stage: ROS 1 Noetic
   rules:
@@ -128,17 +117,6 @@ ros2-humble-ros-base:
     include: .gitlab-ci/ros2-humble/ros2-humble-ros-base.yml
     strategy: depend
 
-ros2-humble-desktop:
-  stage: ROS 2 Humble
-  rules:
-    - if: $ROS_DISTROS =~ /.*humble.*/
-  needs:
-    - job: ros2-humble-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-humble/ros2-humble-desktop.yml
-    strategy: depend
-
 ros2-humble-desktop-full:
   stage: ROS 2 Humble
   rules:
@@ -171,17 +149,6 @@ ros2-iron-ros-base:
     include: .gitlab-ci/ros2-iron/ros2-iron-ros-base.yml
     strategy: depend
 
-ros2-iron-desktop:
-  stage: ROS 2 Iron
-  rules:
-    - if: $ROS_DISTROS =~ /.*iron.*/
-  needs:
-    - job: ros2-iron-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-iron/ros2-iron-desktop.yml
-    strategy: depend
-
 ros2-iron-desktop-full:
   stage: ROS 2 Iron
   rules:
@@ -212,17 +179,6 @@ ros2-jazzy-ros-base:
       optional: true
   trigger:
     include: .gitlab-ci/ros2-jazzy/ros2-jazzy-ros-base.yml
-    strategy: depend
-
-ros2-jazzy-desktop:
-  stage: ROS 2 Jazzy
-  rules:
-    - if: $ROS_DISTROS =~ /.*jazzy.*/
-  needs:
-    - job: ros2-jazzy-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-jazzy/ros2-jazzy-desktop.yml
     strategy: depend
 
 ros2-jazzy-desktop-full:
