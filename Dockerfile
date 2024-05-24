@@ -2,7 +2,6 @@
 #     --load \
 #     --platform $(uname)/$(uname -m) \
 #     --build-arg BUILD_VERSION=$BUILD_VERSION \
-#     --build-arg CUDA_VERSION=$CUDA_VERSION \
 #     --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
 #     --build-arg ROS_VERSION=$ROS_VERSION \
 #     --build-arg ROS_DISTRO=$ROS_DISTRO \
@@ -15,17 +14,22 @@
 #     .
 
 ARG BUILD_VERSION
-ARG UBUNTU_VERSION="20.04"
-ARG CUDA_VERSION=11.8
+ARG UBUNTU_VERSION="22.04"
 
-# === base (multiarch) ===============================================================
-FROM ubuntu:${UBUNTU_VERSION} as base
+# === base-amd64 ==================================================================
+FROM --platform=amd64 ubuntu:${UBUNTU_VERSION} as base-amd64
 
-# === base-ml (multiarch) ============================================================
-FROM rwthika/cuda:${CUDA_VERSION}-cudnn-trt-ubuntu${UBUNTU_VERSION} as base-ml
+# === base-arm64 ==================================================================
+FROM --platform=arm64 ubuntu:${UBUNTU_VERSION} as base-arm64
+
+# === base-ml-amd64 ==================================================================
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.04-py3 as base-ml-amd64
+
+# === base-ml-arm64 ==================================================================
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.6.2-runtime as base-ml-arm64
 
 # === dependencies ===================================================================
-FROM "base${BUILD_VERSION}" as dependencies
+FROM "base${BUILD_VERSION}-${TARGETARCH}" as dependencies
 
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]

@@ -350,7 +350,6 @@ docker buildx build
   --platform $PLATFORM
   --build-arg BUILD_VERSION=$BUILD_VERSION
   --build-arg UBUNTU_VERSION=$UBUNTU_VERSION
-  --build-arg CUDA_VERSION=$CUDA_VERSION
   --build-arg ROS_VERSION=$ROS_VERSION
   --build-arg ROS_DISTRO=$ROS_DISTRO
   --build-arg ROS_PACKAGE=$ROS_PACKAGE
