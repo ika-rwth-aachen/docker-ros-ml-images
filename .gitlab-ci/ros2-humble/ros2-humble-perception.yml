@@ -1,4 +1,0 @@
-include:
-  - .gitlab-ci/.template.yml
-  - .gitlab-ci/ros2-humble/.ros2-humble.yml
-  - .gitlab-ci/ros-packages/.perception.yml
