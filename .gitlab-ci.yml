@@ -5,12 +5,11 @@ workflow:
 
 
 variables:
-  ROS_DISTROS: noetic,foxy,humble,iron,jazzy,rolling
+  ROS_DISTROS: noetic,humble,iron,jazzy,rolling
 
 
 stages:
   - ROS 1 Noetic
-  - ROS 2 Foxy
   - ROS 2 Humble
   - ROS 2 Iron
   - ROS 2 Jazzy
@@ -46,38 +45,6 @@ ros-noetic-desktop-full:
       optional: true
   trigger:
     include: .gitlab-ci/ros-noetic/ros-noetic-desktop-full.yml
-    strategy: depend
-
-
-ros2-foxy-ros-core:
-  stage: ROS 2 Foxy
-  rules:
-    - if: $ROS_DISTROS =~ /.*foxy.*/
-  needs: []
-  trigger:
-    include: .gitlab-ci/ros2-foxy/ros2-foxy-ros-core.yml
-    strategy: depend
-
-ros2-foxy-ros-base:
-  stage: ROS 2 Foxy
-  rules:
-    - if: $ROS_DISTROS =~ /.*foxy.*/
-  needs:
-    - job: ros2-foxy-ros-core
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-foxy/ros2-foxy-ros-base.yml
-    strategy: depend
-
-ros2-foxy-desktop:
-  stage: ROS 2 Foxy
-  rules:
-    - if: $ROS_DISTROS =~ /.*foxy.*/
-  needs:
-    - job: ros2-foxy-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-foxy/ros2-foxy-desktop.yml
     strategy: depend
 
 

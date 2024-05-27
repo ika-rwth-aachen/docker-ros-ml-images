@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/github/v/release/ika-rwth-aachen/docker-ros-ml-images"/></a>
   <img src="https://img.shields.io/github/license/ika-rwth-aachen/docker-ros-ml-images"/>
   <img src="https://img.shields.io/badge/ROS-noetic-blueviolet"/>
-  <img src="https://img.shields.io/badge/ROS 2-foxy|humble|iron|rolling-blueviolet"/>
+  <img src="https://img.shields.io/badge/ROS 2-humble|iron|jazzy|rolling-blueviolet"/>
   <img src="https://img.shields.io/badge/PyTorch-2.0-red"/>
   <img src="https://img.shields.io/badge/TensorFlow-2.11-orange"/>
 </p>
@@ -40,7 +40,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 
 | Component        | Variations                                                           |
 | ---------------- | -------------------------------------------------------------------- |
-| ROS Distribution | noetic, foxy, humble, iron, rolling                                  |
+| ROS Distribution | noetic, humble, iron, jazzy, rolling                                 |
 | ROS Components   | core, base, desktop-full                                             |
 | ML Framework     | CUDA, PyTorch Python, PyTorch C++, TensorFlow Python, TensorFlow C++ |
 | Architecture     | amd64, arm64                                                         |
@@ -182,9 +182,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core`                     | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  |   ros-core   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `latest`, `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  |   ros-base   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `humble-desktop-full`                 | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  | desktop-full | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `foxy-ros-core`                       | amd64<br>arm64 | 20.04.6 | 3.8.10  |  foxy   |   ros-core   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `foxy`, `foxy-ros-base`               | amd64<br>arm64 | 20.04.6 | 3.8.10  |  foxy   |   ros-base   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `foxy-desktop`                        | amd64<br>arm64 | 20.04.6 | 3.8.10  |  foxy   |   desktop    | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 
 </details>
 </blockquote>
@@ -208,9 +205,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core`                     |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
 | `latest`, `humble`, `humble-ros-base` |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
 | `humble-desktop-full`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
-| `foxy-ros-core`                       | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
-| `foxy`, `foxy-ros-base`               | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
-| `foxy-desktop`                        | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
 
 </details>
 </blockquote>
@@ -252,15 +246,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core-torch2.0.1-cpp`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
 | `humble-ros-base-torch2.0.1-cpp`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
 | `humble-desktop-full-torch2.0.1-cpp`             |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `foxy-ros-core-torch2.0.1`                       | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `foxy`, `foxy-ros-base-torch2.0.1`               | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `foxy-desktop-torch2.0.1`                        | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `foxy-ros-core-torch2.0.1-py`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `foxy-ros-base-torch2.0.1-py`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `foxy-desktop-torch2.0.1-py`                     | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `foxy-ros-core-torch2.0.1-cpp`                   |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>-  |  foxy<br>-   |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `foxy-ros-base-torch2.0.1-cpp`                   |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>-  |  foxy<br>-   |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `foxy-desktop-torch2.0.1-cpp`                    |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>-  |  foxy<br>-   |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
 
 </details>
 </blockquote>
@@ -302,15 +287,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core-tf2.11.0-cpp`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |  2.11.0<br>-   |
 | `humble-ros-base-tf2.11.0-cpp`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |  2.11.0<br>-   |
 | `humble-desktop-full-tf2.11.0-cpp`             |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |  2.11.0<br>-   |
-| `foxy-ros-core-tf2.11.0`                       | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |     2.11.0     |
-| `foxy`, `foxy-ros-base-tf2.11.0`               | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |     2.11.0     |
-| `foxy-desktop-tf2.11.0`                        | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |     2.11.0     |
-| `foxy-ros-core-tf2.11.0-py`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |       -        |
-| `foxy-ros-base-tf2.11.0-py`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |       -        |
-| `foxy-desktop-tf2.11.0-py`                     | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |       -        |
-| `foxy-ros-core-tf2.11.0-cpp`                   | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |     2.11.0     |
-| `foxy-ros-base-tf2.11.0-cpp`                   | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |     2.11.0     |
-| `foxy-desktop-tf2.11.0-cpp`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |     2.11.0     |
 
 </details>
 </blockquote>
@@ -334,9 +310,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core-tf2.11.0-torch2.0.1`                     |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |    2.11.0<br>-    |  2.11.0<br>-   |
 | `latest`, `humble`, `humble-ros-base-tf2.11.0-torch2.0.1` |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |    2.11.0<br>-    |  2.11.0<br>-   |
 | `humble-desktop-full-tf2.11.0-torch2.0.1`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |    2.11.0<br>-    |  2.11.0<br>-   |
-| `foxy-ros-core-tf2.11.0-torch2.0.1`                       | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
-| `foxy`, `foxy-ros-base-tf2.11.0-torch2.0.1`               | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
-| `foxy-desktop-tf2.11.0-torch2.0.1`                        | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
 
 </details>
 </blockquote>
