@@ -174,6 +174,9 @@ RUN if [[ -n $TF_VERSION_CPP ]]; then \
 # install TensorFlow
 ARG TF_VERSION_PY
 RUN if [[ -n $TF_VERSION_PY ]]; then \
+        apt-get update && \
+        apt-get install -y libhdf5-dev && \
+        rm -rf /var/lib/apt/lists/* && \
         PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}' | cut -d. -f1,2 | tr -d .) && \
         ARCH=$(uname -m) && \
         pip install `if [[ $UBUNTU_VERSION == "24.04" ]]; then echo "--break-system-packages"; fi` --no-cache https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_PY/+*/}/tensorflow-${TF_VERSION_PY}-cp${PYTHON_VERSION}-cp${PYTHON_VERSION}-linux_${ARCH}.whl; \
