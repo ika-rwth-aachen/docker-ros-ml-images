@@ -318,17 +318,17 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 ## Manual Build
 
 ```
-docker buildx build
-  --pull
-  --platform $PLATFORM
-  --build-arg BUILD_VERSION=$BUILD_VERSION
-  --build-arg UBUNTU_VERSION=$UBUNTU_VERSION
-  --build-arg ROS_VERSION=$ROS_VERSION
-  --build-arg ROS_DISTRO=$ROS_DISTRO
-  --build-arg ROS_PACKAGE=$ROS_PACKAGE
-  --build-arg TORCH_VERSION_PY=$TORCH_VERSION_PY
-  --build-arg TORCH_VERSION_CPP=$TORCH_VERSION_CPP
-  --build-arg TF_VERSION_PY=$TF_VERSION_PY
-  --build-arg TF_VERSION_CPP=$TF_VERSION_CPP
+docker buildx build \
+  --pull \
+  --platform $PLATFORM \
+  --build-arg BUILD_VERSION=$BUILD_VERSION \
+  --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
+  --build-arg ROS_VERSION=$ROS_VERSION \
+  --build-arg ROS_DISTRO=$ROS_DISTRO \
+  --build-arg ROS_PACKAGE=$ROS_PACKAGE \
+  --build-arg TORCH_VERSION_PY=$TORCH_VERSION_PY \
+  --build-arg TORCH_VERSION_CPP=$TORCH_VERSION_CPP \
+  --build-arg TF_VERSION_PY=$TF_VERSION_PY \
+  --build-arg TF_VERSION_CPP=$TF_VERSION_CPP \
   --tag $IMAGE .
 ```

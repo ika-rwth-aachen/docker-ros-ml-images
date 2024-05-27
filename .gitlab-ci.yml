@@ -41,7 +41,7 @@ ros-noetic-desktop-full:
   rules:
     - if: $ROS_DISTROS =~ /.*noetic.*/
   needs:
-    - job: ros-noetic-desktop
+    - job: ros-noetic-ros-base
       optional: true
   trigger:
     include: .gitlab-ci/ros-noetic/ros-noetic-desktop-full.yml
@@ -73,7 +73,7 @@ ros2-humble-desktop-full:
   rules:
     - if: $ROS_DISTROS =~ /.*humble.*/
   needs:
-    - job: ros2-humble-desktop
+    - job: ros2-humble-ros-base
       optional: true
   trigger:
     include: .gitlab-ci/ros2-humble/ros2-humble-desktop-full.yml
@@ -105,7 +105,7 @@ ros2-iron-desktop-full:
   rules:
     - if: $ROS_DISTROS =~ /.*iron.*/
   needs:
-    - job: ros2-iron-desktop
+    - job: ros2-iron-ros-base
       optional: true
   trigger:
     include: .gitlab-ci/ros2-iron/ros2-iron-desktop-full.yml
@@ -137,7 +137,7 @@ ros2-jazzy-desktop-full:
   rules:
     - if: $ROS_DISTROS =~ /.*jazzy.*/
   needs:
-    - job: ros2-jazzy-desktop
+    - job: ros2-jazzy-ros-base
       optional: true
   trigger:
     include: .gitlab-ci/ros2-jazzy/ros2-jazzy-desktop-full.yml
