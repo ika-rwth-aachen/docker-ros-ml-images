@@ -16,20 +16,20 @@
 ARG BUILD_VERSION
 ARG UBUNTU_VERSION="22.04"
 
-# === base-amd64 ==================================================================
-FROM --platform=amd64 ubuntu:${UBUNTU_VERSION} as base-amd64
+# === base${BUILD_VERSION}-ubuntu${UBUNTU_VERSION}-${TARGETARCH} ===============
+FROM --platform=amd64 ubuntu:${UBUNTU_VERSION} as base-ubuntu20.04-amd64
+FROM --platform=amd64 ubuntu:${UBUNTU_VERSION} as base-ubuntu22.04-amd64
+FROM --platform=amd64 ubuntu:${UBUNTU_VERSION} as base-ubuntu24.04-amd64
+FROM --platform=arm64 ubuntu:${UBUNTU_VERSION} as base-ubuntu20.04-arm64
+FROM --platform=arm64 ubuntu:${UBUNTU_VERSION} as base-ubuntu22.04-arm64
+FROM --platform=arm64 ubuntu:${UBUNTU_VERSION} as base-ubuntu24.04-arm64
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.04-py3 as base-ml-ubuntu20.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.04-py3 as base-ml-ubuntu22.04-amd64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.5.2-runtime as base-ml-ubuntu20.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.6.2-runtime as base-ml-ubuntu22.04-arm64
 
-# === base-arm64 ==================================================================
-FROM --platform=arm64 ubuntu:${UBUNTU_VERSION} as base-arm64
-
-# === base-ml-amd64 ==================================================================
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.04-py3 as base-ml-amd64
-
-# === base-ml-arm64 ==================================================================
-FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.6.2-runtime as base-ml-arm64
-
-# === dependencies ===================================================================
-FROM "base${BUILD_VERSION}-${TARGETARCH}" as dependencies
+# === dependencies =============================================================
+FROM "base${BUILD_VERSION}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}" as dependencies
 
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
