@@ -5,9 +5,9 @@ eval $(cat /etc/os-release | grep ^VERSION=)
 
 ARCH=$(uname -m)
 
-CUDA_VERSION=$(dpkg -l 2> /dev/null | grep -E "cuda-cudart-[0-9]" | awk '{ print $3 }')
-CUDNN_VERSION=$(dpkg -l 2> /dev/null | grep -E "libcudnn[0-9] " | awk '{ print $3 }')
-TENSORRT_VERSION=$(dpkg -l 2> /dev/null | grep -E "libnvinfer[0-9] " | awk '{ print $3 }')
+CUDA_VERSION=$(dpkg -l 2> /dev/null | grep -E "cuda-cudart-[0-9]." | awk '{ print $3 }')
+CUDNN_VERSION=$(dpkg -l 2> /dev/null | grep -E "libcudnn[0-9]. " | awk '{ print $3 }')
+TENSORRT_VERSION=$(dpkg -l 2> /dev/null | grep -E "libnvinfer[0-9]. " | awk '{ print $3 }')
 
 PYTHON_VERSION=$(python --version | awk '{print $2}')
 TF_PIP_VERSION=$(python -c "exec(\"try:\n  import os; os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'; import tensorflow as tf; print(tf.__version__);\n\rexcept ImportError:\n  pass\")")
