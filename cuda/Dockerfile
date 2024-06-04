@@ -9,19 +9,14 @@
 #     --tag $IMAGE \
 #     .
 
-ARG UBUNTU_VERSION=20.04
+ARG UBUNTU_VERSION=22.04
 
-# === base-amd64-20.04 ===============================================================
 FROM --platform=amd64 ubuntu:20.04 as base-amd64-20.04
-
-# === base-arm64-20.04 ===============================================================
-FROM --platform=arm64 nvcr.io/nvidia/l4t-base:35.4.1 as base-arm64-20.04
-
-# === base-amd64-22.04 ===============================================================
 FROM --platform=amd64 ubuntu:22.04 as base-amd64-22.04
-
-# === base-arm64-22.04 ===============================================================
-# not supported
+FROM --platform=amd64 ubuntu:24.04 as base-amd64-24.04
+FROM --platform=arm64 nvcr.io/nvidia/l4t-base:35.4.1 as base-arm64-20.04
+# base-arm64-22.04: not supported
+# base-arm64-24.04: not supported
 
 # === dependencies =============================================================
 FROM "base-${TARGETARCH}-${UBUNTU_VERSION}" as dependencies
@@ -49,7 +44,14 @@ RUN apt-get update && \
 
 # set up CUDA apt repositories
 RUN if [[ "$TARGETARCH" == "amd64" ]]; then \
-        wget -q -O /tmp/cuda-keyring_1.0-1_all.deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION/./}/x86_64/cuda-keyring_1.0-1_all.deb; \
+        if [[ "$UBUNTU_VERSION" == "20.04" ]]; then \
+            CUDA_DEB_URL="https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION/./}/x86_64/cuda-keyring_1.0-1_all.deb"; \
+        elif [[ "$UBUNTU_VERSION" == "22.04" ]]; then \
+            CUDA_DEB_URL="https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION/./}/x86_64/cuda-keyring_1.0-1_all.deb"; \
+        elif [[ "$UBUNTU_VERSION" == "24.04" ]]; then \
+            CUDA_DEB_URL="https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb"; \
+        fi && \
+        wget -q -O /tmp/cuda-keyring_1.0-1_all.deb ${CUDA_DEB_URL}; \
     elif [[ "$TARGETARCH" == "arm64" ]]; then \
         wget -q -O /tmp/cuda-keyring_1.0-1_all.deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION/./}/arm64/cuda-keyring_1.0-1_all.deb; \
     fi && \
@@ -95,14 +97,19 @@ RUN --mount=type=bind,source=nv-tensorrt-local-repo-${TARGETARCH}.deb,target=/nv
     gpg_key=$(dpkg -i nv-tensorrt-local-repo.deb | grep -oP "(?<=cp )[^ ]+(?= )") && \
     cp ${gpg_key} /usr/share/keyrings/ && \
     TENSORRT_MAJOR_VERSION=${TENSORRT_VERSION%%.*} && \
+    if [[ "$TENSORRT_VERSION" == "10.0.1.6-1" ]]; then \
+        CUDA_VERSION_TENSORRT="12.4"; \
+    else \
+        CUDA_VERSION_TENSORRT=${CUDA_VERSION}; \
+    fi && \
     apt-get update && \
     apt-get install -y \
-        libnvinfer${TENSORRT_MAJOR_VERSION}=${TENSORRT_VERSION}+cuda${CUDA_VERSION} \
-        libnvinfer-plugin${TENSORRT_MAJOR_VERSION}=${TENSORRT_VERSION}+cuda${CUDA_VERSION} && \
+        libnvinfer${TENSORRT_MAJOR_VERSION}=${TENSORRT_VERSION}+cuda${CUDA_VERSION_TENSORRT} \
+        libnvinfer-plugin${TENSORRT_MAJOR_VERSION}=${TENSORRT_VERSION}+cuda${CUDA_VERSION_TENSORRT} && \
     if [[ "$INSTALL_AS_DEV" == "1" ]]; then \
         apt-get install -y \
-        libnvinfer-dev=${TENSORRT_VERSION}+cuda${CUDA_VERSION} \
-        libnvinfer-plugin-dev=${TENSORRT_VERSION}+cuda${CUDA_VERSION}; \
+        libnvinfer-dev=${TENSORRT_VERSION}+cuda${CUDA_VERSION_TENSORRT} \
+        libnvinfer-plugin-dev=${TENSORRT_VERSION}+cuda${CUDA_VERSION_TENSORRT}; \
     fi && \
     rm -rf /var/lib/apt/lists/*
 
