@@ -11,27 +11,25 @@
 #     --build-arg TORCH_VERSION_CPP=$TORCH_VERSION_CPP \
 #     --build-arg TF_VERSION_PY=$TF_VERSION_PY \
 #     --build-arg TF_VERSION_CPP=$TF_VERSION_CPP \
+#     --build-arg TRITON_VERSION=$TRITON_VERSION \
 #     --tag $IMAGE \
 #     .
 
 ARG BUILD_VERSION
-ARG UBUNTU_VERSION="20.04"
-ARG CUDA_VERSION=11.8
+ARG UBUNTU_VERSION="22.04"
+ARG CUDA_VERSION=12.2
 
-# === base (amd64) ===============================================================
-FROM ubuntu:${UBUNTU_VERSION} as base-amd64
+# === base (multiarch) ===============================================================
+FROM ubuntu:${UBUNTU_VERSION} as base
 
-# === base-ml (amd64) ============================================================
-FROM nvcr.io/nvidia/cuda:12.2.2-runtime-ubuntu22.04 as base-amd64-ml
+# === base-ml (multiarch) ============================================================
+FROM rwthika/cuda:${CUDA_VERSION}-cudnn-trt-ubuntu${UBUNTU_VERSION} as base-ml
 
-# === base (amd64) ===============================================================
-FROM ubuntu:${UBUNTU_VERSION} as base-arm64
-
-# === base-ml (amd64) ============================================================
-FROM nvcr.io/nvidia/l4t-cuda:12.2.12-runtime as base-arm64-ml
+# === base-triton (multiarch) ============================================================
+FROM rwthika/cuda:${CUDA_VERSION}-ubuntu${UBUNTU_VERSION} as base-triton
 
 # === dependencies ===================================================================
-FROM "base-${TARGETARCH}${BUILD_VERSION}" as dependencies
+FROM "base${BUILD_VERSION}" as dependencies
 
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
@@ -125,18 +123,77 @@ RUN apt-get update && \
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
 
 # --- install ML stuff ----------------------------------------------------
+# TODO: works only with CUDA 11.x / deprecated
 FROM ros as ros-ml
 ARG TARGETARCH
 
+# install PyTorch
+ARG TORCH_VERSION_PY
+RUN if [[ -n $TORCH_VERSION_PY ]]; then \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
+            if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then PT_PACKAGE_NAME=1.11.0+cu113; \
+            elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then PT_PACKAGE_NAME=2.0.1+cu118; \
+            else PT_PACKAGE_NAME=${TORCH_VERSION_PY}+cpu; fi && \
+            pip install torch==${PT_PACKAGE_NAME} -f https://download.pytorch.org/whl/torch_stable.html ; \
+        elif [[ "$TARGETARCH" == "arm64" ]]; then \
+            # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
+            # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
+            if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then TORCH_INSTALL=https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl; \
+            elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then TORCH_INSTALL=https://developer.download.nvidia.cn/compute/redist/jp/v511/pytorch/torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl; \
+            else TORCH_INSTALL=""; fi && \
+            python3 -m pip install --no-cache $TORCH_INSTALL && \
+            apt-get update && \
+            apt-get install -y libopenblas-base && \
+            rm -rf /var/lib/apt/lists/* ; \
+        fi ; \
+    fi
+
+# install PyTorch C++ API (not available for arm64)
+ARG TORCH_VERSION_CPP
+RUN if [[ -n $TORCH_VERSION_CPP ]]; then \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
+            if [[ "$TORCH_VERSION_CPP" = "1.11.0" ]]; then PT_CPP_URL=https://download.pytorch.org/libtorch/cu113/libtorch-cxx11-abi-shared-with-deps-1.11.0%2Bcu113.zip; \
+            elif [[ "$TORCH_VERSION_CPP" = "2.0.1" ]]; then PT_CPP_URL=https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip; \
+            else PT_CPP_URL=""; fi && \
+            wget -q -O /tmp/libtorch.zip ${PT_CPP_URL} && \
+            unzip /tmp/libtorch.zip -d /opt/ && \
+            rm /tmp/libtorch.zip ; \
+        fi ; \
+    fi
+
+# install TensorFlow C++ API incl. protobuf
+ARG TF_VERSION_CPP
+RUN if [[ -n $TF_VERSION_CPP ]]; then \
+        wget -q -O /tmp/libtensorflow-cc.deb "https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_CPP/+*/}/libtensorflow-cc_${TF_VERSION_CPP}-gpu_${TARGETARCH}.deb" && \
+        dpkg -i /tmp/libtensorflow-cc.deb && \
+        ldconfig && \
+        rm /tmp/libtensorflow-cc.deb ; \
+    fi
+
+# install TensorFlow
+ARG TF_VERSION_PY
+RUN if [[ -n $TF_VERSION_PY ]]; then \
+        PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}' | cut -d. -f1,2 | tr -d .) && \
+        ARCH=$(uname -m) && \
+        python3 -m pip install --no-cache https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_PY/+*/}/tensorflow-${TF_VERSION_PY}-cp${PYTHON_VERSION}-cp${PYTHON_VERSION}-linux_${ARCH}.whl; \
+    fi
+
+# --- install tritonclient ----------------------------------------------------
+FROM ros as ros-triton
+ARG TARGETARCH
+
 # install triton client
-RUN if [[ "$TARGETARCH" == "amd64" ]]; then \
-        wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v2.48.0/v2.48.0_ubuntu2204.clients.tar.gz; \
-    elif [[ "$TARGETARCH" == "arm64" ]]; then \
-        wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v2.48.0/tritonserver2.48.0-igpu.tar.gz; \
-    fi && \
-    mkdir -p /opt/tritonclient && \
-    tar -xzf /tmp/tritonclient.tar.gz -C /opt/tritonclient && \
-    rm /tmp/tritonclient.tar.gz
+ARG TRITON_VERSION
+RUN if [[ -n $TRITON_VERSION ]]; then \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
+            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/v${TRITON_VERSION}_ubuntu2204.clients.tar.gz; \
+        elif [[ "$TARGETARCH" == "arm64" ]]; then \
+            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/tritonserver${TRITON_VERSION}-igpu.tar.gz; \
+        fi && \
+        mkdir -p /opt/tritonclient && \
+        tar -xzf /tmp/tritonclient.tar.gz -C /opt/tritonclient && \
+        rm /tmp/tritonclient.tar.gz ; \
+    fi
 
 # === final ====================================================================
 FROM "ros${BUILD_VERSION}" as final
@@ -148,7 +205,8 @@ ENV DOCKER_GID=
 
 # print version information during login
 RUN echo "source /.version_information.sh" >> ~/.bashrc
-COPY .version_information.sh /
+ARG BUILD_VERSION
+COPY .version_information${BUILD_VERSION}.sh /.version_information.sh
 
 # container startup setup
 ENV WORKSPACE=/docker-ros/ws

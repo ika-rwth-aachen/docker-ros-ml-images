@@ -5,6 +5,7 @@ eval $(cat /etc/os-release | grep ^VERSION=)
 
 ARCH=$(uname -m)
 
+CUDA_VERSION=$(dpkg -l 2> /dev/null | grep -E "cuda-cudart-[0-9]" | awk '{ print $3 }')
 PYTHON_VERSION=$(python --version | awk '{print $2}')
 CMAKE_VERSION=$(cmake --version  | grep version | awk '{print $3}')
 if [[ $(command -v nvidia-smi) ]]; then
@@ -24,6 +25,8 @@ Python: $PYTHON_VERSION
 ROS: $ROS_DISTRO
 RMW: $RMW_IMPLEMENTATION
 CMake: $CMAKE_VERSION
+CUDA: $CUDA_VERSION
+Triton: $TRITON_VERSION
 Available GPUs: $NUM_GPUS
 $GPU_INFOS
 ================================================================================
