@@ -22,10 +22,33 @@ cuda:
     when: never
   - when: on_success
 
-torch:
+cuda-trt:
+  stage: Image Variations
+  trigger:
+    include: .gitlab-ci/ml-variations/ros-cuda-trt.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_CUDA_TRT == 'true'
+    when: never
+  - when: on_success
+
+triton:
   stage: Image Variations
   needs:
     - job: cuda
+      optional: true
+  trigger:
+    include: .gitlab-ci/ml-variations/ros-triton.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_TRITON == 'true'
+    when: never
+  - when: on_success
+
+torch:
+  stage: Image Variations
+  needs:
+    - job: cuda-trt
       optional: true
   trigger:
     include: .gitlab-ci/ml-variations/ros-torch.yml
@@ -64,7 +87,7 @@ torch-cpp:
 tf:
   stage: Image Variations
   needs:
-    - job: cuda
+    - job: cuda-trt
       optional: true
   trigger:
     include: .gitlab-ci/ml-variations/ros-tf.yml
