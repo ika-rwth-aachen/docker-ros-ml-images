@@ -135,7 +135,6 @@ RUN if [[ -n $TORCH_VERSION_PY ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
             if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then PT_PACKAGE_NAME=1.11.0+cu113; \
             elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then PT_PACKAGE_NAME=2.0.1+cu118; \
-            elif [[ "$TORCH_VERSION_PY" = "2.3.1" ]]; then PT_PACKAGE_NAME=2.3.1+cu121; \
             else PT_PACKAGE_NAME=${TORCH_VERSION_PY}+cpu; fi && \
             pip install `if [[ $UBUNTU_VERSION == "24.04" ]]; then echo "--break-system-packages"; fi` torch==${PT_PACKAGE_NAME} -f https://download.pytorch.org/whl/torch_stable.html ; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
@@ -157,7 +156,6 @@ RUN if [[ -n $TORCH_VERSION_CPP ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
             if [[ "$TORCH_VERSION_CPP" = "1.11.0" ]]; then PT_CPP_URL=https://download.pytorch.org/libtorch/cu113/libtorch-cxx11-abi-shared-with-deps-1.11.0%2Bcu113.zip; \
             elif [[ "$TORCH_VERSION_CPP" = "2.0.1" ]]; then PT_CPP_URL=https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip; \
-            elif [[ "$TORCH_VERSION_CPP" = "2.3.1" ]]; then PT_CPP_URL=https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.3.1%2Bcu121.zip; \
             else PT_CPP_URL=""; fi && \
             wget -q -O /tmp/libtorch.zip ${PT_CPP_URL} && \
             unzip /tmp/libtorch.zip -d /opt/ && \
@@ -177,7 +175,12 @@ RUN if [[ -n $TF_VERSION_CPP ]]; then \
 # install TensorFlow
 ARG TF_VERSION_PY
 RUN if [[ -n $TF_VERSION_PY ]]; then \
-        pip install `if [[ $UBUNTU_VERSION == "24.04" ]]; then echo "--break-system-packages"; fi` tensorflow==${TF_VERSION_PY}; \
+        apt-get update && \
+        apt-get install -y libhdf5-dev && \
+        rm -rf /var/lib/apt/lists/* && \
+        PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}' | cut -d. -f1,2 | tr -d .) && \
+        ARCH=$(uname -m) && \
+        pip install `if [[ $UBUNTU_VERSION == "24.04" ]]; then echo "--break-system-packages"; fi` --no-cache https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_PY/+*/}/tensorflow-${TF_VERSION_PY}-cp${PYTHON_VERSION}-cp${PYTHON_VERSION}-linux_${ARCH}.whl; \
     fi
 
 # --- install tritonclient ----------------------------------------------------
