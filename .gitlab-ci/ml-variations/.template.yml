@@ -42,6 +42,7 @@ variables:
         --build-arg TORCH_VERSION_CPP=$TORCH_VERSION_CPP
         --build-arg TF_VERSION_PY=$TF_VERSION_PY
         --build-arg TF_VERSION_CPP=$TF_VERSION_CPP
+        --build-arg TRITON_VERSION=$TRITON_VERSION
         --tag $IMAGE .
 
 .docker-push-manifest:

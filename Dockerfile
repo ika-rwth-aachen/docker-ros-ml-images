@@ -189,6 +189,7 @@ ARG TARGETARCH
 
 # install triton client
 ARG TRITON_VERSION
+ENV TRITON_VERSION=${TRITON_VERSION}
 RUN if [[ -n $TRITON_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
             wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/v${TRITON_VERSION}_ubuntu2204.clients.tar.gz; \

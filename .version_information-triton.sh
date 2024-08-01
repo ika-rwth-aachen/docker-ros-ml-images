@@ -5,6 +5,12 @@ eval $(cat /etc/os-release | grep ^VERSION=)
 
 ARCH=$(uname -m)
 
+if [[ -z "$RMW_IMPLEMENTATION" ]]; then
+  if ros2 pkg list | grep -q "rmw_fastrtps_cpp"; then
+    export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+  fi
+fi
+
 CUDA_VERSION=$(dpkg -l 2> /dev/null | grep -E "cuda-cudart-[0-9]" | awk '{ print $3 }')
 PYTHON_VERSION=$(python --version | awk '{print $2}')
 CMAKE_VERSION=$(cmake --version  | grep version | awk '{print $3}')
