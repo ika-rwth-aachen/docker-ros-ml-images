@@ -1,4 +1,0 @@
-include:
-  - .gitlab-ci/.template.yml
-  - .gitlab-ci/ros2-foxy/.ros2-foxy.yml
-  - .gitlab-ci/ros-packages/.desktop.yml
