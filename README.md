@@ -17,9 +17,7 @@
 > This repository is open-sourced and maintained by the [**Institute for Automotive Engineering (ika) at RWTH Aachen University**](https://www.ika.rwth-aachen.de/).
 > **DevOps, Containerization and Orchestration of Software-Defined Vehicles** are some of many research topics within our [*Vehicle Intelligence & Automated Driving*](https://www.ika.rwth-aachen.de/en/competences/fields-of-research/vehicle-intelligence-automated-driving.html) domain.
 > If you would like to learn more about how we can support your DevOps or automated driving efforts, feel free to reach out to us!
-> &nbsp;&nbsp;&nbsp;&nbsp; *Timo Woopen - Manager Research Area Vehicle Intelligence & Automated Driving*
-> &nbsp;&nbsp;&nbsp;&nbsp; *+49 241 80 23549*
-> &nbsp;&nbsp;&nbsp;&nbsp; *timo.woopen@ika.rwth-aachen.de*
+> :email: ***opensource@ika.rwth-aachen.de***
 
 We recommend to use *docker-ros-ml-images* in combination with our other tools for Docker and ROS.
 - [*docker-ros*](https://github.com/ika-rwth-aachen/docker-ros) automatically builds minimal container images of ROS applications <a href="https://github.com/ika-rwth-aachen/docker-ros"><img src="https://img.shields.io/github/stars/ika-rwth-aachen/docker-ros?style=social"/></a>
@@ -81,11 +79,11 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 </details>
 </blockquote>
 
-#### [`rwthika/ros-cuda`](https://hub.docker.com/r/rwthika/ros-cuda) (ROS + CUDA)
+#### [`rwthika/ros-cuda-trt`](https://hub.docker.com/r/rwthika/ros-cuda-trt) (ROS + CUDA + TensorRT)
 
 <blockquote>
 
-<a href="https://hub.docker.com/r/rwthika/ros-cuda"><img src="https://img.shields.io/docker/pulls/rwthika/ros-cuda"/></a>
+<a href="https://hub.docker.com/r/rwthika/ros-cuda-trt"><img src="https://img.shields.io/docker/pulls/rwthika/ros-cuda-trt"/></a>
 
 <details><summary>Click to expand</summary>
 
@@ -182,15 +180,18 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core`                     | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  |   ros-core   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `latest`, `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  |   ros-base   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 | `humble-desktop-full`                 | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  | desktop-full | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
+| `jazzy-ros-core`                      | amd64<br>arm64 | 24.04   | 3.12.3  | jazzy   |   ros-core   | 3.28.3 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
+| `jazzy`, `jazzy-ros-base`             | amd64<br>arm64 | 24.04   | 3.12.3  | jazzy   |   ros-base   | 3.28.3 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
+| `jazzy-desktop-full`                  | amd64<br>arm64 | 24.04   | 3.12.3  | jazzy   | desktop-full | 3.28.3 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
 
 </details>
 </blockquote>
 
-#### [`rwthika/ros2-cuda`](https://hub.docker.com/r/rwthika/ros2-cuda) (ROS 2 + CUDA)
+#### [`rwthika/ros2-cuda-trt`](https://hub.docker.com/r/rwthika/ros2-cuda-trt) (ROS 2 + CUDA + TensorRT)
 
 <blockquote>
 
-<a href="https://hub.docker.com/r/rwthika/ros2-cuda"><img src="https://img.shields.io/docker/pulls/rwthika/ros2-cuda"/></a>
+<a href="https://hub.docker.com/r/rwthika/ros2-cuda-trt"><img src="https://img.shields.io/docker/pulls/rwthika/ros2-cuda-trt"/></a>
 
 <details><summary>Click to expand</summary>
 
