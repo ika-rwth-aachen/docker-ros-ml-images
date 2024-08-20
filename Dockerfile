@@ -152,6 +152,9 @@ RUN if [[ -n $TORCH_VERSION_PY ]]; then \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
+            apt-get update && \
+            apt-get install -y libopenblas-base && \
+            rm -rf /var/lib/apt/lists/* ; \
             if [[ $UBUNTU_VERSION == "20.04" ]]; then \
                 pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION_PY}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
             else \
@@ -170,8 +173,9 @@ RUN if [[ -n $TF_VERSION_PY ]]; then \
             apt-get install -y libhdf5-dev && \
             rm -rf /var/lib/apt/lists/* && \
             if [[ $UBUNTU_VERSION == "20.04" ]]; then \
+                pip3 install h5py==3.7.0 && \
                 pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v512 tensorflow==${TF_VERSION_PY}+nv23.06; \
-            else \ 
+            else \
                 pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v60 tensorflow==${TF_VERSION_PY}+nv24.07; \
             fi; \
         fi; \
