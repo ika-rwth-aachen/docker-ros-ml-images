@@ -3,9 +3,11 @@ variables:
   ROS_VERSION: 2
   ROS_VERSION_NAME: ros2
   ROS_DISTRO: jazzy
-  DISABLE_CUDA: "true"
-  DISABLE_CUDA_TRT: "true"
-  DISABLE_TRITON: "true"
+  _TF_VERSION: 2.16.1
+  _TORCH_VERSION: 2.4.0
+  _TRITON_VERSION: 2.48.0
+  DISABLE_TENSORRT: "true"
   DISABLE_TORCH: "true"
   DISABLE_TF: "true"
   DISABLE_ML: "true"
+  DISABLE_ML_ARM64: "true"

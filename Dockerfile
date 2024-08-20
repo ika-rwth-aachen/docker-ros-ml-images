@@ -2,34 +2,49 @@
 #     --load \
 #     --platform $(uname)/$(uname -m) \
 #     --build-arg BUILD_VERSION=$BUILD_VERSION \
-#     --build-arg CUDA_VERSION=$CUDA_VERSION \
 #     --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
 #     --build-arg ROS_VERSION=$ROS_VERSION \
 #     --build-arg ROS_DISTRO=$ROS_DISTRO \
 #     --build-arg ROS_PACKAGE=$ROS_PACKAGE \
 #     --build-arg TORCH_VERSION_PY=$TORCH_VERSION_PY \
-#     --build-arg TORCH_VERSION_CPP=$TORCH_VERSION_CPP \
 #     --build-arg TF_VERSION_PY=$TF_VERSION_PY \
-#     --build-arg TF_VERSION_CPP=$TF_VERSION_CPP \
 #     --build-arg TRITON_VERSION=$TRITON_VERSION \
 #     --tag $IMAGE \
 #     .
 
 ARG BUILD_VERSION
 ARG UBUNTU_VERSION="22.04"
-ARG CUDA_VERSION=12.2
 
-# === base (multiarch) ===============================================================
-FROM ubuntu:${UBUNTU_VERSION} as base
+# === ubuntu base images ==========================================================================
+FROM --platform=amd64 ubuntu:20.04 as base-ubuntu20.04-amd64
+FROM --platform=amd64 ubuntu:22.04 as base-ubuntu22.04-amd64
+FROM --platform=amd64 ubuntu:24.04 as base-ubuntu24.04-amd64
 
-# === base-ml (multiarch) ============================================================
-FROM rwthika/cuda:${CUDA_VERSION}-cudnn-trt-ubuntu${UBUNTU_VERSION} as base-ml
+FROM --platform=arm64 ubuntu:20.04 as base-ubuntu20.04-arm64
+FROM --platform=arm64 ubuntu:22.04 as base-ubuntu22.04-arm64
+FROM --platform=arm64 ubuntu:24.04 as base-ubuntu24.04-arm64
 
-# === base-triton (multiarch) ============================================================
-FROM rwthika/cuda:${CUDA_VERSION}-ubuntu${UBUNTU_VERSION} as base-triton
+# === cuda base images ============================================================================
+FROM --platform=amd64 nvcr.io/nvidia/cuda:11.4.3-runtime-ubuntu20.04 as base-cuda-ubuntu20.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/cuda:12.2.2-runtime-ubuntu22.04 as base-cuda-ubuntu22.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.0-runtime-ubuntu24.04 as base-cuda-ubuntu24.04-amd64
 
-# === dependencies ===================================================================
-FROM "base${BUILD_VERSION}" as dependencies
+FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:11.4.19-runtime as base-cuda-ubuntu20.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.2.12-runtime as base-cuda-ubuntu22.04-arm64
+# no l4t-cuda image for ubuntu24 available
+
+# === tensorrt base images ========================================================================
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.04-py3 as base-tensorrt-ubuntu20.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.09-py3 as base-tensorrt-ubuntu22.04-amd64
+# no tensorrt image for ubuntu24 available
+
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.5.2-runtime as base-tensorrt-ubuntu20.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.6.2-runtime as base-tensorrt-ubuntu22.04-arm64
+# no l4t-tensorrt image for ubuntu24 available
+
+
+# === dependencies ================================================================================
+FROM "base${BUILD_VERSION}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}" as dependencies
 
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
@@ -73,7 +88,7 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
     apt-get install git-lfs && \
     rm -rf /var/lib/apt/lists/*
 
-# --- install and setup ROS ----------------------------------------------------
+# === install and setup ROS =======================================================================
 FROM dependencies as ros
 ARG TARGETARCH
 ARG UBUNTU_VERSION
@@ -124,9 +139,8 @@ RUN apt-get update && \
 # source ROS
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
 
-# --- install ML stuff ----------------------------------------------------
-# TODO: works only with CUDA 11.x / deprecated
-FROM ros as ros-ml
+# === install ML frameworks on tensorrt base ======================================================
+FROM ros as ros-tensorrt
 ARG TARGETARCH
 ARG UBUNTU_VERSION
 
@@ -134,58 +148,26 @@ ARG UBUNTU_VERSION
 ARG TORCH_VERSION_PY
 RUN if [[ -n $TORCH_VERSION_PY ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
-            if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then PT_PACKAGE_NAME=1.11.0+cu113; \
-            elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then PT_PACKAGE_NAME=2.0.1+cu118; \
-            else PT_PACKAGE_NAME=${TORCH_VERSION_PY}+cpu; fi && \
-            pip install torch==${PT_PACKAGE_NAME} -f https://download.pytorch.org/whl/torch_stable.html ; \
+            pip3 install torch==${TORCH_VERSION_PY}; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
-            if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then TORCH_INSTALL=https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl; \
-            elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then TORCH_INSTALL=https://developer.download.nvidia.cn/compute/redist/jp/v511/pytorch/torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl; \
-            else TORCH_INSTALL=""; fi && \
-            pip install --no-cache $TORCH_INSTALL && \
-            apt-get update && \
-            apt-get install -y libopenblas-base && \
-            rm -rf /var/lib/apt/lists/* ; \
-        fi ; \
-    fi
-
-# install PyTorch C++ API (not available for arm64)
-ARG TORCH_VERSION_CPP
-RUN if [[ -n $TORCH_VERSION_CPP ]]; then \
-        if [[ "$TARGETARCH" == "amd64" ]]; then \
-            if [[ "$TORCH_VERSION_CPP" = "1.11.0" ]]; then PT_CPP_URL=https://download.pytorch.org/libtorch/cu113/libtorch-cxx11-abi-shared-with-deps-1.11.0%2Bcu113.zip; \
-            elif [[ "$TORCH_VERSION_CPP" = "2.0.1" ]]; then PT_CPP_URL=https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip; \
-            else PT_CPP_URL=""; fi && \
-            wget -q -O /tmp/libtorch.zip ${PT_CPP_URL} && \
-            unzip /tmp/libtorch.zip -d /opt/ && \
-            rm /tmp/libtorch.zip ; \
-        fi ; \
-    fi
-
-# install TensorFlow C++ API incl. protobuf
-ARG TF_VERSION_CPP
-RUN if [[ -n $TF_VERSION_CPP ]]; then \
-        wget -q -O /tmp/libtensorflow-cc.deb "https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_CPP/+*/}/libtensorflow-cc_${TF_VERSION_CPP}-gpu_${TARGETARCH}.deb" && \
-        dpkg -i /tmp/libtensorflow-cc.deb && \
-        ldconfig && \
-        rm /tmp/libtensorflow-cc.deb ; \
+            pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/torch-${TORCH_VERSION_PY}a0+f70bd71a48.nv24.06.15634931-cp310-cp310-linux_aarch64.whl; \
+        fi; \
     fi
 
 # install TensorFlow
 ARG TF_VERSION_PY
 RUN if [[ -n $TF_VERSION_PY ]]; then \
-        apt-get update && \
-        apt-get install -y libhdf5-dev && \
-        rm -rf /var/lib/apt/lists/* && \
-        PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}' | cut -d. -f1,2 | tr -d .) && \
-        ARCH=$(uname -m) && \
-        pip install --no-cache https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_PY/+*/}/tensorflow-${TF_VERSION_PY}-cp${PYTHON_VERSION}-cp${PYTHON_VERSION}-linux_${ARCH}.whl; \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
+            pip3 install tensorflow==${TF_VERSION_PY}; \
+        elif [[ "$TARGETARCH" == "arm64" ]]; then \
+            pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v${JP_VERSION} tensorflow==${TF_VERSION_PY}+nv24.07; \
+        fi; \
     fi
 
-# --- install tritonclient ----------------------------------------------------
-FROM ros as ros-triton
+# === install tritonclient on cuda base ===========================================================
+FROM ros as ros-cuda
 ARG TARGETARCH
 
 # install triton client

@@ -3,4 +3,6 @@ variables:
   ROS_VERSION: 2
   ROS_VERSION_NAME: "ros2"
   ROS_DISTRO: iron
-  DISABLE_ML_ARM64: "true"
+  _TF_VERSION: 2.16.1
+  _TORCH_VERSION: 2.4.0
+  _TRITON_VERSION: 2.48.0

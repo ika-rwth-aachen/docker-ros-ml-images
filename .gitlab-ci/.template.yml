@@ -22,13 +22,13 @@ cuda:
     when: never
   - when: on_success
 
-cuda-trt:
+tensorrt:
   stage: Image Variations
   trigger:
-    include: .gitlab-ci/ml-variations/ros-cuda-trt.yml
+    include: .gitlab-ci/ml-variations/ros-tensorrt.yml
     strategy: depend
   rules:
-  - if: $DISABLE_CUDA_TRT == 'true'
+  - if: $DISABLE_TENSORRT == 'true'
     when: never
   - when: on_success
 
@@ -48,7 +48,7 @@ triton:
 torch:
   stage: Image Variations
   needs:
-    - job: cuda-trt
+    - job: tensorrt
       optional: true
   trigger:
     include: .gitlab-ci/ml-variations/ros-torch.yml
@@ -58,68 +58,16 @@ torch:
     when: never
   - when: on_success
 
-torch-py:
-  stage: Image Variations
-  needs:
-    - job: torch
-      optional: true
-  trigger:
-    include: .gitlab-ci/ml-variations/ros-torch-py.yml
-    strategy: depend
-  rules:
-  - if: $DISABLE_TORCH == 'true' || $DISABLE_TORCH_PY == 'true'
-    when: never
-  - when: on_success
-
-torch-cpp:
-  stage: Image Variations
-  needs:
-    - job: torch
-      optional: true
-  trigger:
-    include: .gitlab-ci/ml-variations/ros-torch-cpp.yml
-    strategy: depend
-  rules:
-  - if: $DISABLE_TORCH == 'true' || $DISABLE_TORCH_CPP == 'true'
-    when: never
-  - when: on_success
-
 tf:
   stage: Image Variations
   needs:
-    - job: cuda-trt
+    - job: tensorrt
       optional: true
   trigger:
     include: .gitlab-ci/ml-variations/ros-tf.yml
     strategy: depend
   rules:
   - if: $DISABLE_TF == 'true'
-    when: never
-  - when: on_success
-
-tf-py:
-  stage: Image Variations
-  needs:
-    - job: tf
-      optional: true
-  trigger:
-    include: .gitlab-ci/ml-variations/ros-tf-py.yml
-    strategy: depend
-  rules:
-  - if: $DISABLE_TF == 'true' || $DISABLE_TF_PY == 'true'
-    when: never
-  - when: on_success
-
-tf-cpp:
-  stage: Image Variations
-  needs:
-    - job: tf
-      optional: true
-  trigger:
-    include: .gitlab-ci/ml-variations/ros-tf-cpp.yml
-    strategy: depend
-  rules:
-  - if: $DISABLE_TF == 'true' || $DISABLE_TF_CPP == 'true'
     when: never
   - when: on_success
 

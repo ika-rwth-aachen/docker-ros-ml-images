@@ -3,5 +3,6 @@ variables:
   ROS_VERSION: 2
   ROS_VERSION_NAME: "ros2"
   ROS_DISTRO: rolling
-  DISABLE_CUDA: "true"
-  DISABLE_TRITON: "true"
+  _TF_VERSION: 2.12.0
+  _TORCH_VERSION: 2.1.0
+  _TRITON_VERSION: 2.48.0

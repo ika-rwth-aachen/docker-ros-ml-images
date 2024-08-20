@@ -1,5 +1,5 @@
 include:
-  - .gitlab-ci/ml-variations/ros-cuda-trt.yml
+  - .gitlab-ci/ml-variations/ros-tensorrt.yml
   - .gitlab-ci/ml-variations/.torch.yml
   - .gitlab-ci/ml-variations/.tf.yml
 
