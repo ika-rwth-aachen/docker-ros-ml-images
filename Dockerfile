@@ -152,7 +152,11 @@ RUN if [[ -n $TORCH_VERSION_PY ]]; then \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
-            pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/torch-${TORCH_VERSION_PY}a0+f70bd71a48.nv24.06.15634931-cp310-cp310-linux_aarch64.whl; \
+            if [[ $UBUNTU_VERSION == "20.04" ]]; then \
+                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION_PY}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
+            else \
+                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/torch-${TORCH_VERSION_PY}a0+f70bd71a48.nv24.06.15634931-cp310-cp310-linux_aarch64.whl; \
+            fi; \
         fi; \
     fi
 
@@ -162,7 +166,14 @@ RUN if [[ -n $TF_VERSION_PY ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
             pip3 install tensorflow==${TF_VERSION_PY}; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
-            pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v${JP_VERSION} tensorflow==${TF_VERSION_PY}+nv24.07; \
+            apt-get update && \
+            apt-get install -y libhdf5-dev && \
+            rm -rf /var/lib/apt/lists/* && \
+            if [[ $UBUNTU_VERSION == "20.04" ]]; then \
+                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v512 tensorflow==${TF_VERSION_PY}+nv23.06; \
+            else \ 
+                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v60 tensorflow==${TF_VERSION_PY}+nv24.07; \
+            fi; \
         fi; \
     fi
 
