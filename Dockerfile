@@ -216,7 +216,7 @@ ENV DOCKER_GID=
 # print version information during login
 RUN echo "source /.version_information.sh" >> ~/.bashrc
 ARG BUILD_VERSION
-COPY .version_information${BUILD_VERSION}.sh /.version_information.sh
+COPY .version_information.sh /.version_information.sh
 
 # container startup setup
 ENV WORKSPACE=/docker-ros/ws

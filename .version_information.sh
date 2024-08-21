@@ -11,7 +11,14 @@ if [[ -z "$RMW_IMPLEMENTATION" ]]; then
   fi
 fi
 
+CUDA_VERSION=$(dpkg -l 2> /dev/null | grep -E "cuda-cudart-[0-9]" | awk '{ print $3 }')
+CUDNN_VERSION=$(dpkg -l 2> /dev/null | grep -E "libcudnn[0-9] " | awk '{ print $3 }')
+TENSORRT_VERSION=$(dpkg -l 2> /dev/null | grep -E "libnvinfer[0-9] " | awk '{ print $3 }')
+
 PYTHON_VERSION=$(python --version | awk '{print $2}')
+TF_PIP_VERSION=$(python -c "exec(\"try:\n  import os; os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'; import tensorflow as tf; print(tf.__version__);\n\rexcept ImportError:\n  pass\")")
+PT_PIP_VERSION=$(python -c "exec(\"try:\n  import torch; print(torch.__version__);\n\rexcept ImportError:\n  pass\")")
+
 CMAKE_VERSION=$(cmake --version  | grep version | awk '{print $3}')
 if [[ $(command -v nvidia-smi) ]]; then
   NUM_GPUS=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
@@ -30,6 +37,12 @@ Python: $PYTHON_VERSION
 ROS: $ROS_DISTRO
 RMW: $RMW_IMPLEMENTATION
 CMake: $CMAKE_VERSION
+CUDA: $CUDA_VERSION
+cuDNN: $CUDNN_VERSION
+TensorRT: $TENSORRT_VERSION
+Triton: $TRITON_VERSION
+TensorFlow: $TF_PIP_VERSION
+PyTorch: $PT_PIP_VERSION
 Available GPUs: $NUM_GPUS
 $GPU_INFOS
 ================================================================================
