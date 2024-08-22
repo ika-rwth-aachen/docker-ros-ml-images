@@ -221,6 +221,10 @@ COPY .version_information.sh /.version_information.sh
 # container startup setup
 ENV WORKSPACE=/docker-ros/ws
 WORKDIR $WORKSPACE
+ENV TINI_VERSION=v0.19.0
+ARG TARGETARCH
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${TARGETARCH} /tini
+RUN chmod +x /tini
 COPY entrypoint.sh /
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/tini", "--", "/entrypoint.sh"]
 CMD ["bash"]
