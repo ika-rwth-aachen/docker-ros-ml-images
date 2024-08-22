@@ -86,8 +86,8 @@ RUN apt-get update && \
         x11-apps \
         zip \
     && rm -rf /var/lib/apt/lists/*
-RUN if [[ $UBUNTU_VERSION == "24.04" ]]; then python -m pip config --global set global.break-system-packages true; \
-    else python -m pip install --upgrade pip; fi
+RUN if [[ $UBUNTU_VERSION == "24.04" ]]; then python -m pip config --global set global.break-system-packages true; fi && \
+    python -m pip install --upgrade pip
 
 # install more essentials
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
