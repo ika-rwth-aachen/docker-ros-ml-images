@@ -53,7 +53,7 @@ USER root
 
 ARG TARGETARCH
 ARG UBUNTU_VERSION
-RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" ]]; then \
+RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" && $BUILD_VERSION != "" ]]; then \
         # bug in base image -> replace line in /etc/apt/sources.list to use "r36.3" instead of "r36.0"
         sed -i 's/https:\/\/repo.download.nvidia.com\/jetson\/common r36.0 main/https:\/\/repo.download.nvidia.com\/jetson\/common r36.3 main/g' /etc/apt/sources.list && \
         echo "deb https://repo.download.nvidia.com/jetson/t234 r36.3 main" >> /etc/apt/sources.list; \
