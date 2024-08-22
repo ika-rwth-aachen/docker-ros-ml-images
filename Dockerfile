@@ -1,7 +1,7 @@
 # docker buildx build \
 #     --load \
 #     --platform $(uname)/$(uname -m) \
-#     --build-arg BUILD_VERSION=$BUILD_VERSION \
+#     --build-arg BASE_IMAGE_TYPE=$BASE_IMAGE_TYPE \
 #     --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
 #     --build-arg ROS_VERSION=$ROS_VERSION \
 #     --build-arg ROS_DISTRO=$ROS_DISTRO \
@@ -12,7 +12,7 @@
 #     --tag $IMAGE \
 #     .
 
-ARG BUILD_VERSION
+ARG BASE_IMAGE_TYPE
 ARG UBUNTU_VERSION="22.04"
 
 # === ubuntu base images ==========================================================================
@@ -34,7 +34,7 @@ FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.2.12-runtime as base-cuda-ubunt
 # no l4t-cuda image for ubuntu24 available
 
 # === tensorrt base images ========================================================================
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.04-py3 as base-tensorrt-ubuntu20.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.04-py3 as base-tensorrt-ubuntu20.04-amd64 # TODO: change to version with CUDA 11.4
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.09-py3 as base-tensorrt-ubuntu22.04-amd64
 # no tensorrt image for ubuntu24 available
 
@@ -44,7 +44,7 @@ FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.6.2-runtime as base-tensorr
 
 
 # === dependencies ================================================================================
-FROM "base${BUILD_VERSION}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}" as dependencies
+FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}" as dependencies
 
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
@@ -53,7 +53,7 @@ USER root
 
 ARG TARGETARCH
 ARG UBUNTU_VERSION
-RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" && $BUILD_VERSION != "" ]]; then \
+RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" && $BASE_IMAGE_TYPE != "" ]]; then \
         # bug in base image -> replace line in /etc/apt/sources.list to use "r36.3" instead of "r36.0"
         sed -i 's/https:\/\/repo.download.nvidia.com\/jetson\/common r36.0 main/https:\/\/repo.download.nvidia.com\/jetson\/common r36.3 main/g' /etc/apt/sources.list && \
         echo "deb https://repo.download.nvidia.com/jetson/t234 r36.3 main" >> /etc/apt/sources.list; \
@@ -207,7 +207,7 @@ RUN if [[ -n $TRITON_VERSION ]]; then \
     fi
 
 # === final ====================================================================
-FROM "ros${BUILD_VERSION}" as final
+FROM "ros${BASE_IMAGE_TYPE}" as final
 
 # user setup
 ENV DOCKER_USER=dockeruser
@@ -216,7 +216,7 @@ ENV DOCKER_GID=
 
 # print version information during login
 RUN echo "source /.version_information.sh" >> ~/.bashrc
-ARG BUILD_VERSION
+ARG BASE_IMAGE_TYPE
 COPY .version_information.sh /.version_information.sh
 
 # container startup setup

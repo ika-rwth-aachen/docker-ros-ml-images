@@ -32,7 +32,7 @@ variables:
         --cache-from type=registry,ref=$IMAGE_CACHE
         --cache-to type=inline
         --platform $PLATFORM
-        --build-arg BUILD_VERSION=$BUILD_VERSION
+        --build-arg BASE_IMAGE_TYPE=$BASE_IMAGE_TYPE
         --build-arg UBUNTU_VERSION=$UBUNTU_VERSION
         --build-arg ROS_VERSION=$ROS_VERSION
         --build-arg ROS_DISTRO=$ROS_DISTRO
@@ -45,13 +45,13 @@ variables:
 .docker-push-manifest:
   script:
     - |-
-      if [[ "${DISABLE_AMD64}" != "true" ]] && [[ "${DISABLE_ML_AMD64}" != "true" || "${BUILD_VERSION}" == "" ]]; then
+      if [[ "${DISABLE_AMD64}" != "true" ]] && [[ "${DISABLE_ML_AMD64}" != "true" || "${BASE_IMAGE_TYPE}" == "" ]]; then
         docker pull ${IMAGE_CI}-amd64
         docker tag ${IMAGE_CI}-amd64 ${IMAGE}-amd64
         docker push ${IMAGE}-amd64
         AMD64_IS_ENABLED="true"
       fi
-      if [[ "${DISABLE_ARM64}" != "true" ]] && [[ "${DISABLE_ML_ARM64}" != "true" || "${BUILD_VERSION}" == "" ]]; then
+      if [[ "${DISABLE_ARM64}" != "true" ]] && [[ "${DISABLE_ML_ARM64}" != "true" || "${BASE_IMAGE_TYPE}" == "" ]]; then
         docker pull ${IMAGE_CI}-arm64
         docker tag ${IMAGE_CI}-arm64 ${IMAGE}-arm64
         docker push ${IMAGE}-arm64
@@ -77,7 +77,7 @@ build-amd64:
   rules:
     - if: $DISABLE_AMD64 == 'true'
       when: never
-    - if: $DISABLE_ML_AMD64 == 'true' && $BUILD_VERSION != ''
+    - if: $DISABLE_ML_AMD64 == 'true' && $BASE_IMAGE_TYPE != ''
       when: never
     - when: on_success
   script:
@@ -93,7 +93,7 @@ build-arm64:
   rules:
     - if: $DISABLE_ARM64 == 'true'
       when: never
-    - if: $DISABLE_ML_ARM64 == 'true' && $BUILD_VERSION != ''
+    - if: $DISABLE_ML_ARM64 == 'true' && $BASE_IMAGE_TYPE != ''
       when: never
     - when: on_success
   script:
