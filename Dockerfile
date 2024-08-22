@@ -34,7 +34,7 @@ FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.2.12-runtime AS base-cuda-ubunt
 # no l4t-cuda image for ubuntu24 available
 
 # === tensorrt base images ========================================================================
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.04-py3 AS base-tensorrt-ubuntu20.04-amd64 # TODO: change to version with CUDA 11.4
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.04-py3 AS base-tensorrt-ubuntu20.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.09-py3 AS base-tensorrt-ubuntu22.04-amd64
 # no tensorrt image for ubuntu24 available
 
