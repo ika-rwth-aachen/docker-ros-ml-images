@@ -16,35 +16,35 @@ ARG BASE_IMAGE_TYPE
 ARG UBUNTU_VERSION="22.04"
 
 # === ubuntu base images ==========================================================================
-FROM --platform=amd64 ubuntu:20.04 as base-ubuntu20.04-amd64
-FROM --platform=amd64 ubuntu:22.04 as base-ubuntu22.04-amd64
-FROM --platform=amd64 ubuntu:24.04 as base-ubuntu24.04-amd64
+FROM --platform=amd64 ubuntu:20.04 AS base-ubuntu20.04-amd64
+FROM --platform=amd64 ubuntu:22.04 AS base-ubuntu22.04-amd64
+FROM --platform=amd64 ubuntu:24.04 AS base-ubuntu24.04-amd64
 
-FROM --platform=arm64 ubuntu:20.04 as base-ubuntu20.04-arm64
-FROM --platform=arm64 ubuntu:22.04 as base-ubuntu22.04-arm64
-FROM --platform=arm64 ubuntu:24.04 as base-ubuntu24.04-arm64
+FROM --platform=arm64 ubuntu:20.04 AS base-ubuntu20.04-arm64
+FROM --platform=arm64 ubuntu:22.04 AS base-ubuntu22.04-arm64
+FROM --platform=arm64 ubuntu:24.04 AS base-ubuntu24.04-arm64
 
 # === cuda base images ============================================================================
-FROM --platform=amd64 nvcr.io/nvidia/cuda:11.4.3-runtime-ubuntu20.04 as base-cuda-ubuntu20.04-amd64
-FROM --platform=amd64 nvcr.io/nvidia/cuda:12.2.2-runtime-ubuntu22.04 as base-cuda-ubuntu22.04-amd64
-FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.0-runtime-ubuntu24.04 as base-cuda-ubuntu24.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/cuda:11.4.3-runtime-ubuntu20.04 AS base-cuda-ubuntu20.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/cuda:12.2.2-runtime-ubuntu22.04 AS base-cuda-ubuntu22.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.0-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-amd64
 
-FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:11.4.19-runtime as base-cuda-ubuntu20.04-arm64
-FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.2.12-runtime as base-cuda-ubuntu22.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:11.4.19-runtime AS base-cuda-ubuntu20.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.2.12-runtime AS base-cuda-ubuntu22.04-arm64
 # no l4t-cuda image for ubuntu24 available
 
 # === tensorrt base images ========================================================================
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.04-py3 as base-tensorrt-ubuntu20.04-amd64 # TODO: change to version with CUDA 11.4
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.09-py3 as base-tensorrt-ubuntu22.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.04-py3 AS base-tensorrt-ubuntu20.04-amd64 # TODO: change to version with CUDA 11.4
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.09-py3 AS base-tensorrt-ubuntu22.04-amd64
 # no tensorrt image for ubuntu24 available
 
-FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.5.2-runtime as base-tensorrt-ubuntu20.04-arm64
-FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.6.2-runtime as base-tensorrt-ubuntu22.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.5.2-runtime AS base-tensorrt-ubuntu20.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.6.2-runtime AS base-tensorrt-ubuntu22.04-arm64
 # no l4t-tensorrt image for ubuntu24 available
 
 
 # === dependencies ================================================================================
-FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}" as dependencies
+FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}" AS dependencies
 
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
@@ -96,7 +96,7 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
     rm -rf /var/lib/apt/lists/*
 
 # === install and setup ROS =======================================================================
-FROM dependencies as ros
+FROM dependencies AS ros
 ARG TARGETARCH
 ARG UBUNTU_VERSION
 
@@ -147,7 +147,7 @@ RUN apt-get update && \
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
 
 # === install ML frameworks on tensorrt base ======================================================
-FROM ros as ros-tensorrt
+FROM ros AS ros-tensorrt
 ARG TARGETARCH
 ARG UBUNTU_VERSION
 
@@ -189,7 +189,7 @@ RUN if [[ -n $TF_VERSION ]]; then \
     fi
 
 # === install tritonclient on cuda base ===========================================================
-FROM ros as ros-cuda
+FROM ros AS ros-cuda
 ARG TARGETARCH
 
 # install triton client
@@ -207,7 +207,7 @@ RUN if [[ -n $TRITON_VERSION ]]; then \
     fi
 
 # === final ====================================================================
-FROM "ros${BASE_IMAGE_TYPE}" as final
+FROM "ros${BASE_IMAGE_TYPE}" AS final
 
 # user setup
 ENV DOCKER_USER=dockeruser
