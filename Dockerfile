@@ -216,7 +216,6 @@ ENV DOCKER_GID=
 
 # print version information during login
 RUN echo "source /.version_information.sh" >> ~/.bashrc
-ARG BASE_IMAGE_TYPE
 COPY .version_information.sh /.version_information.sh
 
 # container startup setup
