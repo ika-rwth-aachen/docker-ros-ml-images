@@ -6,8 +6,8 @@
 #     --build-arg ROS_VERSION=$ROS_VERSION \
 #     --build-arg ROS_DISTRO=$ROS_DISTRO \
 #     --build-arg ROS_PACKAGE=$ROS_PACKAGE \
-#     --build-arg TORCH_VERSION_PY=$TORCH_VERSION_PY \
-#     --build-arg TF_VERSION_PY=$TF_VERSION_PY \
+#     --build-arg TORCH_VERSION=$TORCH_VERSION \
+#     --build-arg TF_VERSION=$TF_VERSION \
 #     --build-arg TRITON_VERSION=$TRITON_VERSION \
 #     --tag $IMAGE \
 #     .
@@ -152,10 +152,10 @@ ARG TARGETARCH
 ARG UBUNTU_VERSION
 
 # install PyTorch
-ARG TORCH_VERSION_PY
-RUN if [[ -n $TORCH_VERSION_PY ]]; then \
+ARG TORCH_VERSION
+RUN if [[ -n $TORCH_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
-            pip3 install torch==${TORCH_VERSION_PY}; \
+            pip3 install torch==${TORCH_VERSION}; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
@@ -163,27 +163,27 @@ RUN if [[ -n $TORCH_VERSION_PY ]]; then \
             apt-get install -y libopenblas-base && \
             rm -rf /var/lib/apt/lists/* ; \
             if [[ $UBUNTU_VERSION == "20.04" ]]; then \
-                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION_PY}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
+                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
             else \
-                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/torch-${TORCH_VERSION_PY}a0+f70bd71a48.nv24.06.15634931-cp310-cp310-linux_aarch64.whl; \
+                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/torch-${TORCH_VERSION}a0+f70bd71a48.nv24.06.15634931-cp310-cp310-linux_aarch64.whl; \
             fi; \
         fi; \
     fi
 
 # install TensorFlow
-ARG TF_VERSION_PY
-RUN if [[ -n $TF_VERSION_PY ]]; then \
+ARG TF_VERSION
+RUN if [[ -n $TF_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
-            pip3 install tensorflow==${TF_VERSION_PY}; \
+            pip3 install tensorflow==${TF_VERSION}; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             apt-get update && \
             apt-get install -y libhdf5-dev && \
             rm -rf /var/lib/apt/lists/* && \
             if [[ $UBUNTU_VERSION == "20.04" ]]; then \
                 pip3 install h5py==3.7.0 && \
-                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v512 tensorflow==${TF_VERSION_PY}+nv23.06; \
+                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v512 tensorflow==${TF_VERSION}+nv23.06; \
             else \
-                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v60 tensorflow==${TF_VERSION_PY}+nv24.07; \
+                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v60 tensorflow==${TF_VERSION}+nv24.07; \
             fi; \
         fi; \
     fi

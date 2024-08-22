@@ -327,9 +327,7 @@ docker buildx build \
   --build-arg ROS_VERSION=$ROS_VERSION \
   --build-arg ROS_DISTRO=$ROS_DISTRO \
   --build-arg ROS_PACKAGE=$ROS_PACKAGE \
-  --build-arg TORCH_VERSION_PY=$TORCH_VERSION_PY \
-  --build-arg TORCH_VERSION_CPP=$TORCH_VERSION_CPP \
-  --build-arg TF_VERSION_PY=$TF_VERSION_PY \
-  --build-arg TF_VERSION_CPP=$TF_VERSION_CPP \
+  --build-arg TORCH_VERSION=$TORCH_VERSION \
+  --build-arg TF_VERSION=$TF_VERSION \
   --tag $IMAGE .
 ```

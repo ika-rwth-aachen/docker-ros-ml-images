@@ -1,2 +1,2 @@
 variables:
-  TF_VERSION_PY: ${_TF_VERSION}
+  TF_VERSION: ${_TF_VERSION}
