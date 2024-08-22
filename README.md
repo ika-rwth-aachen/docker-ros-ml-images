@@ -13,10 +13,10 @@
 
 *docker-ros-ml-images* provides machine learning-enabled ROS Docker images.
 
-> [!IMPORTANT]
-> This repository is open-sourced and maintained by the [**Institute for Automotive Engineering (ika) at RWTH Aachen University**](https://www.ika.rwth-aachen.de/).
-> **DevOps, Containerization and Orchestration of Software-Defined Vehicles** are some of many research topics within our [*Vehicle Intelligence & Automated Driving*](https://www.ika.rwth-aachen.de/en/competences/fields-of-research/vehicle-intelligence-automated-driving.html) domain.
-> If you would like to learn more about how we can support your DevOps or automated driving efforts, feel free to reach out to us!
+> [!IMPORTANT]  
+> This repository is open-sourced and maintained by the [**Institute for Automotive Engineering (ika) at RWTH Aachen University**](https://www.ika.rwth-aachen.de/).  
+> **DevOps, Containerization and Orchestration of Software-Defined Vehicles** are some of many research topics within our [*Vehicle Intelligence & Automated Driving*](https://www.ika.rwth-aachen.de/en/competences/fields-of-research/vehicle-intelligence-automated-driving.html) domain.  
+> If you would like to learn more about how we can support your advanced driver assistance and automated driving efforts, feel free to reach out to us!  
 > :email: ***opensource@ika.rwth-aachen.de***
 
 We recommend to use *docker-ros-ml-images* in combination with our other tools for Docker and ROS.
