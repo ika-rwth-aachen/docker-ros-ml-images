@@ -51,12 +51,19 @@ SHELL ["/bin/bash", "-c"]
 
 USER root
 
+ARG BASE_IMAGE_TYPE
 ARG TARGETARCH
 ARG UBUNTU_VERSION
 RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" && $BASE_IMAGE_TYPE != "" ]]; then \
         # bug in base image -> replace line in /etc/apt/sources.list to use "r36.3" instead of "r36.0"
         sed -i 's/https:\/\/repo.download.nvidia.com\/jetson\/common r36.0 main/https:\/\/repo.download.nvidia.com\/jetson\/common r36.3 main/g' /etc/apt/sources.list && \
         echo "deb https://repo.download.nvidia.com/jetson/t234 r36.3 main" >> /etc/apt/sources.list; \
+    elif [[ $TARGETARCH == "amd64" && $BASE_IMAGE_TYPE == "-tensorrt" ]]; then \
+        # add cuda apt repository for tensorrt base images
+        echo "HI" && \
+        wget -q -O /tmp/cuda-keyring_1.0-1_all.deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION/./}/x86_64/cuda-keyring_1.0-1_all.deb && \
+        dpkg -i /tmp/cuda-keyring_1.0-1_all.deb && \
+        rm -rf /tmp/cuda-keyring_1.0-1_all.deb; \
     fi
 
 # install essentials via apt
