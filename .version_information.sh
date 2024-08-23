@@ -5,7 +5,7 @@ eval $(cat /etc/os-release | grep ^VERSION=)
 
 ARCH=$(uname -m)
 
-if [[ -z "$RMW_IMPLEMENTATION" ]]; then
+if [[ -z "$RMW_IMPLEMENTATION" && $ROS_DISTRO != "noetic" ]]; then
   if ros2 pkg list | grep -q "rmw_fastrtps_cpp"; then
     export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
   fi
