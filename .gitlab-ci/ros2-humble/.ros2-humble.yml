@@ -1,8 +1,7 @@
+include:
+  - .gitlab-ci/os/.ubuntu22.yml
+
 variables:
-  UBUNTU_VERSION: "22.04"
   ROS_VERSION: 2
   ROS_VERSION_NAME: "ros2"
   ROS_DISTRO: humble
-  _TF_VERSION: 2.16.1
-  _TORCH_VERSION: 2.4.0
-  _TRITON_VERSION: 2.48.0
