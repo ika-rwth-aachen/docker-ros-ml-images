@@ -164,7 +164,7 @@ ros2-rolling-ros-base:
     include: .gitlab-ci/ros2-rolling/ros2-rolling-ros-base.yml
     strategy: depend
 
-ros2-rolling-desktop:
+ros2-rolling-desktop-full:
   stage: ROS 2 Rolling
   rules:
     - if: $ROS_DISTROS =~ /.*rolling.*/
@@ -172,5 +172,5 @@ ros2-rolling-desktop:
     - job: ros2-rolling-ros-base
       optional: true
   trigger:
-    include: .gitlab-ci/ros2-rolling/ros2-rolling-desktop.yml
+    include: .gitlab-ci/ros2-rolling/ros2-rolling-desktop-full.yml
     strategy: depend
