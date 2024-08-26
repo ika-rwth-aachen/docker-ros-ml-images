@@ -73,6 +73,7 @@ RUN apt-get update && \
     apt-get install -y \
         bsdmainutils \
         build-essential \
+        bash-completion \
         curl \
         dirmngr \
         gdb \
@@ -97,6 +98,9 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 RUN if [[ $UBUNTU_VERSION == "24.04" ]]; then python -m pip config --global set global.break-system-packages true; \
     else python -m pip install --upgrade pip; fi
+
+# enable bash completion
+RUN sed -i '/^#if \[ -f \/etc\/bash_completion \]/,/^#fi/ s/^#//' ~/.bashrc
 
 # install more essentials
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
