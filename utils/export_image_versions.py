@@ -49,14 +49,14 @@ def get_tool_versions(image_name):
             result[tool] = f"Error: {e.output.decode('utf-8').strip()}"
     return result
 
-def export_to_csv(data, file_path):
+def export_to_csv(data, file_path, arch):
     with open(file_path, 'w') as csvfile:
         field_names = ["Tag"] + list(VERSION_GETTER_COMMANDS.keys())
         writer = csv.DictWriter(csvfile, fieldnames = field_names)
         writer.writeheader()
         for image in data:
-            short_image = image.split("/")[-1]
-            writer.writerow({"Tag": short_image, **data[image]})
+            image_tag = "`" + image.split("/")[-1].replace(f"-{arch}", "") + "`"
+            writer.writerow({"Tag": image_tag, **data[image]})
 
 def main():
     args = parse_arguments()
@@ -70,7 +70,7 @@ def main():
         for image in pbar:
             pbar.set_postfix(image=image)
             all_versions[image] = get_tool_versions(image)
-    export_to_csv(all_versions, os.path.join(SCRIPT_PATH, f"image_versions-{args.arch}.csv"))
+    export_to_csv(all_versions, os.path.join(SCRIPT_PATH, f"image_versions-{args.arch}.csv"), args.arch)
 
 if __name__ == "__main__":
     main()
