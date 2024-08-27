@@ -178,7 +178,13 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
             if [[ $UBUNTU_VERSION == "20.04" ]]; then \
                 pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
             else \
-                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/torch-${TORCH_VERSION}a0+f70bd71a48.nv24.06.15634931-cp310-cp310-linux_aarch64.whl; \
+                wget -q -O /tmp/cusparselt-local-tegra-repo-ubuntu2204-0.6.2_1.0-1_arm64.deb https://developer.download.nvidia.com/compute/cusparselt/0.6.2/local_installers/cusparselt-local-tegra-repo-ubuntu2204-0.6.2_1.0-1_arm64.deb && \
+                dpkg -i /tmp/cusparselt-local-tegra-repo-ubuntu2204-0.6.2_1.0-1_arm64.deb && \
+                mv /var/cusparselt-local-tegra-repo-ubuntu2204-0.6.2/cusparselt-*-keyring.gpg /usr/share/keyrings/ && \
+                apt-get update && \
+                apt-get install -y cuda-cupti-12-2 libcusparselt0 && \
+                rm -rf /var/lib/apt/lists/* && \
+                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/torch-${TORCH_VERSION}a0+3bcc3cddb5.nv24.07.16234504-cp310-cp310-linux_aarch64.whl; \
             fi; \
         fi; \
     fi
