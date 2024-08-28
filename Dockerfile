@@ -238,9 +238,6 @@ ENV DOCKER_GID=
 RUN echo "source /.version_information.sh" >> ~/.bashrc
 COPY .version_information.sh /.version_information.sh
 
-# remove docker-clean rule to enable auto-completion for apt commands
-RUN  rm -f /etc/apt/apt.conf.d/docker-clean
-
 # container startup setup
 ENV WORKSPACE=/docker-ros/ws
 WORKDIR $WORKSPACE
