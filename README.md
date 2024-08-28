@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/ROS-noetic-blueviolet"/>
   <img src="https://img.shields.io/badge/ROS 2-humble|iron|jazzy|rolling-blueviolet"/>
   <img src="https://img.shields.io/badge/NVIDIA Triton-2.48.0-darkgreen"/>
-  <img src="https://img.shields.io/badge/PyTorch-2.4.0-red"/>
+  <img src="https://img.shields.io/badge/PyTorch-2.3.0-red"/>
   <img src="https://img.shields.io/badge/TensorFlow-2.16.1-orange"/>
 </p>
 

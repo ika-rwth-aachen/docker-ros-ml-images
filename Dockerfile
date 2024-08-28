@@ -168,23 +168,24 @@ ARG UBUNTU_VERSION
 ARG TORCH_VERSION
 RUN if [[ -n $TORCH_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
-            pip3 install torch==${TORCH_VERSION}; \
+            pip3 install torch==${TORCH_VERSION} && \
+            if [[ "$TORCH_VERSION" == "2.3.0" ]]; then pip3 install torchversion==0.18.0; fi; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
             apt-get update && \
-            apt-get install -y libopenblas-base && \
+            apt-get install -y libopenblas-base libopenmpi-dev libomp-dev && \
             rm -rf /var/lib/apt/lists/* ; \
             if [[ $UBUNTU_VERSION == "20.04" ]]; then \
                 pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
             else \
-                wget -q -O /tmp/cusparselt-local-tegra-repo-ubuntu2204-0.6.2_1.0-1_arm64.deb https://developer.download.nvidia.com/compute/cusparselt/0.6.2/local_installers/cusparselt-local-tegra-repo-ubuntu2204-0.6.2_1.0-1_arm64.deb && \
-                dpkg -i /tmp/cusparselt-local-tegra-repo-ubuntu2204-0.6.2_1.0-1_arm64.deb && \
-                mv /var/cusparselt-local-tegra-repo-ubuntu2204-0.6.2/cusparselt-*-keyring.gpg /usr/share/keyrings/ && \
                 apt-get update && \
-                apt-get install -y cuda-cupti-12-2 libcusparselt0 && \
+                apt-get install -y cuda-cupti-12-2 && \
                 rm -rf /var/lib/apt/lists/* && \
-                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v60/pytorch/torch-${TORCH_VERSION}a0+3bcc3cddb5.nv24.07.16234504-cp310-cp310-linux_aarch64.whl; \
+                wget -q -O /tmp/torch-${TORCH_VERSION}-cp310-cp310-linux_aarch64.whl https://nvidia.box.com/shared/static/mp164asf3sceb570wvjsrezk1p4ftj8t.whl && \
+                wget -q -O /tmp/torchvision-0.18.0a0+6043bc2-cp310-cp310-linux_aarch64.whl https://nvidia.box.com/shared/static/xpr06qe6ql3l6rj22cu3c45tz1wzi36p.whl && \
+                pip install --no-cache /tmp/torch*.whl && \
+                rm -f /tmp/torch*.whl; \
             fi; \
         fi; \
     fi
