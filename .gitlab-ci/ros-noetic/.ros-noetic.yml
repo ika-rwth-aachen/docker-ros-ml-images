@@ -1,5 +1,7 @@
+include:
+  - .gitlab-ci/os/.ubuntu20.yml
+
 variables:
-  UBUNTU_VERSION: "20.04"
   ROS_VERSION: 1
   ROS_VERSION_NAME: "ros"
   ROS_DISTRO: noetic

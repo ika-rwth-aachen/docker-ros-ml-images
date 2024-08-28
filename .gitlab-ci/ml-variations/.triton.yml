@@ -1,0 +1,2 @@
+variables:
+  TRITON_VERSION: ${_TRITON_VERSION}

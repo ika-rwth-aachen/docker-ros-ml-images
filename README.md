@@ -4,12 +4,13 @@
   <img src="https://img.shields.io/github/v/release/ika-rwth-aachen/docker-ros-ml-images"/></a>
   <img src="https://img.shields.io/github/license/ika-rwth-aachen/docker-ros-ml-images"/>
   <img src="https://img.shields.io/badge/ROS-noetic-blueviolet"/>
-  <img src="https://img.shields.io/badge/ROS 2-foxy|humble|iron|rolling-blueviolet"/>
-  <img src="https://img.shields.io/badge/PyTorch-2.0-red"/>
-  <img src="https://img.shields.io/badge/TensorFlow-2.11-orange"/>
+  <img src="https://img.shields.io/badge/ROS 2-humble|iron|jazzy|rolling-blueviolet"/>
+  <img src="https://img.shields.io/badge/NVIDIA Triton-2.48.0-darkgreen"/>
+  <img src="https://img.shields.io/badge/PyTorch-2.3.0-red"/>
+  <img src="https://img.shields.io/badge/TensorFlow-2.16.1-orange"/>
 </p>
 
-*docker-ros-ml-images* provides machine learning-enabled ROS Docker images.
+*docker-ros-ml-images* provides multi-arch machine learning-enabled ROS Docker images.
 
 > [!IMPORTANT]  
 > This repository is open-sourced and maintained by the [**Institute for Automotive Engineering (ika) at RWTH Aachen University**](https://www.ika.rwth-aachen.de/).  
@@ -22,6 +23,12 @@ We recommend to use *docker-ros-ml-images* in combination with our other tools f
 - [*docker-run*](https://github.com/ika-rwth-aachen/docker-run) is a CLI tool for simplified interaction with Docker images <a href="https://github.com/ika-rwth-aachen/docker-run"><img src="https://img.shields.io/github/stars/ika-rwth-aachen/docker-run?style=social"/></a>
 
 
+## Quick Links to Available Images
+
+[`ros2`](#rwthikaros2-ros-2) | [`ros2-cuda`](#rwthikaros2-cuda-ros-2-nvidia-cuda) | [`ros2-tensorrt`](#rwthikaros2-tensorrt-ros-2-nvidia-cuda-nvidia-tensorrt) | [`ros2-triton`](#rwthikaros2-triton-ros-2-nvidia-cuda-nvidia-triton-client) | [`ros2-torch`](#rwthikaros2-torch-ros-2-nvidia-cuda-nvidia-tensorrt-pytorch) | [`ros2-tf`](#rwthikaros2-tf-ros-2-nvidia-cuda-nvidia-tensorrt-tensorflow) | [`ros2-ml`](#rwthikaros2-ml-ros-2-nvidia-cuda-nvidia-tensorrt-pytorch-tensorflow)  
+[`ros`](#rwthikaros-ros) | [`ros-cuda`](#rwthikaros-cuda-ros-nvidia-cuda) | [`ros-tensorrt`](#rwthikaros-tensorrt-ros-nvidia-cuda-nvidia-tensorrt) | [`ros-triton`](#rwthikaros-triton-ros-nvidia-cuda-nvidia-triton-client) | [`ros-torch`](#rwthikaros-torch-ros-nvidia-cuda-nvidia-tensorrt-pytorch) | [`ros-tf`](#rwthikaros-tf-ros-nvidia-cuda-nvidia-tensorrt-tensorflow) | [`ros-ml`](#rwthikaros-ml-ros-nvidia-cuda-nvidia-tensorrt-pytorch-tensorflow)
+
+
 ## Quick Start
 
 ```bash
@@ -32,14 +39,20 @@ docker run --rm rwthika/ros2-ml:humble \
 
 ## Variations
 
-With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch machine learning-enabled ROS Docker images. Each of the provided Docker images includes support for popular machine learning frameworks in addition to a ROS distribution. Currently, the supported machine learning frameworks are [*PyTorch*](https://pytorch.org/) and [*TensorFlow*](https://www.tensorflow.org/). Since robotic applications are often implemented in C++ instead of Python for performance reasons, we also offer the C++ APIs of both frameworks. Combining the components listed the table below, we have built more than 100 multi-arch images and make them publicly available on [DockerHub](https://hub.docker.com/u/rwthika). In addition to the provided images, we also publish the [generic Dockerfile](./Dockerfile) used to flexibly build images combining the different components.
+With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch machine learning-enabled ROS Docker images. Starting with plain ROS images, we offer successively larger ROS base images that also come with [*NVIDIA CUDA*](https://developer.nvidia.com/cuda-toolkit), [*NVIDIA TensorRT*](https://developer.nvidia.com/tensorrt), [*NVIDIA Triton Client*](https://developer.nvidia.com/triton-inference-server), [*PyTorch*](https://pytorch.org/) and/or [*TensorFlow*](https://www.tensorflow.org/) installations. Combining the components listed in the table below, we have built more than 100 multi-arch images and make them publicly available on [DockerHub](https://hub.docker.com/u/rwthika). In addition to the provided images, we also publish the [generic Dockerfile](./Dockerfile) used to flexibly build images combining the different components.
 
-| Component        | Variations                                                           |
-| ---------------- | -------------------------------------------------------------------- |
-| ROS Distribution | noetic, foxy, humble, iron, rolling                                  |
-| ROS Components   | core, base, desktop, desktop-full                                    |
-| ML Framework     | CUDA, PyTorch Python, PyTorch C++, TensorFlow Python, TensorFlow C++ |
-| Architecture     | amd64, arm64                                                         |
+| Component        | Variations                                                              |
+| ---------------- | ----------------------------------------------------------------------- |
+| ROS Distribution | noetic, humble, iron, jazzy, rolling                                    |
+| ROS Components   | core, base, desktop-full                                                |
+| ML Framework     | NVIDIA CUDA, NVIDIA TensorRT, NVIDIA Triton Client, PyTorch, TensorFlow |
+| Architecture     | amd64, arm64                                                            |
+
+> [!NOTE]
+> All images are targeted at NVIDIA GPUs and therefore base off of official [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). The arm64 images, in particular, target NVIDIA Jetson SoCs and are based off of [NVIDIA L4T base images](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base). Ubuntu 22 images are provided with JetPack 6, Ubuntu 20 images with JetPack 5.
+
+> [!NOTE]
+> Since robotic applications are often implemented in C++ instead of Python for performance reasons, previous releases of our images also shipped with the C++ APIs of PyTorch and TensorFlow. Installing the C++ libraries often involves cumbersome building from source, so we have decided to drop PyTorch/TensorFlow C++ support for more frequent releases. You may still find those images with ML C++ support under the [23.08 release](https://hub.docker.com/r/rwthika/ros2-ml/tags?page=&page_size=&ordering=&name=-v23.08).
 
 
 ## Image Configuration
@@ -57,115 +70,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 ## Available Images
 
-### ROS
-
-#### [`rwthika/ros`](https://hub.docker.com/r/rwthika/ros) (ROS)
-
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros"><img src="https://img.shields.io/docker/pulls/rwthika/ros"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                   |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  | CUDA  | cuDNN | TensorRT | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
-| ------------------------------------- | :------------: | :-----: | :----: | :----: | :----------: | :----: | :---: | :---: | :------: | :------------: | :---------: | :---------------: | :------------: |
-| `noetic-ros-core`                     | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-core   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `latest`, `noetic`, `noetic-ros-base` | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-base   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `noetic-desktop`                      | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   desktop    | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `noetic-desktop-full`                 | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic | desktop-full | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-
-</details>
-</blockquote>
-
-#### [`rwthika/ros-cuda`](https://hub.docker.com/r/rwthika/ros-cuda) (ROS + CUDA)
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros-cuda"><img src="https://img.shields.io/docker/pulls/rwthika/ros-cuda"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                   |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  |  CUDA   | cuDNN | TensorRT | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
-| ------------------------------------- | :------------: | :-----: | :----: | :----: | :----------: | :----: | :-----: | :---: | :------: | :------------: | :---------: | :---------------: | :------------: |
-| `noetic-ros-core`                     | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-core   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `latest`, `noetic`, `noetic-ros-base` | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-base   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `noetic-desktop`                      | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   desktop    | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-| `noetic-desktop-full`                 | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic | desktop-full | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |       -        |
-
-</details>
-</blockquote>
-
-#### [`rwthika/ros-torch`](https://hub.docker.com/r/rwthika/ros-torch) (ROS + PyTorch)
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros-torch"><img src="https://img.shields.io/docker/pulls/rwthika/ros-torch"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                              |      Arch      |    Ubuntu    |   Python    |     ROS     |   ROS Packages    |    CMake    |     CUDA     |   cuDNN    |  TensorRT  | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
-| ------------------------------------------------ | :------------: | :----------: | :---------: | :---------: | :---------------: | :---------: | :----------: | :--------: | :--------: | :------------: | :---------: | :---------------: | :------------: |
-| `noetic-ros-core-torch2.0.1`                     | amd64<br>arm64 |   20.04.6    |   3.8.10    |   noetic    |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `latest`, `noetic`, `noetic-ros-base-torch2.0.1` | amd64<br>arm64 |   20.04.6    |   3.8.10    |   noetic    |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `noetic-desktop-torch2.0.1`                      | amd64<br>arm64 |   20.04.6    |   3.8.10    |   noetic    |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `noetic-desktop-full-torch2.0.1`                 | amd64<br>arm64 |   20.04.6    |   3.8.10    |   noetic    |   desktop-full    |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `noetic-ros-core-torch2.0.1-py`                  | amd64<br>arm64 |   20.04.6    |   3.8.10    |   noetic    |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `noetic-ros-base-torch2.0.1-py`                  | amd64<br>arm64 |   20.04.6    |   3.8.10    |   noetic    |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `noetic-desktop-torch2.0.1-py`                   | amd64<br>arm64 |   20.04.6    |   3.8.10    |   noetic    |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `noetic-desktop-full-torch2.0.1-py`              | amd64<br>arm64 |   20.04.6    |   3.8.10    |   noetic    |   desktop-full    |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `noetic-ros-core-torch2.0.1-cpp`                 |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>- | noetic<br>- |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `noetic-ros-base-torch2.0.1-cpp`                 |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>- | noetic<br>- |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `noetic-desktop-torch2.0.1-cpp`                  |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>- | noetic<br>- |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `noetic-desktop-full-torch2.0.1-cpp`             |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>- | noetic<br>- | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-
-</details>
-</blockquote>
-
-#### [`rwthika/ros-tf`](https://hub.docker.com/r/rwthika/ros-tf) (ROS + TensorFlow)
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros-tf"><img src="https://img.shields.io/docker/pulls/rwthika/ros-tf"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                            |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  |  CUDA   | cuDNN | TensorRT | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
-| ---------------------------------------------- | :------------: | :-----: | :----: | :----: | :----------: | :----: | :-----: | :---: | :------: | :------------: | :---------: | :---------------: | :------------: |
-| `noetic-ros-core-tf2.11.0`                     | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-core   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |      2.11.0       |     2.11.0     |
-| `latest`, `noetic`, `noetic-ros-base-tf2.11.0` | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-base   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |      2.11.0       |     2.11.0     |
-| `noetic-desktop-tf2.11.0`                      | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   desktop    | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |      2.11.0       |     2.11.0     |
-| `noetic-desktop-full-tf2.11.0`                 | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic | desktop-full | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |      2.11.0       |     2.11.0     |
-| `noetic-ros-core-tf2.11.0-py`                  | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-core   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |      2.11.0       |       -        |
-| `noetic-ros-base-tf2.11.0-py`                  | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-base   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |      2.11.0       |       -        |
-| `noetic-desktop-tf2.11.0-py`                   | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   desktop    | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |      2.11.0       |       -        |
-| `noetic-desktop-full-tf2.11.0-py`              | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic | desktop-full | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |      2.11.0       |       -        |
-| `noetic-ros-core-tf2.11.0-cpp`                 | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-core   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |     2.11.0     |
-| `noetic-ros-base-tf2.11.0-cpp`                 | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-base   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |     2.11.0     |
-| `noetic-desktop-tf2.11.0-cpp`                  | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   desktop    | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |     2.11.0     |
-| `noetic-desktop-full-tf2.11.0-cpp`             | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic | desktop-full | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   |       -        |      -      |         -         |     2.11.0     |
-
-</details>
-</blockquote>
-
-#### [`rwthika/ros-ml`](https://hub.docker.com/r/rwthika/ros-ml) (ROS + PyTorch + TensorFlow)
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros-ml"><img src="https://img.shields.io/docker/pulls/rwthika/ros-ml"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                                       |      Arch      | Ubuntu  | Python |  ROS   | ROS Packages | CMake  |  CUDA   | cuDNN | TensorRT | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
-| --------------------------------------------------------- | :------------: | :-----: | :----: | :----: | :----------: | :----: | :-----: | :---: | :------: | :------------: | :---------: | :---------------: | :------------: |
-| `noetic-ros-core-tf2.11.0-torch2.0.1`                     | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-core   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
-| `latest`, `noetic`, `noetic-ros-base-tf2.11.0-torch2.0.1` | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-base   | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
-| `noetic-desktop-tf2.11.0-torch2.0.1`                      | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   desktop    | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
-| `noetic-desktop-full-tf2.11.0-torch2.0.1`                 | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic | desktop-full | 3.27.2 | 11.8.89 | 8.6.0 |  8.5.3   | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
-
-</details>
-</blockquote>
-
 ### ROS 2
 
 #### [`rwthika/ros2`](https://hub.docker.com/r/rwthika/ros2) (ROS 2)
@@ -176,27 +80,25 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                   |      Arch      | Ubuntu  | Python  |   ROS   | ROS Packages | CMake  | CUDA  | cuDNN | TensorRT | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
-| ------------------------------------- | :------------: | :-----: | :-----: | :-----: | :----------: | :----: | :---: | :---: | :------: | :------------: | :---------: | :---------------: | :------------: |
-| `rolling-ros-core`                    | amd64<br>arm64 | 20.04.6 | 3.8.10  | rolling |   ros-core   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `rolling`, `rolling-ros-base`         | amd64<br>arm64 | 20.04.6 | 3.8.10  | rolling |   ros-base   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `rolling-desktop`                     | amd64<br>arm64 | 20.04.6 | 3.8.10  | rolling |   desktop    | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `iron-ros-core`                       | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   |   ros-core   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `iron`, `iron-ros-base`               | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   |   ros-base   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `iron-desktop`                        | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   |   desktop    | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `iron-desktop-full`                   | amd64<br>arm64 | 22.04.2 | 3.10.12 |  iron   | desktop-full | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `humble-ros-core`                     | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  |   ros-core   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `latest`, `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  |   ros-base   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `humble-desktop`                      | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  |   desktop    | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `humble-desktop-full`                 | amd64<br>arm64 | 22.04.2 | 3.10.12 | humble  | desktop-full | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `foxy-ros-core`                       | amd64<br>arm64 | 20.04.6 | 3.8.10  |  foxy   |   ros-core   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `foxy`, `foxy-ros-base`               | amd64<br>arm64 | 20.04.6 | 3.8.10  |  foxy   |   ros-base   | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
-| `foxy-desktop`                        | amd64<br>arm64 | 20.04.6 | 3.8.10  |  foxy   |   desktop    | 3.27.2 |   -   |   -   |    -     |       -        |      -      |         -         |       -        |
+| Tag                                   |      Arch      | Ubuntu  | Python  |   ROS   | ROS Package  | CMake  | CUDA  | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
+| :------------------------------------ | :------------: | :-----: | :-----: | :-----: | :----------: | :----: | :---: | :---: | :------: | :----: | :-----: | :--------: |
+| `humble-ros-core`                     | amd64<br>arm64 | 22.04.4 | 3.10.12 | humble  |   ros-core   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `latest`, `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.4 | 3.10.12 | humble  |   ros-base   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `humble-desktop-full`                 | amd64<br>arm64 | 22.04.4 | 3.10.12 | humble  | desktop-full | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `iron-ros-core`                       | amd64<br>arm64 | 22.04.4 | 3.10.12 |  iron   |   ros-core   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `iron`, `iron-ros-base`               | amd64<br>arm64 | 22.04.4 | 3.10.12 |  iron   |   ros-base   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `iron-desktop-full`                   | amd64<br>arm64 | 22.04.4 | 3.10.12 |  iron   | desktop-full | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `jazzy-ros-core`                      | amd64<br>arm64 |  24.04  | 3.12.3  |  jazzy  |   ros-core   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `jazzy`, `jazzy-ros-base`             | amd64<br>arm64 |  24.04  | 3.12.3  |  jazzy  |   ros-base   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `jazzy-desktop-full`                  | amd64<br>arm64 |  24.04  | 3.12.3  |  jazzy  | desktop-full | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `rolling-ros-core`                    | amd64<br>arm64 |  24.04  | 3.12.3  | rolling |   ros-core   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `rolling`, `rolling-ros-base`         | amd64<br>arm64 |  24.04  | 3.12.3  | rolling |   ros-base   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `rolling-desktop-full`                | amd64<br>arm64 |  24.04  | 3.12.3  | rolling | desktop-full | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
 
 </details>
 </blockquote>
 
-#### [`rwthika/ros2-cuda`](https://hub.docker.com/r/rwthika/ros2-cuda) (ROS 2 + CUDA)
+#### [`rwthika/ros2-cuda`](https://hub.docker.com/r/rwthika/ros2-cuda) (ROS 2, NVIDIA CUDA)
 
 <blockquote>
 
@@ -204,27 +106,71 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                   |      Arch      |    Ubuntu    |    Python    |     ROS     |   ROS Packages    |    CMake    |     CUDA     |   cuDNN    |  TensorRT  | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
-| ------------------------------------- | :------------: | :----------: | :----------: | :---------: | :---------------: | :---------: | :----------: | :--------: | :--------: | :------------: | :---------: | :---------------: | :------------: |
-| `rolling-ros-core`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
-| `rolling`, `rolling-ros-base`         | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
-| `rolling-desktop`                     | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
-| `iron-ros-core`                       |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
-| `iron`, `iron-ros-base`               |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
-| `iron-desktop`                        |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
-| `iron-desktop-full`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
-| `humble-ros-core`                     |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
-| `latest`, `humble`, `humble-ros-base` |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
-| `humble-desktop`                      |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
-| `humble-desktop-full`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |       -        |
-| `foxy-ros-core`                       | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
-| `foxy`, `foxy-ros-base`               | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
-| `foxy-desktop`                        | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |       -        |
+| Tag                                   |      Arch      | Ubuntu  | Python  |   ROS   | ROS Package  | CMake  |   CUDA   | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
+| :------------------------------------ | :------------: | :-----: | :-----: | :-----: | :----------: | :----: | :------: | :---: | :------: | :----: | :-----: | :--------: |
+| `humble-ros-core`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  |   ros-core   | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
+| `latest`, `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  |   ros-base   | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
+| `humble-desktop-full`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  | desktop-full | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
+| `iron-ros-core`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   |   ros-core   | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
+| `iron`, `iron-ros-base`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   |   ros-base   | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
+| `iron-desktop-full`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   | desktop-full | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
+| `jazzy-ros-core`                      |     amd64      |  24.04  | 3.12.3  |  jazzy  |   ros-core   | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
+| `jazzy`, `jazzy-ros-base`             |     amd64      |  24.04  | 3.12.3  |  jazzy  |   ros-base   | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
+| `jazzy-desktop-full`                  |     amd64      |  24.04  | 3.12.3  |  jazzy  | desktop-full | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
+| `rolling-ros-core`                    |     amd64      |  24.04  | 3.12.3  | rolling |   ros-core   | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
+| `rolling`, `rolling-ros-base`         |     amd64      |  24.04  | 3.12.3  | rolling |   ros-base   | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
+| `rolling-desktop-full`                |     amd64      |  24.04  | 3.12.3  | rolling | desktop-full | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
 
 </details>
 </blockquote>
 
-#### [`rwthika/ros2-torch`](https://hub.docker.com/r/rwthika/ros2-torch) (ROS 2 + PyTorch)
+#### [`rwthika/ros2-tensorrt`](https://hub.docker.com/r/rwthika/ros2-tensorrt) (ROS 2, NVIDIA CUDA, NVIDIA TensorRT)
+
+<blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros2-tensorrt"><img src="https://img.shields.io/docker/pulls/rwthika/ros2-tensorrt"/></a>
+
+<details><summary>Click to expand</summary>
+
+| Tag                                   |      Arch      | Ubuntu  | Python  |  ROS   | ROS Package  |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
+| :------------------------------------ | :------------: | :-----: | :-----: | :----: | :----------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
+| `humble-ros-core`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| `latest`, `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| `humble-desktop-full`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| `iron-ros-core`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| `iron`, `iron-ros-base`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| `iron-desktop-full`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+
+</details>
+</blockquote>
+
+#### [`rwthika/ros2-triton`](https://hub.docker.com/r/rwthika/ros2-triton) (ROS 2, NVIDIA CUDA, NVIDIA Triton Client)
+
+<blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros2-triton"><img src="https://img.shields.io/docker/pulls/rwthika/ros2-triton"/></a>
+
+<details><summary>Click to expand</summary>
+
+| Tag                                                |      Arch      | Ubuntu  | Python  |   ROS   | ROS Package  | CMake  |   CUDA   | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
+| :------------------------------------------------- | :------------: | :-----: | :-----: | :-----: | :----------: | :----: | :------: | :---: | :------: | :----: | :-----: | :--------: |
+| `humble-ros-core-triton2.48.0`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  |   ros-core   | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
+| `latest`, `humble`, `humble-ros-base-triton2.48.0` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  |   ros-base   | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
+| `humble-desktop-full-triton2.48.0`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  | desktop-full | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
+| `iron-ros-core-triton2.48.0`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   |   ros-core   | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
+| `iron`, `iron-ros-base-triton2.48.0`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   |   ros-base   | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
+| `iron-desktop-full-triton2.48.0`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   | desktop-full | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
+| `jazzy-ros-core-triton2.48.0`                      |     amd64      |  24.04  | 3.12.3  |  jazzy  |   ros-core   | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
+| `jazzy`, `jazzy-ros-base-triton2.48.0`             |     amd64      |  24.04  | 3.12.3  |  jazzy  |   ros-base   | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
+| `jazzy-desktop-full-triton2.48.0`                  |     amd64      |  24.04  | 3.12.3  |  jazzy  | desktop-full | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
+| `rolling-ros-core-triton2.48.0`                    |     amd64      |  24.04  | 3.12.3  | rolling |   ros-core   | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
+| `rolling`, `rolling-ros-base-triton2.48.0`         |     amd64      |  24.04  | 3.12.3  | rolling |   ros-base   | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
+| `rolling-desktop-full-triton2.48.0`                |     amd64      |  24.04  | 3.12.3  | rolling | desktop-full | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
+
+</details>
+</blockquote>
+
+#### [`rwthika/ros2-torch`](https://hub.docker.com/r/rwthika/ros2-torch) (ROS 2, NVIDIA CUDA, NVIDIA TensorRT, PyTorch)
 
 <blockquote>
 
@@ -232,55 +178,19 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                              |      Arch      |    Ubuntu    |    Python    |     ROS      |   ROS Packages    |    CMake    |     CUDA     |   cuDNN    |  TensorRT  | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
-| ------------------------------------------------ | :------------: | :----------: | :----------: | :----------: | :---------------: | :---------: | :----------: | :--------: | :--------: | :------------: | :---------: | :---------------: | :------------: |
-| `rolling-ros-core-torch2.0.1`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling    |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `rolling`, `rolling-ros-base-torch2.0.1`         | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling    |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `rolling-desktop-torch2.0.1`                     | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling    |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `rolling-ros-core-torch2.0.1-py`                 | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling    |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `rolling-ros-base-torch2.0.1-py`                 | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling    |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `rolling-desktop-torch2.0.1-py`                  | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling    |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `rolling-ros-core-torch2.0.1-cpp`                |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>-  | rolling<br>- |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `rolling-ros-base-torch2.0.1-cpp`                |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>-  | rolling<br>- |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `rolling-desktop-torch2.0.1-cpp`                 |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>-  | rolling<br>- |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `iron-ros-core-torch2.0.1`                       |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |         -         |       -        |
-| `iron`, `iron-ros-base-torch2.0.1`               |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |         -         |       -        |
-| `iron-desktop-torch2.0.1`                        |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |         -         |       -        |
-| `iron-desktop-full-torch2.0.1`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |         -         |       -        |
-| `iron-ros-core-torch2.0.1-py`                    |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   |      -      |         -         |       -        |
-| `iron-ros-base-torch2.0.1-py`                    |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   |      -      |         -         |       -        |
-| `iron-desktop-torch2.0.1-py`                     |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   |      -      |         -         |       -        |
-| `iron-desktop-full-torch2.0.1-py`                |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   |      -      |         -         |       -        |
-| `iron-ros-core-torch2.0.1-cpp`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `iron-ros-base-torch2.0.1-cpp`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `iron-desktop-torch2.0.1-cpp`                    |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `iron-desktop-full-torch2.0.1-cpp`               |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-   | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `humble-ros-core-torch2.0.1`                     |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |         -         |       -        |
-| `latest`, `humble`, `humble-ros-base-torch2.0.1` |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |         -         |       -        |
-| `humble-desktop-torch2.0.1`                      |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |         -         |       -        |
-| `humble-desktop-full-torch2.0.1`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |         -         |       -        |
-| `humble-ros-core-torch2.0.1-py`                  |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   |      -      |         -         |       -        |
-| `humble-ros-base-torch2.0.1-py`                  |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   |      -      |         -         |       -        |
-| `humble-desktop-torch2.0.1-py`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   |      -      |         -         |       -        |
-| `humble-desktop-full-torch2.0.1-py`              |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   |      -      |         -         |       -        |
-| `humble-ros-core-torch2.0.1-cpp`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `humble-ros-base-torch2.0.1-cpp`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `humble-desktop-torch2.0.1-cpp`                  |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `humble-desktop-full-torch2.0.1-cpp`             |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>-  | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `foxy-ros-core-torch2.0.1`                       | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `foxy`, `foxy-ros-base-torch2.0.1`               | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `foxy-desktop-torch2.0.1`                        | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |         -         |       -        |
-| `foxy-ros-core-torch2.0.1-py`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `foxy-ros-base-torch2.0.1-py`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `foxy-desktop-torch2.0.1-py`                     | amd64<br>arm64 |   20.04.6    |    3.8.10    |     foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 |      -      |         -         |       -        |
-| `foxy-ros-core-torch2.0.1-cpp`                   |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>-  |  foxy<br>-   |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `foxy-ros-base-torch2.0.1-cpp`                   |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>-  |  foxy<br>-   |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
-| `foxy-desktop-torch2.0.1-cpp`                    |   amd64<br>-   | 20.04.6<br>- | 3.8.10<br>-  |  foxy<br>-   |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        | 2.0.1<br>-  |         -         |       -        |
+| Tag                                              |      Arch      | Ubuntu  | Python  |  ROS   | ROS Package  |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
+| :----------------------------------------------- | :------------: | :-----: | :-----: | :----: | :----------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
+| `humble-ros-core-torch2.4.0`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| `latest`, `humble`, `humble-ros-base-torch2.4.0` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| `humble-desktop-full-torch2.4.0`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| `iron-ros-core-torch2.4.0`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| `iron`, `iron-ros-base-torch2.4.0`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| `iron-desktop-full-torch2.4.0`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
 
 </details>
 </blockquote>
 
-#### [`rwthika/ros2-tf`](https://hub.docker.com/r/rwthika/ros2-tf) (ROS 2 + TensorFlow)
+#### [`rwthika/ros2-tf`](https://hub.docker.com/r/rwthika/ros2-tf) (ROS 2, NVIDIA CUDA, NVIDIA TensorRT, TensorFlow)
 
 <blockquote>
 
@@ -288,55 +198,19 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                            |      Arch      |    Ubuntu    |    Python    |     ROS     |   ROS Packages    |    CMake    |     CUDA     |   cuDNN    |  TensorRT  | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
-| ---------------------------------------------- | :------------: | :----------: | :----------: | :---------: | :---------------: | :---------: | :----------: | :--------: | :--------: | :------------: | :---------: | :---------------: | :------------: |
-| `rolling-ros-core-tf2.11.0`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |     2.11.0     |
-| `rolling`, `rolling-ros-base-tf2.11.0`         | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |     2.11.0     |
-| `rolling-desktop-tf2.11.0`                     | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |     2.11.0     |
-| `rolling-ros-core-tf2.11.0-py`                 | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |       -        |
-| `rolling-ros-base-tf2.11.0-py`                 | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |       -        |
-| `rolling-desktop-tf2.11.0-py`                  | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |       -        |
-| `rolling-ros-core-tf2.11.0-cpp`                | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |     2.11.0     |
-| `rolling-ros-base-tf2.11.0-cpp`                | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |     2.11.0     |
-| `rolling-desktop-tf2.11.0-cpp`                 | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |     2.11.0     |
-| `iron-ros-core-tf2.11.0`                       |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |  2.11.0<br>-   |
-| `iron`, `iron-ros-base-tf2.11.0`               |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |  2.11.0<br>-   |
-| `iron-desktop-tf2.11.0`                        |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |  2.11.0<br>-   |
-| `iron-desktop-full-tf2.11.0`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |  2.11.0<br>-   |
-| `iron-ros-core-tf2.11.0-py`                    |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |       -        |
-| `iron-ros-base-tf2.11.0-py`                    |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |       -        |
-| `iron-desktop-tf2.11.0-py`                     |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |       -        |
-| `iron-desktop-full-tf2.11.0-py`                |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |       -        |
-| `iron-ros-core-tf2.11.0-cpp`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |  2.11.0<br>-   |
-| `iron-ros-base-tf2.11.0-cpp`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |  2.11.0<br>-   |
-| `iron-desktop-tf2.11.0-cpp`                    |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |  2.11.0<br>-   |
-| `iron-desktop-full-tf2.11.0-cpp`               |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |  2.11.0<br>-   |
-| `humble-ros-core-tf2.11.0`                     |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |  2.11.0<br>-   |
-| `latest`, `humble`, `humble-ros-base-tf2.11.0` |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |  2.11.0<br>-   |
-| `humble-desktop-tf2.11.0`                      |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |  2.11.0<br>-   |
-| `humble-desktop-full-tf2.11.0`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |  2.11.0<br>-   |
-| `humble-ros-core-tf2.11.0-py`                  |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |       -        |
-| `humble-ros-base-tf2.11.0-py`                  |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |       -        |
-| `humble-desktop-tf2.11.0-py`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |       -        |
-| `humble-desktop-full-tf2.11.0-py`              |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |    2.11.0<br>-    |       -        |
-| `humble-ros-core-tf2.11.0-cpp`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |  2.11.0<br>-   |
-| `humble-ros-base-tf2.11.0-cpp`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |  2.11.0<br>-   |
-| `humble-desktop-tf2.11.0-cpp`                  |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |  2.11.0<br>-   |
-| `humble-desktop-full-tf2.11.0-cpp`             |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |       -        |      -      |         -         |  2.11.0<br>-   |
-| `foxy-ros-core-tf2.11.0`                       | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |     2.11.0     |
-| `foxy`, `foxy-ros-base-tf2.11.0`               | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |     2.11.0     |
-| `foxy-desktop-tf2.11.0`                        | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |     2.11.0     |
-| `foxy-ros-core-tf2.11.0-py`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |       -        |
-| `foxy-ros-base-tf2.11.0-py`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |       -        |
-| `foxy-desktop-tf2.11.0-py`                     | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |      2.11.0       |       -        |
-| `foxy-ros-core-tf2.11.0-cpp`                   | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |     2.11.0     |
-| `foxy-ros-base-tf2.11.0-cpp`                   | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |     2.11.0     |
-| `foxy-desktop-tf2.11.0-cpp`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    |       -        |      -      |         -         |     2.11.0     |
+| Tag                                            |      Arch      | Ubuntu  | Python  |  ROS   | ROS Package  |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
+| :--------------------------------------------- | :------------: | :-----: | :-----: | :----: | :----------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
+| `humble-ros-core-tf2.16.1`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| `latest`, `humble`, `humble-ros-base-tf2.16.1` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| `humble-desktop-full-tf2.16.1`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| `iron-ros-core-tf2.16.1`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| `iron`, `iron-ros-base-tf2.16.1`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| `iron-desktop-full-tf2.16.1`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
 
 </details>
 </blockquote>
 
-#### [`rwthika/ros2-ml`](https://hub.docker.com/r/rwthika/ros2-ml) (ROS 2 + PyTorch + TensorFlow)
+#### [`rwthika/ros2-ml`](https://hub.docker.com/r/rwthika/ros2-ml) (ROS 2, NVIDIA CUDA, NVIDIA TensorRT, PyTorch, TensorFlow)
 
 <blockquote>
 
@@ -344,22 +218,153 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                                       |      Arch      |    Ubuntu    |    Python    |     ROS     |   ROS Packages    |    CMake    |     CUDA     |   cuDNN    |  TensorRT  | PyTorch Python | PyTorch C++ | TensorFlow Python | TensorFlow C++ |
-| --------------------------------------------------------- | :------------: | :----------: | :----------: | :---------: | :---------------: | :---------: | :----------: | :--------: | :--------: | :------------: | :---------: | :---------------: | :------------: |
-| `rolling-ros-core-tf2.11.0-torch2.0.1`                    | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
-| `rolling`, `rolling-ros-base-tf2.11.0-torch2.0.1`         | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
-| `rolling-desktop-tf2.11.0-torch2.0.1`                     | amd64<br>arm64 |   20.04.6    |    3.8.10    |   rolling   |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
-| `iron-ros-core-tf2.11.0-torch2.0.1`                       |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |    2.11.0<br>-    |  2.11.0<br>-   |
-| `iron`, `iron-ros-base-tf2.11.0-torch2.0.1`               |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |    2.11.0<br>-    |  2.11.0<br>-   |
-| `iron-desktop-tf2.11.0-torch2.0.1`                        |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |    2.11.0<br>-    |  2.11.0<br>-   |
-| `iron-desktop-full-tf2.11.0-torch2.0.1`                   |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- |  iron<br>-  | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |    2.11.0<br>-    |  2.11.0<br>-   |
-| `humble-ros-core-tf2.11.0-torch2.0.1`                     |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-core<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |    2.11.0<br>-    |  2.11.0<br>-   |
-| `latest`, `humble`, `humble-ros-base-tf2.11.0-torch2.0.1` |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   ros-base<br>-   | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |    2.11.0<br>-    |  2.11.0<br>-   |
-| `humble-desktop-tf2.11.0-torch2.0.1`                      |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- |   desktop<br>-    | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |    2.11.0<br>-    |  2.11.0<br>-   |
-| `humble-desktop-full-tf2.11.0-torch2.0.1`                 |   amd64<br>-   | 22.04.2<br>- | 3.10.12<br>- | humble<br>- | desktop-full<br>- | 3.27.2<br>- | 11.8.89<br>- | 8.6.0<br>- | 8.5.3<br>- |   2.0.1<br>-   | 2.0.1<br>-  |    2.11.0<br>-    |  2.11.0<br>-   |
-| `foxy-ros-core-tf2.11.0-torch2.0.1`                       | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-core      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
-| `foxy`, `foxy-ros-base-tf2.11.0-torch2.0.1`               | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |     ros-base      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
-| `foxy-desktop-tf2.11.0-torch2.0.1`                        | amd64<br>arm64 |   20.04.6    |    3.8.10    |    foxy     |      desktop      |   3.27.2    |   11.8.89    |   8.6.0    |   8.5.3    | 2.0.1<br>2.0.0 | 2.0.1<br>-  |      2.11.0       |     2.11.0     |
+| Tag                                                       |      Arch      | Ubuntu  | Python  |  ROS   | ROS Package  |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
+| :-------------------------------------------------------- | :------------: | :-----: | :-----: | :----: | :----------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
+| `humble-ros-core-tf2.16.1-torch2.4.0`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| `latest`, `humble`, `humble-ros-base-tf2.16.1-torch2.4.0` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| `humble-desktop-full-tf2.16.1-torch2.4.0`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| `iron-ros-core-tf2.16.1-torch2.4.0`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| `iron`, `iron-ros-base-tf2.16.1-torch2.4.0`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| `iron-desktop-full-tf2.16.1-torch2.4.0`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
 
 </details>
 </blockquote>
+
+### ROS
+
+#### [`rwthika/ros`](https://hub.docker.com/r/rwthika/ros) (ROS)
+
+<blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros"><img src="https://img.shields.io/docker/pulls/rwthika/ros"/></a>
+
+<details><summary>Click to expand</summary>
+
+| Tag                                   |      Arch      | Ubuntu  | Python |  ROS   | ROS Package  | CMake  | CUDA  | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
+| :------------------------------------ | :------------: | :-----: | :----: | :----: | :----------: | :----: | :---: | :---: | :------: | :----: | :-----: | :--------: |
+| `noetic-ros-core`                     | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-core   | 3.16.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `latest`, `noetic`, `noetic-ros-base` | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-base   | 3.16.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `noetic-desktop-full`                 | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic | desktop-full | 3.16.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+
+</details>
+</blockquote>
+
+#### [`rwthika/ros-cuda`](https://hub.docker.com/r/rwthika/ros-cuda) (ROS, NVIDIA CUDA)
+
+<blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros-cuda"><img src="https://img.shields.io/docker/pulls/rwthika/ros-cuda"/></a>
+
+<details><summary>Click to expand</summary>
+
+| Tag                                   |      Arch      | Ubuntu  | Python |  ROS   | ROS Package  | CMake  |         CUDA         | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
+| :------------------------------------ | :------------: | :-----: | :----: | :----: | :----------: | :----: | :------------------: | :---: | :------: | :----: | :-----: | :--------: |
+| `noetic-ros-core`                     | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-core   | 3.16.3 | 11.4.148<br>11.4.298 |   -   |    -     |   -    |    -    |     -      |
+| `latest`, `noetic`, `noetic-ros-base` | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-base   | 3.16.3 | 11.4.148<br>11.4.298 |   -   |    -     |   -    |    -    |     -      |
+| `noetic-desktop-full`                 | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic | desktop-full | 3.16.3 | 11.4.148<br>11.4.298 |   -   |    -     |   -    |    -    |     -      |
+
+</details>
+</blockquote>
+
+#### [`rwthika/ros-tensorrt`](https://hub.docker.com/r/rwthika/ros-tensorrt) (ROS, NVIDIA CUDA, NVIDIA TensorRT)
+
+<blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros-tensorrt"><img src="https://img.shields.io/docker/pulls/rwthika/ros-tensorrt"/></a>
+
+<details><summary>Click to expand</summary>
+
+| Tag                                   |      Arch      |       Ubuntu       | Python |  ROS   | ROS Package  |      CMake       |         CUDA         |         cuDNN         |    TensorRT    | Triton | PyTorch | TensorFlow |
+| :------------------------------------ | :------------: | :----------------: | :----: | :----: | :----------: | :--------------: | :------------------: | :-------------------: | :------------: | :----: | :-----: | :--------: |
+| `noetic-ros-core`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |     -      |
+| `latest`, `noetic`, `noetic-ros-base` | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |     -      |
+| `noetic-desktop-full`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |     -      |
+
+</details>
+</blockquote>
+
+#### [`rwthika/ros-triton`](https://hub.docker.com/r/rwthika/ros-triton) (ROS, NVIDIA CUDA, NVIDIA Triton Client)
+
+<blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros-triton"><img src="https://img.shields.io/docker/pulls/rwthika/ros-triton"/></a>
+
+<details><summary>Click to expand</summary>
+
+| Tag                                                |      Arch      | Ubuntu  | Python |  ROS   | ROS Package  | CMake  |         CUDA         | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
+| :------------------------------------------------- | :------------: | :-----: | :----: | :----: | :----------: | :----: | :------------------: | :---: | :------: | :----: | :-----: | :--------: |
+| `noetic-ros-core-triton2.48.0`                     | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-core   | 3.16.3 | 11.4.148<br>11.4.298 |   -   |    -     | 2.48.0 |    -    |     -      |
+| `latest`, `noetic`, `noetic-ros-base-triton2.48.0` | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic |   ros-base   | 3.16.3 | 11.4.148<br>11.4.298 |   -   |    -     | 2.48.0 |    -    |     -      |
+| `noetic-desktop-full-triton2.48.0`                 | amd64<br>arm64 | 20.04.6 | 3.8.10 | noetic | desktop-full | 3.16.3 | 11.4.148<br>11.4.298 |   -   |    -     | 2.48.0 |    -    |     -      |
+
+</details>
+</blockquote>
+
+#### [`rwthika/ros-torch`](https://hub.docker.com/r/rwthika/ros-torch) (ROS, NVIDIA CUDA, NVIDIA TensorRT, PyTorch)
+
+<blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros-torch"><img src="https://img.shields.io/docker/pulls/rwthika/ros-torch"/></a>
+
+<details><summary>Click to expand</summary>
+
+| Tag                                              |      Arch      |       Ubuntu       | Python |  ROS   | ROS Package  |      CMake       |         CUDA         |         cuDNN         |    TensorRT    | Triton | PyTorch | TensorFlow |
+| :----------------------------------------------- | :------------: | :----------------: | :----: | :----: | :----------: | :--------------: | :------------------: | :-------------------: | :------------: | :----: | :-----: | :--------: |
+| `noetic-ros-core-torch2.1.0`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |  2.1.0  |     -      |
+| `latest`, `noetic`, `noetic-ros-base-torch2.1.0` | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |  2.1.0  |     -      |
+| `noetic-desktop-full-torch2.1.0`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |  2.1.0  |     -      |
+
+</details>
+</blockquote>
+
+#### [`rwthika/ros-tf`](https://hub.docker.com/r/rwthika/ros-tf) (ROS, NVIDIA CUDA, NVIDIA TensorRT, TensorFlow)
+
+<blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros-tf"><img src="https://img.shields.io/docker/pulls/rwthika/ros-tf"/></a>
+
+<details><summary>Click to expand</summary>
+
+| Tag                                            |      Arch      |       Ubuntu       | Python |  ROS   | ROS Package  |      CMake       |         CUDA         |         cuDNN         |    TensorRT    | Triton | PyTorch | TensorFlow |
+| :--------------------------------------------- | :------------: | :----------------: | :----: | :----: | :----------: | :--------------: | :------------------: | :-------------------: | :------------: | :----: | :-----: | :--------: |
+| `noetic-ros-core-tf2.12.0`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |
+| `latest`, `noetic`, `noetic-ros-base-tf2.12.0` | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |
+| `noetic-desktop-full-tf2.12.0`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |
+
+</details>
+</blockquote>
+
+#### [`rwthika/ros-ml`](https://hub.docker.com/r/rwthika/ros-ml) (ROS, NVIDIA CUDA, NVIDIA TensorRT, PyTorch, TensorFlow)
+
+<blockquote>
+
+<a href="https://hub.docker.com/r/rwthika/ros-ml"><img src="https://img.shields.io/docker/pulls/rwthika/ros-ml"/></a>
+
+<details><summary>Click to expand</summary>
+
+| Tag                                                       |      Arch      |       Ubuntu       | Python |  ROS   | ROS Package  |      CMake       |         CUDA         |         cuDNN         |    TensorRT    | Triton | PyTorch | TensorFlow |
+| :-------------------------------------------------------- | :------------: | :----------------: | :----: | :----: | :----------: | :--------------: | :------------------: | :-------------------: | :------------: | :----: | :-----: | :--------: |
+| `noetic-ros-core-tf2.12.0-torch2.1.0`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |  2.1.0  |   2.12.0   |
+| `latest`, `noetic`, `noetic-ros-base-tf2.12.0-torch2.1.0` | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |  2.1.0  |   2.12.0   |
+| `noetic-desktop-full-tf2.12.0-torch2.1.0`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |  2.1.0  |   2.12.0   |
+
+</details>
+</blockquote>
+
+
+## Manual Build
+
+```
+docker buildx build \
+  --pull \
+  --platform $PLATFORM \
+  --build-arg BASE_IMAGE_TYPE=$BASE_IMAGE_TYPE \
+  --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
+  --build-arg ROS_VERSION=$ROS_VERSION \
+  --build-arg ROS_DISTRO=$ROS_DISTRO \
+  --build-arg ROS_PACKAGE=$ROS_PACKAGE \
+  --build-arg TORCH_VERSION=$TORCH_VERSION \
+  --build-arg TF_VERSION=$TF_VERSION \
+  --build-arg TRITON_VERSION=$TRITON_VERSION \
+  --tag $IMAGE .
+```

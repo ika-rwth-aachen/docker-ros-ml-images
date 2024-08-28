@@ -5,32 +5,16 @@ workflow:
 
 
 variables:
-  ROS_DISTROS: noetic,foxy,humble,iron,rolling
+  ROS_DISTROS: noetic,humble,iron,jazzy,rolling
 
 
 stages:
-  # - CUDA
   - ROS 1 Noetic
-  - ROS 2 Foxy
   - ROS 2 Humble
   - ROS 2 Iron
+  - ROS 2 Jazzy
   - ROS 2 Rolling
 
-# build-cuda-ubuntu20:
-#   stage: CUDA
-#   trigger:
-#     include: .gitlab-ci/.cuda-base.yml
-#     strategy: depend
-#   variables:
-#     UBUNTU_VERSION: "20.04"
-
-# build-cuda-ubuntu22:
-#   stage: CUDA
-#   trigger:
-#     include: .gitlab-ci/.cuda-base.yml
-#     strategy: depend
-#   variables:
-#     UBUNTU_VERSION: "22.04"
 
 ros-noetic-ros-core:
   stage: ROS 1 Noetic
@@ -52,7 +36,7 @@ ros-noetic-ros-base:
     include: .gitlab-ci/ros-noetic/ros-noetic-ros-base.yml
     strategy: depend
 
-ros-noetic-desktop:
+ros-noetic-desktop-full:
   stage: ROS 1 Noetic
   rules:
     - if: $ROS_DISTROS =~ /.*noetic.*/
@@ -60,50 +44,7 @@ ros-noetic-desktop:
     - job: ros-noetic-ros-base
       optional: true
   trigger:
-    include: .gitlab-ci/ros-noetic/ros-noetic-desktop.yml
-    strategy: depend
-
-ros-noetic-desktop-full:
-  stage: ROS 1 Noetic
-  rules:
-    - if: $ROS_DISTROS =~ /.*noetic.*/
-  needs:
-    - job: ros-noetic-desktop
-      optional: true
-  trigger:
     include: .gitlab-ci/ros-noetic/ros-noetic-desktop-full.yml
-    strategy: depend
-
-
-ros2-foxy-ros-core:
-  stage: ROS 2 Foxy
-  rules:
-    - if: $ROS_DISTROS =~ /.*foxy.*/
-  needs: []
-  trigger:
-    include: .gitlab-ci/ros2-foxy/ros2-foxy-ros-core.yml
-    strategy: depend
-
-ros2-foxy-ros-base:
-  stage: ROS 2 Foxy
-  rules:
-    - if: $ROS_DISTROS =~ /.*foxy.*/
-  needs:
-    - job: ros2-foxy-ros-core
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-foxy/ros2-foxy-ros-base.yml
-    strategy: depend
-
-ros2-foxy-desktop:
-  stage: ROS 2 Foxy
-  rules:
-    - if: $ROS_DISTROS =~ /.*foxy.*/
-  needs:
-    - job: ros2-foxy-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-foxy/ros2-foxy-desktop.yml
     strategy: depend
 
 
@@ -127,23 +68,12 @@ ros2-humble-ros-base:
     include: .gitlab-ci/ros2-humble/ros2-humble-ros-base.yml
     strategy: depend
 
-ros2-humble-desktop:
-  stage: ROS 2 Humble
-  rules:
-    - if: $ROS_DISTROS =~ /.*humble.*/
-  needs:
-    - job: ros2-humble-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-humble/ros2-humble-desktop.yml
-    strategy: depend
-
 ros2-humble-desktop-full:
   stage: ROS 2 Humble
   rules:
     - if: $ROS_DISTROS =~ /.*humble.*/
   needs:
-    - job: ros2-humble-desktop
+    - job: ros2-humble-ros-base
       optional: true
   trigger:
     include: .gitlab-ci/ros2-humble/ros2-humble-desktop-full.yml
@@ -170,7 +100,7 @@ ros2-iron-ros-base:
     include: .gitlab-ci/ros2-iron/ros2-iron-ros-base.yml
     strategy: depend
 
-ros2-iron-desktop:
+ros2-iron-desktop-full:
   stage: ROS 2 Iron
   rules:
     - if: $ROS_DISTROS =~ /.*iron.*/
@@ -178,18 +108,39 @@ ros2-iron-desktop:
     - job: ros2-iron-ros-base
       optional: true
   trigger:
-    include: .gitlab-ci/ros2-iron/ros2-iron-desktop.yml
+    include: .gitlab-ci/ros2-iron/ros2-iron-desktop-full.yml
     strategy: depend
 
-ros2-iron-desktop-full:
-  stage: ROS 2 Iron
+
+ros2-jazzy-ros-core:
+  stage: ROS 2 Jazzy
   rules:
-    - if: $ROS_DISTROS =~ /.*iron.*/
+    - if: $ROS_DISTROS =~ /.*jazzy.*/
+  needs: []
+  trigger:
+    include: .gitlab-ci/ros2-jazzy/ros2-jazzy-ros-core.yml
+    strategy: depend
+
+ros2-jazzy-ros-base:
+  stage: ROS 2 Jazzy
+  rules:
+    - if: $ROS_DISTROS =~ /.*jazzy.*/
   needs:
-    - job: ros2-iron-desktop
+    - job: ros2-jazzy-ros-core
       optional: true
   trigger:
-    include: .gitlab-ci/ros2-iron/ros2-iron-desktop-full.yml
+    include: .gitlab-ci/ros2-jazzy/ros2-jazzy-ros-base.yml
+    strategy: depend
+
+ros2-jazzy-desktop-full:
+  stage: ROS 2 Jazzy
+  rules:
+    - if: $ROS_DISTROS =~ /.*jazzy.*/
+  needs:
+    - job: ros2-jazzy-ros-base
+      optional: true
+  trigger:
+    include: .gitlab-ci/ros2-jazzy/ros2-jazzy-desktop-full.yml
     strategy: depend
 
 
@@ -213,7 +164,7 @@ ros2-rolling-ros-base:
     include: .gitlab-ci/ros2-rolling/ros2-rolling-ros-base.yml
     strategy: depend
 
-ros2-rolling-desktop:
+ros2-rolling-desktop-full:
   stage: ROS 2 Rolling
   rules:
     - if: $ROS_DISTROS =~ /.*rolling.*/
@@ -221,5 +172,5 @@ ros2-rolling-desktop:
     - job: ros2-rolling-ros-base
       optional: true
   trigger:
-    include: .gitlab-ci/ros2-rolling/ros2-rolling-desktop.yml
+    include: .gitlab-ci/ros2-rolling/ros2-rolling-desktop-full.yml
     strategy: depend

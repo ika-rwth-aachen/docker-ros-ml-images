@@ -1,0 +1,6 @@
+include: .gitlab-ci/ml-variations/ros.yml
+
+variables:
+  BASE_IMAGE_TYPE: "-tensorrt"
+  IMAGE_REPO:    ${IMAGE_BASE}/${ROS_VERSION_NAME}-tensorrt
+  IMAGE_REPO_CI: ${IMAGE_BASE_CI}/${ROS_VERSION_NAME}-tensorrt

@@ -1,9 +1,9 @@
 include:
-  - .gitlab-ci/ml-variations/ros-cuda.yml
+  - .gitlab-ci/ml-variations/ros-tensorrt.yml
   - .gitlab-ci/ml-variations/.torch.yml
 
 variables:
   IMAGE_REPO:               ${IMAGE_BASE}/${ROS_VERSION_NAME}-torch
   IMAGE_REPO_CI:            ${IMAGE_BASE_CI}/${ROS_VERSION_NAME}-torch
   TAG:                      ${ROS_DISTRO}-${ROS_PACKAGE}-torch${TORCH_VERSION}
-  IMAGE_CI_CACHE:           ${IMAGE_BASE_CI}/${ROS_VERSION_NAME}-cuda:${CI_COMMIT_REF_SLUG}_${ROS_DISTRO}-${ROS_PACKAGE}_ci
+  IMAGE_CI_CACHE:           ${IMAGE_BASE_CI}/${ROS_VERSION_NAME}-tensorrt:${CI_COMMIT_REF_SLUG}_${ROS_DISTRO}-${ROS_PACKAGE}_ci

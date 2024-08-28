@@ -1,42 +1,79 @@
 # docker buildx build \
 #     --load \
 #     --platform $(uname)/$(uname -m) \
-#     --build-arg BUILD_VERSION=$BUILD_VERSION \
-#     --build-arg CUDA_VERSION=$CUDA_VERSION \
+#     --build-arg BASE_IMAGE_TYPE=$BASE_IMAGE_TYPE \
 #     --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
 #     --build-arg ROS_VERSION=$ROS_VERSION \
 #     --build-arg ROS_DISTRO=$ROS_DISTRO \
 #     --build-arg ROS_PACKAGE=$ROS_PACKAGE \
-#     --build-arg TORCH_VERSION_PY=$TORCH_VERSION_PY \
-#     --build-arg TORCH_VERSION_CPP=$TORCH_VERSION_CPP \
-#     --build-arg TF_VERSION_PY=$TF_VERSION_PY \
-#     --build-arg TF_VERSION_CPP=$TF_VERSION_CPP \
+#     --build-arg TORCH_VERSION=$TORCH_VERSION \
+#     --build-arg TF_VERSION=$TF_VERSION \
+#     --build-arg TRITON_VERSION=$TRITON_VERSION \
 #     --tag $IMAGE \
 #     .
 
-ARG BUILD_VERSION
-ARG UBUNTU_VERSION="20.04"
-ARG CUDA_VERSION=11.8
+ARG BASE_IMAGE_TYPE
+ARG UBUNTU_VERSION="22.04"
 
-# === base (multiarch) ===============================================================
-FROM ubuntu:${UBUNTU_VERSION} as base
+# === ubuntu base images ==========================================================================
+FROM --platform=amd64 ubuntu:20.04 AS base-ubuntu20.04-amd64
+FROM --platform=amd64 ubuntu:22.04 AS base-ubuntu22.04-amd64
+FROM --platform=amd64 ubuntu:24.04 AS base-ubuntu24.04-amd64
 
-# === base-ml (multiarch) ============================================================
-FROM rwthika/cuda:${CUDA_VERSION}-cudnn-trt-ubuntu${UBUNTU_VERSION} as base-ml
+FROM --platform=arm64 ubuntu:20.04 AS base-ubuntu20.04-arm64
+FROM --platform=arm64 ubuntu:22.04 AS base-ubuntu22.04-arm64
+FROM --platform=arm64 ubuntu:24.04 AS base-ubuntu24.04-arm64
 
-# === dependencies ===================================================================
-FROM "base${BUILD_VERSION}" as dependencies
+# === cuda base images ============================================================================
+FROM --platform=amd64 nvcr.io/nvidia/cuda:11.4.3-runtime-ubuntu20.04 AS base-cuda-ubuntu20.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/cuda:12.2.2-runtime-ubuntu22.04 AS base-cuda-ubuntu22.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.0-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-amd64
+
+FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:11.4.19-runtime AS base-cuda-ubuntu20.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.2.12-runtime AS base-cuda-ubuntu22.04-arm64
+# no l4t-cuda image for ubuntu24 available
+
+# === tensorrt base images ========================================================================
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:21.08-py3 AS base-tensorrt-ubuntu20.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.09-py3 AS base-tensorrt-ubuntu22.04-amd64
+# no tensorrt image for ubuntu24 available
+
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.5.2-runtime AS base-tensorrt-ubuntu20.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.6.2-runtime AS base-tensorrt-ubuntu22.04-arm64
+# no l4t-tensorrt image for ubuntu24 available
+
+
+# === dependencies ================================================================================
+FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}" AS dependencies
 
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
 
 USER root
 
+ARG BASE_IMAGE_TYPE
+ARG TARGETARCH
+ARG UBUNTU_VERSION
+RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" && $BASE_IMAGE_TYPE != "" ]]; then \
+        # bug in base image -> replace line in /etc/apt/sources.list to use "r36.3" instead of "r36.0"
+        # touch: https://forums.balena.io/t/getting-linux-for-tegra-into-a-container-on-balena-os/179421/20
+        sed -i 's/https:\/\/repo.download.nvidia.com\/jetson\/common r36.0 main/https:\/\/repo.download.nvidia.com\/jetson\/common r36.3 main/g' /etc/apt/sources.list && \
+        echo "deb https://repo.download.nvidia.com/jetson/t234 r36.3 main" >> /etc/apt/sources.list && \
+        mkdir -p /opt/nvidia/l4t-packages/ && \
+        touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall; \
+    elif [[ $TARGETARCH == "amd64" && $BASE_IMAGE_TYPE == "-tensorrt" ]]; then \
+        # add cuda apt repository for tensorrt base images
+        wget -q -O /tmp/cuda-keyring_1.0-1_all.deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION/./}/x86_64/cuda-keyring_1.0-1_all.deb && \
+        dpkg -i /tmp/cuda-keyring_1.0-1_all.deb && \
+        rm -rf /tmp/cuda-keyring_1.0-1_all.deb; \
+    fi
+
 # install essentials via apt
 RUN apt-get update && \
     apt-get install -y \
         bsdmainutils \
         build-essential \
+        bash-completion \
         curl \
         dirmngr \
         gdb \
@@ -59,7 +96,11 @@ RUN apt-get update && \
         x11-apps \
         zip \
     && rm -rf /var/lib/apt/lists/*
-RUN pip3 install --upgrade pip
+RUN if [[ $UBUNTU_VERSION == "24.04" ]]; then python -m pip config --global set global.break-system-packages true; \
+    else python -m pip install --upgrade pip; fi
+
+# enable bash completion
+RUN sed -i '/^#if \[ -f \/etc\/bash_completion \]/,/^#fi/ s/^#//' ~/.bashrc
 
 # install more essentials
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
@@ -67,9 +108,10 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
     apt-get install git-lfs && \
     rm -rf /var/lib/apt/lists/*
 
-# --- install and setup ROS ----------------------------------------------------
-FROM dependencies as ros
+# === install and setup ROS =======================================================================
+FROM dependencies AS ros
 ARG TARGETARCH
+ARG UBUNTU_VERSION
 
 # setup keys and sources.list
 ARG ROS_VERSION
@@ -103,7 +145,6 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # install ROS
-ARG UBUNTU_VERSION
 ARG ROS_DISTRO
 ENV ROS_DISTRO=${ROS_DISTRO}
 ARG ROS_PACKAGE=ros-core
@@ -118,63 +159,75 @@ RUN apt-get update && \
 # source ROS
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
 
-# --- install ML stuff ----------------------------------------------------
-FROM ros as ros-ml
+# === install ML frameworks on tensorrt base ======================================================
+FROM ros AS ros-tensorrt
 ARG TARGETARCH
+ARG UBUNTU_VERSION
 
 # install PyTorch
-ARG TORCH_VERSION_PY
-RUN if [[ -n $TORCH_VERSION_PY ]]; then \
+ARG TORCH_VERSION
+RUN if [[ -n $TORCH_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
-            if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then PT_PACKAGE_NAME=1.11.0+cu113; \
-            elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then PT_PACKAGE_NAME=2.0.1+cu118; \
-            else PT_PACKAGE_NAME=${TORCH_VERSION_PY}+cpu; fi && \
-            pip install torch==${PT_PACKAGE_NAME} -f https://download.pytorch.org/whl/torch_stable.html ; \
+            pip3 install torch==${TORCH_VERSION} && \
+            if [[ "$TORCH_VERSION" == "2.3.0" ]]; then pip3 install torchvision==0.18.0; fi; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
-            if [[ "$TORCH_VERSION_PY" = "1.11.0" ]]; then TORCH_INSTALL=https://nvidia.box.com/shared/static/ssf2v7pf5i245fk4i0q926hy4imzs2ph.whl; \
-            elif [[ "$TORCH_VERSION_PY" = "2.0.1" ]]; then TORCH_INSTALL=https://developer.download.nvidia.cn/compute/redist/jp/v511/pytorch/torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl; \
-            else TORCH_INSTALL=""; fi && \
-            python3 -m pip install --no-cache $TORCH_INSTALL && \
             apt-get update && \
-            apt-get install -y libopenblas-base && \
+            apt-get install -y libopenblas-base libopenmpi-dev libomp-dev && \
             rm -rf /var/lib/apt/lists/* ; \
-        fi ; \
-    fi
-
-# install PyTorch C++ API (not available for arm64)
-ARG TORCH_VERSION_CPP
-RUN if [[ -n $TORCH_VERSION_CPP ]]; then \
-        if [[ "$TARGETARCH" == "amd64" ]]; then \
-            if [[ "$TORCH_VERSION_CPP" = "1.11.0" ]]; then PT_CPP_URL=https://download.pytorch.org/libtorch/cu113/libtorch-cxx11-abi-shared-with-deps-1.11.0%2Bcu113.zip; \
-            elif [[ "$TORCH_VERSION_CPP" = "2.0.1" ]]; then PT_CPP_URL=https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcu118.zip; \
-            else PT_CPP_URL=""; fi && \
-            wget -q -O /tmp/libtorch.zip ${PT_CPP_URL} && \
-            unzip /tmp/libtorch.zip -d /opt/ && \
-            rm /tmp/libtorch.zip ; \
-        fi ; \
-    fi
-
-# install TensorFlow C++ API incl. protobuf
-ARG TF_VERSION_CPP
-RUN if [[ -n $TF_VERSION_CPP ]]; then \
-        wget -q -O /tmp/libtensorflow-cc.deb "https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_CPP/+*/}/libtensorflow-cc_${TF_VERSION_CPP}-gpu_${TARGETARCH}.deb" && \
-        dpkg -i /tmp/libtensorflow-cc.deb && \
-        ldconfig && \
-        rm /tmp/libtensorflow-cc.deb ; \
+            if [[ $UBUNTU_VERSION == "20.04" ]]; then \
+                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
+            else \
+                apt-get update && \
+                apt-get install -y cuda-cupti-12-2 && \
+                rm -rf /var/lib/apt/lists/* && \
+                wget -q -O /tmp/torch-${TORCH_VERSION}-cp310-cp310-linux_aarch64.whl https://nvidia.box.com/shared/static/mp164asf3sceb570wvjsrezk1p4ftj8t.whl && \
+                wget -q -O /tmp/torchvision-0.18.0a0+6043bc2-cp310-cp310-linux_aarch64.whl https://nvidia.box.com/shared/static/xpr06qe6ql3l6rj22cu3c45tz1wzi36p.whl && \
+                pip install --no-cache /tmp/torch*.whl && \
+                rm -f /tmp/torch*.whl; \
+            fi; \
+        fi; \
     fi
 
 # install TensorFlow
-ARG TF_VERSION_PY
-RUN if [[ -n $TF_VERSION_PY ]]; then \
-        PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}' | cut -d. -f1,2 | tr -d .) && \
-        ARCH=$(uname -m) && \
-        python3 -m pip install --no-cache https://github.com/ika-rwth-aachen/libtensorflow_cc/releases/download/v${TF_VERSION_PY/+*/}/tensorflow-${TF_VERSION_PY}-cp${PYTHON_VERSION}-cp${PYTHON_VERSION}-linux_${ARCH}.whl; \
+ARG TF_VERSION
+RUN if [[ -n $TF_VERSION ]]; then \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
+            pip3 install tensorflow==${TF_VERSION}; \
+        elif [[ "$TARGETARCH" == "arm64" ]]; then \
+            apt-get update && \
+            apt-get install -y libhdf5-dev && \
+            rm -rf /var/lib/apt/lists/* && \
+            if [[ $UBUNTU_VERSION == "20.04" ]]; then \
+                pip3 install h5py==3.7.0 && \
+                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v512 tensorflow==${TF_VERSION}+nv23.06; \
+            else \
+                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v60 tensorflow==${TF_VERSION}+nv24.07; \
+            fi; \
+        fi; \
+    fi
+
+# === install tritonclient on cuda base ===========================================================
+FROM ros AS ros-cuda
+ARG TARGETARCH
+
+# install triton client
+ARG TRITON_VERSION
+ENV TRITON_VERSION=${TRITON_VERSION}
+RUN if [[ -n $TRITON_VERSION ]]; then \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
+            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/v${TRITON_VERSION}_ubuntu2204.clients.tar.gz; \
+        elif [[ "$TARGETARCH" == "arm64" ]]; then \
+            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/tritonserver${TRITON_VERSION}-igpu.tar.gz; \
+        fi && \
+        mkdir -p /opt/tritonclient && \
+        tar -xzf /tmp/tritonclient.tar.gz -C /opt/tritonclient && \
+        rm /tmp/tritonclient.tar.gz ; \
     fi
 
 # === final ====================================================================
-FROM "ros${BUILD_VERSION}" as final
+FROM "ros${BASE_IMAGE_TYPE}" AS final
 
 # user setup
 ENV DOCKER_USER=dockeruser
@@ -183,11 +236,15 @@ ENV DOCKER_GID=
 
 # print version information during login
 RUN echo "source /.version_information.sh" >> ~/.bashrc
-COPY .version_information.sh /
+COPY .version_information.sh /.version_information.sh
 
 # container startup setup
 ENV WORKSPACE=/docker-ros/ws
 WORKDIR $WORKSPACE
+ENV TINI_VERSION=v0.19.0
+ARG TARGETARCH
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${TARGETARCH} /tini
+RUN chmod +x /tini
 COPY entrypoint.sh /
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/tini", "--", "/entrypoint.sh"]
 CMD ["bash"]

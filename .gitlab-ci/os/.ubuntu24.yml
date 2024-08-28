@@ -1,0 +1,8 @@
+variables:
+  UBUNTU_VERSION: "24.04"
+  _TRITON_VERSION: 2.48.0
+  DISABLE_TENSORRT: "true"
+  DISABLE_TORCH: "true"
+  DISABLE_TF: "true"
+  DISABLE_ML: "true"
+  DISABLE_ML_ARM64: "true"

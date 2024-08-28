@@ -1,11 +1,10 @@
 include: .gitlab-ci/ml-variations/.template.yml
 
 variables:
-  BUILD_VERSION:              ""
+  BASE_IMAGE_TYPE:              ""
   IMAGE_REPO:                 ${IMAGE_BASE}/${ROS_VERSION_NAME}
   IMAGE_REPO_CI:              ${IMAGE_BASE_CI}/${ROS_VERSION_NAME}
   TAG:                        ${ROS_DISTRO}-${ROS_PACKAGE}
   IMAGE:                      ${IMAGE_REPO}:${TAG}
   IMAGE_CI:                   ${IMAGE_REPO_CI}:${CI_COMMIT_REF_SLUG}_${TAG}_ci
   IMAGE_CI_CACHE:             ${IMAGE_CI}
-  CUDA_VERSION:               "11.8"  # only used for variable substitution in the base-ml image (build fails otherwise)

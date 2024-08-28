@@ -1,8 +1,0 @@
-include: .gitlab-ci/ml-variations/ros-tf.yml
-
-variables:
-  TAG:                                  ${ROS_DISTRO}-${ROS_PACKAGE}-tf${TF_VERSION}-py
-  IMAGE_CI_CACHE:                       ${IMAGE_REPO_CI}:${CI_COMMIT_REF_SLUG}_${ROS_DISTRO}-${ROS_PACKAGE}-tf${TF_VERSION}_ci
-  TF_VERSION_CPP:                       ""
-  DISABLE_PUSH_AS_LATEST:               'true'
-  DISABLE_PUSH_AS_DEFAULT_ROS_PACKAGE:  'true'
