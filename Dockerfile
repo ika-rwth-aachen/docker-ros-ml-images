@@ -6,6 +6,7 @@
 #     --build-arg ROS_VERSION=$ROS_VERSION \
 #     --build-arg ROS_DISTRO=$ROS_DISTRO \
 #     --build-arg ROS_PACKAGE=$ROS_PACKAGE \
+#     --build-arg ROS_BUILD_FROM_SRC=$ROS_BUILD_FROM_SRC \
 #     --build-arg TORCH_VERSION=$TORCH_VERSION \
 #     --build-arg TF_VERSION=$TF_VERSION \
 #     --build-arg TRITON_VERSION=$TRITON_VERSION \
@@ -148,13 +149,44 @@ RUN apt-get update && \
 ARG ROS_DISTRO
 ENV ROS_DISTRO=${ROS_DISTRO}
 ARG ROS_PACKAGE=ros-core
-RUN apt-get update && \
-    if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "20.04" ]]; then \
-        apt-get upgrade -y && \
-        apt-get purge -y '*opencv*' ; \
-    fi && \
-    apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-${ROS_PACKAGE} && \
-    rm -rf /var/lib/apt/lists/*
+ARG ROS_BUILD_FROM_SRC=false
+RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
+        apt-get update && \
+        apt-get install -y software-properties-common && \
+        add-apt-repository universe && \
+        apt-get update && \
+        apt-get install -y \
+            python3-flake8-blind-except \
+            python3-flake8-class-newline \
+            python3-flake8-deprecated \
+            python3-mypy \
+            python3-pip \
+            python3-pytest \
+            python3-pytest-cov \
+            python3-pytest-mock \
+            python3-pytest-repeat \
+            python3-pytest-rerunfailures \
+            python3-pytest-runner \
+            python3-pytest-timeout \
+            ros-dev-tools && \
+        mkdir -p /ros${ROS_VERSION}_${ROS_DISTRO}/src && \
+        cd /ros${ROS_VERSION}_${ROS_DISTRO}/src && \
+        vcs import --input https://raw.githubusercontent.com/ros${ROS_VERSION}/ros${ROS_VERSION}/${ROS_DISTRO}/ros${ROS_VERSION}.repos src && \
+        rosdep update --rosdistro ${ROS_DISTRO} && \
+        rosdep install -y --ignore-src --from-paths src --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers" && \
+        mkdir -p /opt/ros/${ROS_DISTRO} && \
+        colcon build --parallel-workers 4 --install-base /opt/ros/${ROS_DISTRO} --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release && \
+        cd - && \
+        rm -rf /var/lib/apt/lists/*; \
+    else \
+        apt-get update && \
+        if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "20.04" ]]; then \
+            apt-get upgrade -y && \
+            apt-get purge -y '*opencv*' ; \
+        fi && \
+        apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-${ROS_PACKAGE} && \
+        rm -rf /var/lib/apt/lists/*; \
+    fi
 
 # source ROS
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc

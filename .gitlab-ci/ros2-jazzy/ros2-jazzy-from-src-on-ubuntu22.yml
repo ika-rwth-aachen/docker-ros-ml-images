@@ -1,0 +1,9 @@
+include:
+  - .gitlab-ci/.template.yml
+  - .gitlab-ci/os/.ubuntu22.yml
+
+variables:
+  ROS_VERSION: 2
+  ROS_VERSION_NAME: ros2
+  ROS_DISTRO: jazzy
+  ROS_BUILD_FROM_SRC: true
