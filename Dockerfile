@@ -177,6 +177,7 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
         mkdir -p /opt/ros/${ROS_DISTRO} && \
         colcon build --parallel-workers 4 --install-base /opt/ros/${ROS_DISTRO} --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release && \
         cd - && \
+        rm -rf /ros${ROS_VERSION}_${ROS_DISTRO} && \
         rm -rf /var/lib/apt/lists/*; \
     else \
         apt-get update && \
