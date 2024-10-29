@@ -26,20 +26,20 @@ FROM --platform=arm64 ubuntu:24.04 AS base-ubuntu24.04-arm64
 
 # === cuda base images ============================================================================
 FROM --platform=amd64 nvcr.io/nvidia/cuda:11.4.3-runtime-ubuntu20.04 AS base-cuda-ubuntu20.04-amd64
-FROM --platform=amd64 nvcr.io/nvidia/cuda:12.2.2-runtime-ubuntu22.04 AS base-cuda-ubuntu22.04-amd64
-FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.0-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu22.04 AS base-cuda-ubuntu22.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-amd64
 
 FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:11.4.19-runtime AS base-cuda-ubuntu20.04-arm64
-FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.2.12-runtime AS base-cuda-ubuntu22.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.6.11-runtime AS base-cuda-ubuntu22.04-arm64
 # no l4t-cuda image for ubuntu24 available
 
 # === tensorrt base images ========================================================================
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:21.08-py3 AS base-tensorrt-ubuntu20.04-amd64
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:23.09-py3 AS base-tensorrt-ubuntu22.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.08-py3 AS base-tensorrt-ubuntu22.04-amd64
 # no tensorrt image for ubuntu24 available
 
 FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.5.2-runtime AS base-tensorrt-ubuntu20.04-arm64
-FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.6.2-runtime AS base-tensorrt-ubuntu22.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime AS base-tensorrt-ubuntu22.04-arm64
 # no l4t-tensorrt image for ubuntu24 available
 
 
@@ -55,10 +55,11 @@ ARG BASE_IMAGE_TYPE
 ARG TARGETARCH
 ARG UBUNTU_VERSION
 RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" && $BASE_IMAGE_TYPE != "" ]]; then \
-        # bug in base image -> replace line in /etc/apt/sources.list to use "r36.3" instead of "r36.0"
+        # add nvidia apt repositories for l4t base images
         # touch: https://forums.balena.io/t/getting-linux-for-tegra-into-a-container-on-balena-os/179421/20
-        sed -i 's/https:\/\/repo.download.nvidia.com\/jetson\/common r36.0 main/https:\/\/repo.download.nvidia.com\/jetson\/common r36.3 main/g' /etc/apt/sources.list && \
-        echo "deb https://repo.download.nvidia.com/jetson/t234 r36.3 main" >> /etc/apt/sources.list && \
+        apt-key adv --fetch-key http://repo.download.nvidia.com/jetson/jetson-ota-public.asc && \
+        echo "deb https://repo.download.nvidia.com/jetson/common r36.4 main" >> /etc/apt/sources.list && \
+        echo "deb https://repo.download.nvidia.com/jetson/t234 r36.4 main" >> /etc/apt/sources.list && \
         mkdir -p /opt/nvidia/l4t-packages/ && \
         touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall; \
     elif [[ $TARGETARCH == "amd64" && $BASE_IMAGE_TYPE == "-tensorrt" ]]; then \
@@ -169,7 +170,7 @@ ARG TORCH_VERSION
 RUN if [[ -n $TORCH_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
             pip3 install torch==${TORCH_VERSION} && \
-            if [[ "$TORCH_VERSION" == "2.3.0" ]]; then pip3 install torchvision==0.18.0; fi; \
+            if [[ "$TORCH_VERSION" == "2.5.0" ]]; then pip3 install torchvision==0.20.0; fi; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
@@ -180,10 +181,10 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
                 pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
             else \
                 apt-get update && \
-                apt-get install -y cuda-cupti-12-2 && \
+                apt-get install -y cuda-cupti-12-6 && \
                 rm -rf /var/lib/apt/lists/* && \
-                wget -q -O /tmp/torch-${TORCH_VERSION}-cp310-cp310-linux_aarch64.whl https://nvidia.box.com/shared/static/mp164asf3sceb570wvjsrezk1p4ftj8t.whl && \
-                wget -q -O /tmp/torchvision-0.18.0a0+6043bc2-cp310-cp310-linux_aarch64.whl https://nvidia.box.com/shared/static/xpr06qe6ql3l6rj22cu3c45tz1wzi36p.whl && \
+                wget -q -O /tmp/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl https://developer.download.nvidia.com/compute/redist/jp/v61/pytorch/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl && \
+                wget -q -O /tmp/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl http://jetson.webredirect.org/jp6/cu126/+f/5f9/67f920de3953f/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl && \
                 pip install --no-cache /tmp/torch*.whl && \
                 rm -f /tmp/torch*.whl; \
             fi; \
@@ -203,7 +204,7 @@ RUN if [[ -n $TF_VERSION ]]; then \
                 pip3 install h5py==3.7.0 && \
                 pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v512 tensorflow==${TF_VERSION}+nv23.06; \
             else \
-                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v60 tensorflow==${TF_VERSION}+nv24.07; \
+                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v61 tensorflow==${TF_VERSION}+nv24.08; \
             fi; \
         fi; \
     fi
