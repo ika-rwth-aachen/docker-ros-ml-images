@@ -220,7 +220,7 @@ RUN if [[ -n $TRITON_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
             wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/v${TRITON_VERSION}_ubuntu2204.clients.tar.gz; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
-            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/tritonserver${TRITON_VERSION}-igpu.tar.gz; \
+            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/tritonserver-${TRITON_VERSION}-igpu.tar.gz; \
         fi && \
         mkdir -p /opt/tritonclient && \
         tar -xzf /tmp/tritonclient.tar.gz -C /opt/tritonclient && \
