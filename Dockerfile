@@ -170,7 +170,7 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
             python3-pytest-timeout \
             ros-dev-tools && \
         mkdir -p /ros${ROS_VERSION}_${ROS_DISTRO}/src && \
-        cd /ros${ROS_VERSION}_${ROS_DISTRO}/src && \
+        cd /ros${ROS_VERSION}_${ROS_DISTRO} && \
         vcs import --input https://raw.githubusercontent.com/ros${ROS_VERSION}/ros${ROS_VERSION}/${ROS_DISTRO}/ros${ROS_VERSION}.repos src && \
         rosdep update --rosdistro ${ROS_DISTRO} && \
         rosdep install -y --ignore-src --from-paths src --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers" && \
