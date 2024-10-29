@@ -5,7 +5,9 @@ workflow:
 
 
 variables:
-  ROS_DISTROS: noetic,humble,iron,jazzy,rolling
+  ROS_DISTROS:
+    value: noetic,humble,iron,jazzy,rolling
+    description: Comma-separated list of ROS Distributions to build [noetic,humble,iron,jazzy,rolling]
 
 
 stages:
