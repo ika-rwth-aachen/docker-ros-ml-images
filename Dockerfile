@@ -169,6 +169,10 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
             python3-pytest-runner \
             python3-pytest-timeout \
             ros-dev-tools && \
+        if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "22.04" ]]; then \
+            apt-get upgrade -y && \
+            apt-get purge -y '*opencv*' ; \
+        fi && \
         mkdir -p /ros${ROS_VERSION}_${ROS_DISTRO}/src && \
         cd /ros${ROS_VERSION}_${ROS_DISTRO} && \
         vcs import --input https://raw.githubusercontent.com/ros${ROS_VERSION}/ros${ROS_VERSION}/${ROS_DISTRO}/ros${ROS_VERSION}.repos src && \
