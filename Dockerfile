@@ -167,7 +167,7 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
             python3-pytest-runner \
             python3-pytest-timeout \
             ros-dev-tools && \
-        if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "22.04" ]]; then \
+        if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "22.04" && "$BASE_IMAGE_TYPE" != "" ]]; then \
             apt-get install -y libopencv; \
         fi && \
         mkdir -p /ros${ROS_VERSION}_${ROS_DISTRO}/src && \
