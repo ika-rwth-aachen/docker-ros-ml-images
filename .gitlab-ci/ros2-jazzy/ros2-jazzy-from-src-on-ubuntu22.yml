@@ -11,3 +11,4 @@ variables:
   DISABLE_TORCH: "false"
   DISABLE_TF: "false"
   DISABLE_ML: "false"
+  DISABLE_ML_ARM64: "false"
