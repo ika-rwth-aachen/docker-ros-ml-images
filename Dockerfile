@@ -153,9 +153,6 @@ ARG ROS_PACKAGE=ros-core
 ARG ROS_BUILD_FROM_SRC=false
 RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
         apt-get update && \
-        apt-get install -y software-properties-common && \
-        add-apt-repository universe && \
-        apt-get update && \
         apt-get install -y \
             python3-flake8-blind-except \
             python3-flake8-class-newline \
