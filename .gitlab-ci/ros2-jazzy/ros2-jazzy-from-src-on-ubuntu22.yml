@@ -5,4 +5,9 @@ include:
   - .gitlab-ci/os/.ubuntu22.yml
 
 variables:
-  ROS_BUILD_FROM_SRC: true
+  ROS_BUILD_FROM_SRC: "true"
+  DISABLE_AMD64: "true"
+  DISABLE_TENSORRT: "false"
+  DISABLE_TORCH: "false"
+  DISABLE_TF: "false"
+  DISABLE_ML: "false"
