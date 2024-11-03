@@ -198,6 +198,14 @@ FROM ros AS ros-tensorrt
 ARG TARGETARCH
 ARG UBUNTU_VERSION
 
+# install libcudnn as it is not installed in nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime
+# TODO: in amd version libcudnn-dev is also installed; check if this is necessary. Maybe install "cudnn9-cuda-12-6" (includes runtime and dev libs)
+RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" ]]; then \
+        apt-get update && \
+        apt-get install -y libcudnn9-cuda-12 && \
+        rm -rf /var/lib/apt/lists/*; \
+    fi
+
 # install PyTorch
 ARG TORCH_VERSION
 RUN if [[ -n $TORCH_VERSION ]]; then \
