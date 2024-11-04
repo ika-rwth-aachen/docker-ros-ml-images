@@ -218,11 +218,11 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
             apt-get install -y libopenblas-base libopenmpi-dev libomp-dev && \
             rm -rf /var/lib/apt/lists/* ; \
             if [[ $UBUNTU_VERSION == "20.04" ]]; then \
-            pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
+                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
             else \
-            apt-get update && \
                 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/${TARGETARCH}/cuda-keyring_1.1-1_all.deb && \
                 sudo dpkg -i cuda-keyring_1.1-1_all.deb && \
+                apt-get update && \
                 apt-get install -y libcusparselt0 libcusparselt-dev cuda-cupti-12-6 && \
                 rm -rf /var/lib/apt/lists/* && \
                 wget -q -O /tmp/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl https://developer.download.nvidia.com/compute/redist/jp/v61/pytorch/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl && \
