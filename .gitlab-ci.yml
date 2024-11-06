@@ -134,18 +134,7 @@ stages:
 #     include: .gitlab-ci/ros2-jazzy/ros2-jazzy-ros-base.yml
 #     strategy: depend
 
-# ros2-jazzy-desktop-full:
-#   stage: ROS 2 Jazzy
-#   rules:
-#     - if: $ROS_DISTROS =~ /.*jazzy.*/
-#   needs:
-#     - job: ros2-jazzy-ros-base
-#       optional: true
-#   trigger:
-#     include: .gitlab-ci/ros2-jazzy/ros2-jazzy-desktop-full.yml
-#     strategy: depend
-
-ros2-jazzy-from-src-on-ubuntu22:
+ros2-jazzy-desktop-full:
   stage: ROS 2 Jazzy
   rules:
     - if: $ROS_DISTROS =~ /.*jazzy.*/
@@ -153,7 +142,18 @@ ros2-jazzy-from-src-on-ubuntu22:
   #   - job: ros2-jazzy-ros-base
   #     optional: true
   trigger:
-    include: .gitlab-ci/ros2-jazzy/ros2-jazzy-from-src-on-ubuntu22.yml
+    include: .gitlab-ci/ros2-jazzy/ros2-jazzy-desktop-full.yml
+    strategy: depend
+
+ros2-jazzy-ubuntu22-desktop-full:
+  stage: ROS 2 Jazzy
+  rules:
+    - if: $ROS_DISTROS =~ /.*jazzy.*/
+  # needs:
+  #   - job: ros2-jazzy-ros-base
+  #     optional: true
+  trigger:
+    include: .gitlab-ci/ros2-jazzy-ubuntu22/ros2-jazzy-ubuntu22.yml
     strategy: depend
 
 # ros2-rolling-ros-core:
