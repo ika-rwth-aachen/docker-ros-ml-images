@@ -1,26 +1,11 @@
+include:
+  - .gitlab-ci/.defaults.yml
+
+
 stages:
   - Build
   - Test
   - Push
-
-
-default:
-  image: docker:20.10.22-git
-  services:
-    - docker:20.10.22-dind
-  tags:
-    - privileged
-  before_script:
-    - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASSWORD" $REGISTRY
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-
-
-variables:
-  DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: /certs
-  GIT_SUBMODULE_STRATEGY: recursive
-  IMAGE_BASE: $REGISTRY_IMAGE
-  IMAGE_BASE_CI: $CI_REGISTRY_IMAGE
 
 
 .docker-build:

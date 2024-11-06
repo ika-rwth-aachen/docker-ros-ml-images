@@ -16,6 +16,7 @@ stages:
   # - ROS 2 Iron
   - ROS 2 Jazzy
   # - ROS 2 Rolling
+  - Postprocessing
 
 
 # ros-noetic-ros-core:
@@ -149,11 +150,21 @@ ros2-jazzy-ubuntu22-desktop-full:
   stage: ROS 2 Jazzy
   rules:
     - if: $ROS_DISTROS =~ /.*jazzy.*/
-  # needs:
-  #   - job: ros2-jazzy-ros-base
-  #     optional: true
   trigger:
     include: .gitlab-ci/ros2-jazzy-ubuntu22/ros2-jazzy-ubuntu22-desktop-full.yml
+    strategy: depend
+
+post-ros2-jazzy-desktop-full:
+  stage: Postprocessing
+  rules:
+    - if: $ROS_DISTROS =~ /.*jazzy.*/
+  needs:
+    - job: ros2-jazzy-desktop-full
+      optional: true
+    - job: ros2-jazzy-ubuntu22-desktop-full
+      optional: true
+  trigger:
+    include: .gitlab-ci/postprocessing/ros2-jazzy-desktop-full.yml
     strategy: depend
 
 # ros2-rolling-ros-core:
