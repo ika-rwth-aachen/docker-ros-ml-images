@@ -153,7 +153,7 @@ ros2-jazzy-ubuntu22-desktop-full:
   #   - job: ros2-jazzy-ros-base
   #     optional: true
   trigger:
-    include: .gitlab-ci/ros2-jazzy-ubuntu22/ros2-jazzy-ubuntu22.yml
+    include: .gitlab-ci/ros2-jazzy-ubuntu22/ros2-jazzy-ubuntu22-desktop-full.yml
     strategy: depend
 
 # ros2-rolling-ros-core:
