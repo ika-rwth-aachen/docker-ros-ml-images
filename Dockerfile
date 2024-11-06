@@ -175,7 +175,7 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
         rosdep update --rosdistro ${ROS_DISTRO} && \
         rosdep install -y --ignore-src --from-paths src --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers" && \
         mkdir -p /opt/ros/${ROS_DISTRO} && \
-        colcon build --parallel-workers 4 --install-base /opt/ros/${ROS_DISTRO} --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release && \
+        colcon build --parallel-workers 32 --install-base /opt/ros/${ROS_DISTRO} --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release && \
         cd - && \
         rm -rf /ros${ROS_VERSION}_${ROS_DISTRO} && \
         rm -rf /var/lib/apt/lists/*; \
