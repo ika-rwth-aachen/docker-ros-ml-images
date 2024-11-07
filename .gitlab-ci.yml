@@ -158,7 +158,7 @@ ros2-jazzy-ubuntu22-desktop-full:
 post-ros2-jazzy-desktop-full:
   stage: Postprocessing
   rules:
-    - if: $ROS_DISTROS =~ /.*jazzy.*/
+    - if: $ROS_DISTROS =~ /.*jazzy.*/ && $CI_COMMIT_TAG
   needs:
     - job: ros2-jazzy-desktop-full
       optional: true
