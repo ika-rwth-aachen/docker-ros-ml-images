@@ -150,6 +150,7 @@ ros2-jazzy-ubuntu22-desktop-full:
   stage: ROS 2 Jazzy
   rules:
     - if: $ROS_DISTROS =~ /.*jazzy.*/
+  needs: []
   trigger:
     include: .gitlab-ci/ros2-jazzy-ubuntu22/ros2-jazzy-ubuntu22-desktop-full.yml
     strategy: depend
