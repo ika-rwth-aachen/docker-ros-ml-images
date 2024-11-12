@@ -33,12 +33,13 @@ def get_image_list(file_path, arch):
     with open(file_path, "r") as file:
         return [line.strip() for line in file if line.strip().endswith(f"-{arch}")]
 
-def get_tool_versions(image_name):
+def get_tool_versions(image_name, arch):
     result = {}
     for tool, command in VERSION_GETTER_COMMANDS.items():
         try:
+            gpu_flag = "--runtime nvidia" if arch == "arm64" else ""
             output = subprocess.check_output(
-                f"docker run --rm {image_name} bash -c \"{command}\"",
+                f"docker run --rm {gpu_flag} {image_name} bash -c \"{command}\"",
                 shell=True,
                 stderr=subprocess.STDOUT
             )
@@ -69,7 +70,7 @@ def main():
     with tqdm.tqdm(images, desc="Getting info") as pbar:
         for image in pbar:
             pbar.set_postfix(image=image)
-            all_versions[image] = get_tool_versions(image)
+            all_versions[image] = get_tool_versions(image, args.arch)
     export_to_csv(all_versions, os.path.join(SCRIPT_PATH, f"image_versions-{args.arch}.csv"), args.arch)
 
 if __name__ == "__main__":
