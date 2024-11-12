@@ -31,7 +31,7 @@ def parse_arguments():
 
 def get_image_list(file_path, arch):
     with open(file_path, "r") as file:
-        return [line.strip() for line in file if line.strip().endswith(f"-{arch}")]
+        return [line.strip() for line in file]
 
 def get_tool_versions(image_name, arch):
     result = {}
