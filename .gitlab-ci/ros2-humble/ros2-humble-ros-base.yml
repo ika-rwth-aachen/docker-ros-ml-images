@@ -2,6 +2,3 @@ include:
   - .gitlab-ci/.template.yml
   - .gitlab-ci/ros2-humble/.ros2-humble.yml
   - .gitlab-ci/ros-packages/.ros-base.yml
-
-variables:
-  PUSH_AS_LATEST: 'true'

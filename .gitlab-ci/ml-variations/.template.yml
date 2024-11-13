@@ -1,26 +1,11 @@
+include:
+  - .gitlab-ci/.defaults.yml
+
+
 stages:
   - Build
   - Test
   - Push
-
-
-default:
-  image: docker:20.10.22-git
-  services:
-    - docker:20.10.22-dind
-  tags:
-    - privileged
-  before_script:
-    - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASSWORD" $REGISTRY
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-
-
-variables:
-  DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: /certs
-  GIT_SUBMODULE_STRATEGY: recursive
-  IMAGE_BASE: $REGISTRY_IMAGE
-  IMAGE_BASE_CI: $CI_REGISTRY_IMAGE
 
 
 .docker-build:
@@ -37,6 +22,7 @@ variables:
         --build-arg ROS_VERSION=$ROS_VERSION
         --build-arg ROS_DISTRO=$ROS_DISTRO
         --build-arg ROS_PACKAGE=$ROS_PACKAGE
+        --build-arg ROS_BUILD_FROM_SRC=$ROS_BUILD_FROM_SRC
         --build-arg TORCH_VERSION=$TORCH_VERSION
         --build-arg TF_VERSION=$TF_VERSION
         --build-arg TRITON_VERSION=$TRITON_VERSION
@@ -45,25 +31,29 @@ variables:
 .docker-push-manifest:
   script:
     - |-
-      if [[ "${DISABLE_AMD64}" != "true" ]] && [[ "${DISABLE_ML_AMD64}" != "true" || "${BASE_IMAGE_TYPE}" == "" ]]; then
+      if [[ "${DISABLE_AMD64}" == "true" ]] || [[ "${DISABLE_PLAIN_AMD64}" == "true" && "${IMAGE_TYPE}" == "plain" ]] || [[ "${DISABLE_CUDA_AMD64}" == "true" && "${IMAGE_TYPE}" == "cuda" ]] || [[ "${DISABLE_TENSORRT_AMD64}" == "true" && "${IMAGE_TYPE}" == "tensorrt" ]] || [[ "${DISABLE_TRITON_AMD64}" == "true" && "${IMAGE_TYPE}" == "triton" ]] || [[ "${DISABLE_TORCH_AMD64}" == "true" && "${IMAGE_TYPE}" == "torch" ]] || [[ "${DISABLE_TF_AMD64}" == "true" && "${IMAGE_TYPE}" == "tf" ]] || [[ "${DISABLE_ML_AMD64}" == "true" && "${IMAGE_TYPE}" == "ml" ]]; then
+        AMD64_IS_DISABLED="true"
+      fi
+      if [[ "${DISABLE_ARM64}" == "true" ]] || [[ "${DISABLE_PLAIN_ARM64}" == "true" && "${IMAGE_TYPE}" == "plain" ]] || [[ "${DISABLE_CUDA_ARM64}" == "true" && "${IMAGE_TYPE}" == "cuda" ]] || [[ "${DISABLE_TENSORRT_ARM64}" == "true" && "${IMAGE_TYPE}" == "tensorrt" ]] || [[ "${DISABLE_TRITON_ARM64}" == "true" && "${IMAGE_TYPE}" == "triton" ]] || [[ "${DISABLE_TORCH_ARM64}" == "true" && "${IMAGE_TYPE}" == "torch" ]] || [[ "${DISABLE_TF_ARM64}" == "true" && "${IMAGE_TYPE}" == "tf" ]] || [[ "${DISABLE_ML_ARM64}" == "true" && "${IMAGE_TYPE}" == "ml" ]]; then
+        ARM64_IS_DISABLED="true"
+      fi
+      if [[ "${AMD64_IS_DISABLED}" != "true" ]]; then
         docker pull ${IMAGE_CI}-amd64
         docker tag ${IMAGE_CI}-amd64 ${IMAGE}-amd64
         docker push ${IMAGE}-amd64
-        AMD64_IS_ENABLED="true"
       fi
-      if [[ "${DISABLE_ARM64}" != "true" ]] && [[ "${DISABLE_ML_ARM64}" != "true" || "${BASE_IMAGE_TYPE}" == "" ]]; then
+      if [[ "${ARM64_IS_DISABLED}" != "true" ]]; then
         docker pull ${IMAGE_CI}-arm64
         docker tag ${IMAGE_CI}-arm64 ${IMAGE}-arm64
         docker push ${IMAGE}-arm64
-        ARM64_IS_ENABLED="true"
       fi
-      if [[ "${AMD64_IS_ENABLED}" == "true" && "${ARM64_IS_ENABLED}" == "true" ]]; then
+      if [[ "${AMD64_IS_DISABLED}" != "true" && "${ARM64_IS_DISABLED}" != "true" ]]; then
         docker manifest create ${IMAGE} --amend ${IMAGE}-amd64 --amend ${IMAGE}-arm64
         if [[ ${TAGGED_IMAGE} ]]; then docker manifest create ${TAGGED_IMAGE} --amend ${IMAGE}-amd64 --amend ${IMAGE}-arm64; fi
-      elif [[ "${AMD64_IS_ENABLED}" == "true" ]]; then
+      elif [[ "${AMD64_IS_DISABLED}" != "true" ]]; then
         docker manifest create ${IMAGE} --amend ${IMAGE}-amd64
         if [[ ${TAGGED_IMAGE} ]]; then docker manifest create ${TAGGED_IMAGE} --amend ${IMAGE}-amd64; fi
-      elif [[ "${ARM64_IS_ENABLED}" == "true" ]]; then
+      elif [[ "${ARM64_IS_DISABLED}" != "true" ]]; then
         docker manifest create ${IMAGE} --amend ${IMAGE}-arm64
         if [[ ${TAGGED_IMAGE} ]]; then docker manifest create ${TAGGED_IMAGE} --amend ${IMAGE}-arm64; fi
       fi
@@ -77,7 +67,19 @@ build-amd64:
   rules:
     - if: $DISABLE_AMD64 == 'true'
       when: never
-    - if: $DISABLE_ML_AMD64 == 'true' && $BASE_IMAGE_TYPE != ''
+    - if: $DISABLE_PLAIN_AMD64 == 'true' && $IMAGE_TYPE == 'plain'
+      when: never
+    - if: $DISABLE_CUDA_AMD64 == 'true' && $IMAGE_TYPE == 'cuda'
+      when: never
+    - if: $DISABLE_TENSORRT_AMD64 == 'true' && $IMAGE_TYPE == 'tensorrt'
+      when: never
+    - if: $DISABLE_TRITON_AMD64 == 'true' && $IMAGE_TYPE == 'triton'
+      when: never
+    - if: $DISABLE_TORCH_AMD64 == 'true' && $IMAGE_TYPE == 'torch'
+      when: never
+    - if: $DISABLE_TF_AMD64 == 'true' && $IMAGE_TYPE == 'tf'
+      when: never
+    - if: $DISABLE_ML_AMD64 == 'true' && $IMAGE_TYPE == 'ml'
       when: never
     - when: on_success
   script:
@@ -93,7 +95,21 @@ build-arm64:
   rules:
     - if: $DISABLE_ARM64 == 'true'
       when: never
-    - if: $DISABLE_ML_ARM64 == 'true' && $BASE_IMAGE_TYPE != ''
+    - if: $DISABLE_ARM64 == 'true'
+      when: never
+    - if: $DISABLE_PLAIN_ARM64 == 'true' && $IMAGE_TYPE == 'plain'
+      when: never
+    - if: $DISABLE_CUDA_ARM64 == 'true' && $IMAGE_TYPE == 'cuda'
+      when: never
+    - if: $DISABLE_TENSORRT_ARM64 == 'true' && $IMAGE_TYPE == 'tensorrt'
+      when: never
+    - if: $DISABLE_TRITON_ARM64 == 'true' && $IMAGE_TYPE == 'triton'
+      when: never
+    - if: $DISABLE_TORCH_ARM64 == 'true' && $IMAGE_TYPE == 'torch'
+      when: never
+    - if: $DISABLE_TF_ARM64 == 'true' && $IMAGE_TYPE == 'tf'
+      when: never
+    - if: $DISABLE_ML_ARM64 == 'true' && $IMAGE_TYPE == 'ml'
       when: never
     - when: on_success
   script:

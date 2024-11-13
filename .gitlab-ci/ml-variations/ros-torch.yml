@@ -3,6 +3,7 @@ include:
   - .gitlab-ci/ml-variations/.torch.yml
 
 variables:
+  IMAGE_TYPE:               torch
   IMAGE_REPO:               ${IMAGE_BASE}/${ROS_VERSION_NAME}-torch
   IMAGE_REPO_CI:            ${IMAGE_BASE_CI}/${ROS_VERSION_NAME}-torch
   TAG:                      ${ROS_DISTRO}-${ROS_PACKAGE}-torch${TORCH_VERSION}

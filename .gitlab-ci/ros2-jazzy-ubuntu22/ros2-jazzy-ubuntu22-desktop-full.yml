@@ -1,0 +1,19 @@
+include:
+  - .gitlab-ci/.template.yml
+
+variables:
+  UBUNTU_VERSION: "22.04"
+  _TF_VERSION: 2.16.1
+  _TORCH_VERSION: 2.3.0
+  _TRITON_VERSION: 2.48.0
+
+  DISABLE_PLAIN: "true"
+  DISABLE_CUDA_AMD64: "true"
+  DISABLE_TRITON_AMD64: "true"
+
+  ROS_VERSION: 2
+  ROS_VERSION_NAME: ros2
+  ROS_DISTRO: jazzy
+  ROS_BUILD_FROM_SRC: "true"
+
+  ROS_PACKAGE: ubuntu22-desktop-full # only used for tag

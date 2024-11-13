@@ -1,0 +1,89 @@
+include:
+  - .gitlab-ci/.defaults.yml
+
+
+stages:
+  - Postprocessing
+
+
+.docker-push-manifest:
+  script:
+    - docker pull ${IMAGE_CI_AMD64}
+    - docker pull ${IMAGE_CI_ARM64}
+    - docker manifest create ${IMAGE} --amend ${IMAGE_CI_AMD64} --amend ${IMAGE_CI_ARM64}
+    - docker manifest create ${TAGGED_IMAGE} --amend ${IMAGE_CI_AMD64} --amend ${IMAGE_CI_ARM64}
+    - docker manifest push ${IMAGE}
+    - docker manifest push ${TAGGED_IMAGE}
+
+
+manifest-cuda:
+  stage: Postprocessing
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - !reference [.docker-push-manifest, script]
+  variables:
+    IMAGE_CI_AMD64: ${IMAGE_BASE_CI}/ros2-cuda:${CI_COMMIT_REF_SLUG}_jazzy-desktop-full_ci-amd64
+    IMAGE_CI_ARM64: ${IMAGE_BASE_CI}/ros2-cuda:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full_ci-arm64
+    IMAGE:          ${IMAGE_BASE}/ros2-cuda:jazzy-desktop-full
+    TAGGED_IMAGE:   ${IMAGE}-v${CI_COMMIT_TAG}
+
+manifest-triton:
+  stage: Postprocessing
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - !reference [.docker-push-manifest, script]
+  variables:
+    IMAGE_CI_AMD64: ${IMAGE_BASE_CI}/ros2-triton:${CI_COMMIT_REF_SLUG}_jazzy-desktop-full-triton2.48.0_ci-amd64
+    IMAGE_CI_ARM64: ${IMAGE_BASE_CI}/ros2-triton:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full-triton2.48.0_ci-arm64
+    IMAGE:          ${IMAGE_BASE}/ros2-triton:jazzy-desktop-full-triton2.48.0
+    TAGGED_IMAGE:   ${IMAGE}-v${CI_COMMIT_TAG}
+
+retag-tensorrt:
+  stage: Postprocessing
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - !reference [.docker-push-manifest, script]
+  variables:
+    IMAGE_CI_AMD64: ${IMAGE_BASE_CI}/ros2-tensorrt:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full_ci-amd64
+    IMAGE_CI_ARM64: ${IMAGE_BASE_CI}/ros2-tensorrt:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full_ci-arm64
+    IMAGE:          ${IMAGE_BASE}/ros2-tensorrt:jazzy-desktop-full
+    TAGGED_IMAGE:   ${IMAGE}-v${CI_COMMIT_TAG}
+
+retag-torch:
+  stage: Postprocessing
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - !reference [.docker-push-manifest, script]
+  variables:
+    IMAGE_CI_AMD64: ${IMAGE_BASE_CI}/ros2-torch:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full-torch2.3.0_ci-amd64
+    IMAGE_CI_ARM64: ${IMAGE_BASE_CI}/ros2-torch:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full-torch2.3.0_ci-arm64
+    IMAGE:          ${IMAGE_BASE}/ros2-torch:jazzy-desktop-full-torch2.3.0
+    TAGGED_IMAGE:   ${IMAGE}-v${CI_COMMIT_TAG}
+
+retag-tf:
+  stage: Postprocessing
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - !reference [.docker-push-manifest, script]
+  variables:
+    IMAGE_CI_AMD64: ${IMAGE_BASE_CI}/ros2-tf:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full-tf2.16.1_ci-amd64
+    IMAGE_CI_ARM64: ${IMAGE_BASE_CI}/ros2-tf:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full-tf2.16.1_ci-arm64
+    IMAGE:          ${IMAGE_BASE}/ros2-tf:jazzy-desktop-full-tf2.16.1
+    TAGGED_IMAGE:   ${IMAGE}-v${CI_COMMIT_TAG}
+
+retag-ml:
+  stage: Postprocessing
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - !reference [.docker-push-manifest, script]
+  variables:
+    IMAGE_CI_AMD64: ${IMAGE_BASE_CI}/ros2-ml:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full-tf2.16.1-torch2.3.0_ci-amd64
+    IMAGE_CI_ARM64: ${IMAGE_BASE_CI}/ros2-ml:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full-tf2.16.1-torch2.3.0_ci-arm64
+    IMAGE:          ${IMAGE_BASE}/ros2-ml:jazzy-desktop-full-tf2.16.1-torch2.3.0
+    TAGGED_IMAGE:   ${IMAGE}-v${CI_COMMIT_TAG}

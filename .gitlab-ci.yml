@@ -5,7 +5,9 @@ workflow:
 
 
 variables:
-  ROS_DISTROS: noetic,humble,iron,jazzy,rolling
+  ROS_DISTROS:
+    value: noetic,humble,iron,jazzy,rolling
+    description: Comma-separated list of ROS Distributions to build [noetic,humble,iron,jazzy,rolling]
 
 
 stages:
@@ -14,6 +16,7 @@ stages:
   - ROS 2 Iron
   - ROS 2 Jazzy
   - ROS 2 Rolling
+  - Postprocessing
 
 
 ros-noetic-ros-core:
@@ -143,6 +146,27 @@ ros2-jazzy-desktop-full:
     include: .gitlab-ci/ros2-jazzy/ros2-jazzy-desktop-full.yml
     strategy: depend
 
+ros2-jazzy-ubuntu22-desktop-full:
+  stage: ROS 2 Jazzy
+  rules:
+    - if: $ROS_DISTROS =~ /.*jazzy.*/
+  needs: []
+  trigger:
+    include: .gitlab-ci/ros2-jazzy-ubuntu22/ros2-jazzy-ubuntu22-desktop-full.yml
+    strategy: depend
+
+post-ros2-jazzy-desktop-full:
+  stage: Postprocessing
+  rules:
+    - if: $ROS_DISTROS =~ /.*jazzy.*/ && $CI_COMMIT_TAG
+  needs:
+    - job: ros2-jazzy-desktop-full
+      optional: true
+    - job: ros2-jazzy-ubuntu22-desktop-full
+      optional: true
+  trigger:
+    include: .gitlab-ci/postprocessing/ros2-jazzy-desktop-full.yml
+    strategy: depend
 
 ros2-rolling-ros-core:
   stage: ROS 2 Rolling
