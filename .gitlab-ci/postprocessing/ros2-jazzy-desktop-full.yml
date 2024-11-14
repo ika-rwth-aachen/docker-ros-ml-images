@@ -10,8 +10,12 @@ stages:
   script:
     - docker pull ${IMAGE_CI_AMD64}
     - docker pull ${IMAGE_CI_ARM64}
-    - docker manifest create ${IMAGE} --amend ${IMAGE_CI_AMD64} --amend ${IMAGE_CI_ARM64}
-    - docker manifest create ${TAGGED_IMAGE} --amend ${IMAGE_CI_AMD64} --amend ${IMAGE_CI_ARM64}
+    - docker tag ${IMAGE_CI_AMD64} ${IMAGE}-amd64
+    - docker tag ${IMAGE_CI_ARM64} ${IMAGE}-arm64
+    - docker push ${IMAGE}-amd64
+    - docker push ${IMAGE}-arm64
+    - docker manifest create ${IMAGE} --amend ${IMAGE}-amd64 --amend ${IMAGE}-arm64
+    - docker manifest create ${TAGGED_IMAGE} --amend ${IMAGE}-amd64 --amend ${IMAGE}-arm64
     - docker manifest push ${IMAGE}
     - docker manifest push ${TAGGED_IMAGE}
 
