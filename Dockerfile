@@ -69,7 +69,7 @@ RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" && $BASE_IMAGE_TY
         rm -rf /tmp/cuda-keyring_1.0-1_all.deb; \
     fi
 
-# install essentials via apt
+# install essentials
 RUN apt-get update && \
     apt-get install -y \
         bsdmainutils \
@@ -140,8 +140,9 @@ RUN apt-get update && \
             python3-catkin-tools ; \
     elif [[ "$ROS_VERSION" == "2" ]]; then \
         apt-get install -y \
-            python3-colcon-common-extensions \
-        && pip install colcon-clean ; \
+            python3-colcon-common-extensions && \
+        pip install colcon-clean && \
+        pip install ros2-pkg-create ; \
     fi \
     && rm -rf /var/lib/apt/lists/*
 
