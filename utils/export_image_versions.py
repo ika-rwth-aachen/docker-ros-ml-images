@@ -22,6 +22,7 @@ VERSION_GETTER_COMMANDS = {
     "Triton": "echo \\$TRITON_VERSION",
     "PyTorch": "python -c 'exec(\\\"try:\\n  import torch; print(torch.__version__);\\n\\rexcept ImportError:\\n  pass\\\")' | cut -d+ -f1 | cut -d- -f1 | sed 's/a0//g'",
     "TensorFlow": "export TF_CPP_MIN_LOG_LEVEL='1' && python -c 'exec(\\\"try:\\n  import os; import tensorflow as tf; print(tf.__version__);\\n\\rexcept ImportError:\\n  pass\\\")' | cut -d+ -f1 | cut -d- -f1",
+    "ONNX RT": "python -c 'exec(\\\"try:\\n  import onnxruntime; print(onnxruntime.__version__);\\n\\rexcept ImportError:\\n  pass\\\")'",
 }
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))

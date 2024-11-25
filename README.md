@@ -41,12 +41,12 @@ docker run --rm rwthika/ros2-ml:humble \
 
 With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch machine learning-enabled ROS Docker images. Starting with plain ROS images, we offer successively larger ROS base images that also come with [*NVIDIA CUDA*](https://developer.nvidia.com/cuda-toolkit), [*NVIDIA TensorRT*](https://developer.nvidia.com/tensorrt), [*NVIDIA Triton Client*](https://developer.nvidia.com/triton-inference-server), [*PyTorch*](https://pytorch.org/) and/or [*TensorFlow*](https://www.tensorflow.org/) installations. Combining the components listed in the table below, we have built more than 100 multi-arch images and make them publicly available on [DockerHub](https://hub.docker.com/u/rwthika). In addition to the provided images, we also publish the [generic Dockerfile](./Dockerfile) used to flexibly build images combining the different components.
 
-| Component        | Variations                                                              |
-| ---------------- | ----------------------------------------------------------------------- |
-| ROS Distribution | noetic, humble, jazzy, rolling                                          |
-| ROS Components   | core, base, desktop-full                                                |
-| ML Framework     | NVIDIA CUDA, NVIDIA TensorRT, NVIDIA Triton Client, PyTorch, TensorFlow |
-| Architecture     | amd64, arm64                                                            |
+| Component        | Variations                                                                            |
+| ---------------- | ------------------------------------------------------------------------------------- |
+| ROS Distribution | noetic, humble, jazzy, rolling                                                        |
+| ROS Components   | core, base, desktop-full                                                              |
+| ML Framework     | NVIDIA CUDA, NVIDIA TensorRT, NVIDIA Triton Client, PyTorch, TensorFlow, ONNX Runtime |
+| Architecture     | amd64, arm64                                                                          |
 
 > [!NOTE]
 > All images are targeted at NVIDIA GPUs and therefore base off of official [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). The arm64 images, in particular, target NVIDIA Jetson SoCs and are based off of [NVIDIA L4T base images](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base). Ubuntu 22 images are provided with JetPack 6, Ubuntu 20 images with JetPack 5.
@@ -370,6 +370,7 @@ docker buildx build \
   --build-arg ROS_BUILD_FROM_SRC=$ROS_BUILD_FROM_SRC \
   --build-arg TORCH_VERSION=$TORCH_VERSION \
   --build-arg TF_VERSION=$TF_VERSION \
+  --build-arg ONNX_RUNTIME_VERSION=$ONNX_RUNTIME_VERSION \
   --build-arg TRITON_VERSION=$TRITON_VERSION \
   --tag $IMAGE .
 ```
