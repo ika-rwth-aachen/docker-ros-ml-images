@@ -62,7 +62,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 Containers of the provided images start with `root` user by default. If the two environment variables `DOCKER_UID` and `DOCKER_GID` are passed, a new user with the corresponding UID/GID is created on the fly. Most importantly, this features allows to mount and edit files of the host user in the container without having to deal with permission issues.
 
 ```bash
-docker run --rm -it -e DOCKER_UID=$(id -u) -e DOCKER_GID=$(id -g) -e DOCKER_USER=$(id -un) rwthika/ros:latest
+docker run --rm -it -e DOCKER_UID=$(id -u) -e DOCKER_GID=$(id -g) -e DOCKER_USER=$(id -un) rwthika/ros2:latest
 ```
 
 The password of the custom user is set to its username (`dockeruser:dockeruser` by default).
@@ -80,20 +80,20 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                   |      Arch      | Ubuntu  | Python  |   ROS   | ROS Package  | CMake  | CUDA  | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
-| :------------------------------------ | :------------: | :-----: | :-----: | :-----: | :----------: | :----: | :---: | :---: | :------: | :----: | :-----: | :--------: |
-| `humble-ros-core`                     | amd64<br>arm64 | 22.04.4 | 3.10.12 | humble  |   ros-core   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `latest`, `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.4 | 3.10.12 | humble  |   ros-base   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `humble-desktop-full`                 | amd64<br>arm64 | 22.04.4 | 3.10.12 | humble  | desktop-full | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `iron-ros-core`                       | amd64<br>arm64 | 22.04.4 | 3.10.12 |  iron   |   ros-core   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `iron`, `iron-ros-base`               | amd64<br>arm64 | 22.04.4 | 3.10.12 |  iron   |   ros-base   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `iron-desktop-full`                   | amd64<br>arm64 | 22.04.4 | 3.10.12 |  iron   | desktop-full | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `jazzy-ros-core`                      | amd64<br>arm64 |  24.04  | 3.12.3  |  jazzy  |   ros-core   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `jazzy`, `jazzy-ros-base`             | amd64<br>arm64 |  24.04  | 3.12.3  |  jazzy  |   ros-base   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `jazzy-desktop-full`                  | amd64<br>arm64 |  24.04  | 3.12.3  |  jazzy  | desktop-full | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `rolling-ros-core`                    | amd64<br>arm64 |  24.04  | 3.12.3  | rolling |   ros-core   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `rolling`, `rolling-ros-base`         | amd64<br>arm64 |  24.04  | 3.12.3  | rolling |   ros-base   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `rolling-desktop-full`                | amd64<br>arm64 |  24.04  | 3.12.3  | rolling | desktop-full | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| Tag                                 |      Arch      | Ubuntu  | Python  |   ROS   | ROS Package  | CMake  | CUDA  | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
+| :---------------------------------- | :------------: | :-----: | :-----: | :-----: | :----------: | :----: | :---: | :---: | :------: | :----: | :-----: | :--------: |
+| `humble-ros-core`                   | amd64<br>arm64 | 22.04.5 | 3.10.12 | humble  |   ros-core   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `humble`, `humble-ros-base`         | amd64<br>arm64 | 22.04.5 | 3.10.12 | humble  |   ros-base   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `humble-desktop-full`               | amd64<br>arm64 | 22.04.5 | 3.10.12 | humble  | desktop-full | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `iron-ros-core`                     | amd64<br>arm64 | 22.04.5 | 3.10.12 |  iron   |   ros-core   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `iron`, `iron-ros-base`             | amd64<br>arm64 | 22.04.5 | 3.10.12 |  iron   |   ros-base   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `iron-desktop-full`                 | amd64<br>arm64 | 22.04.5 | 3.10.12 |  iron   | desktop-full | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `jazzy-ros-core`                    | amd64<br>arm64 | 24.04.1 | 3.12.3  |  jazzy  |   ros-core   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `latest`, `jazzy`, `jazzy-ros-base` | amd64<br>arm64 | 24.04.1 | 3.12.3  |  jazzy  |   ros-base   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `jazzy-desktop-full`                | amd64<br>arm64 | 24.04.1 | 3.12.3  |  jazzy  | desktop-full | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `rolling-ros-core`                  | amd64<br>arm64 | 24.04.1 | 3.12.3  | rolling |   ros-core   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `rolling`, `rolling-ros-base`       | amd64<br>arm64 | 24.04.1 | 3.12.3  | rolling |   ros-base   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
+| `rolling-desktop-full`              | amd64<br>arm64 | 24.04.1 | 3.12.3  | rolling | desktop-full | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
 
 </details>
 </blockquote>
@@ -106,20 +106,20 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                   |      Arch      | Ubuntu  | Python  |   ROS   | ROS Package  | CMake  |   CUDA   | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
-| :------------------------------------ | :------------: | :-----: | :-----: | :-----: | :----------: | :----: | :------: | :---: | :------: | :----: | :-----: | :--------: |
-| `humble-ros-core`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  |   ros-core   | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
-| `latest`, `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  |   ros-base   | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
-| `humble-desktop-full`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  | desktop-full | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
-| `iron-ros-core`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   |   ros-core   | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
-| `iron`, `iron-ros-base`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   |   ros-base   | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
-| `iron-desktop-full`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   | desktop-full | 3.22.1 | 12.2.140 |   -   |    -     |   -    |    -    |     -      |
-| `jazzy-ros-core`                      |     amd64      |  24.04  | 3.12.3  |  jazzy  |   ros-core   | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
-| `jazzy`, `jazzy-ros-base`             |     amd64      |  24.04  | 3.12.3  |  jazzy  |   ros-base   | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
-| `jazzy-desktop-full`                  |     amd64      |  24.04  | 3.12.3  |  jazzy  | desktop-full | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
-| `rolling-ros-core`                    |     amd64      |  24.04  | 3.12.3  | rolling |   ros-core   | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
-| `rolling`, `rolling-ros-base`         |     amd64      |  24.04  | 3.12.3  | rolling |   ros-base   | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
-| `rolling-desktop-full`                |     amd64      |  24.04  | 3.12.3  | rolling | desktop-full | 3.28.3 | 12.6.37  |   -   |    -     |   -    |    -    |     -      |
+| Tag                                 |      Arch      |      Ubuntu      |      Python       |   ROS   |          ROS Package           |      CMake       |        CUDA         | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
+| :---------------------------------- | :------------: | :--------------: | :---------------: | :-----: | :----------------------------: | :--------------: | :-----------------: | :---: | :------: | :----: | :-----: | :--------: |
+| `humble-ros-core`                   | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |            ros-core            |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
+| `humble`, `humble-ros-base`         | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |            ros-base            |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
+| `humble-desktop-full`               | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |          desktop-full          |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
+| `iron-ros-core`                     | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |            ros-core            |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
+| `iron`, `iron-ros-base`             | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |            ros-base            |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
+| `iron-desktop-full`                 | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |          desktop-full          |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
+| `jazzy-ros-core`                    |     amd64      |      24.04       |      3.12.3       |  jazzy  |            ros-core            |      3.28.3      |       12.6.37       |   -   |    -     |   -    |    -    |     -      |
+| `latest`, `jazzy`, `jazzy-ros-base` |     amd64      |      24.04       |      3.12.3       |  jazzy  |            ros-base            |      3.28.3      |       12.6.37       |   -   |    -     |   -    |    -    |     -      |
+| `jazzy-desktop-full`                | amd64<br>arm64 | 24.04<br>22.04.3 | 3.12.3<br>3.10.12 |  jazzy  | desktop-full<br>built from src | 3.28.3<br>3.22.1 | 12.6.37<br>12.2.140 |   -   |    -     |   -    |    -    |     -      |
+| `rolling-ros-core`                  |     amd64      |      24.04       |      3.12.3       | rolling |            ros-core            |      3.28.3      |       12.6.37       |   -   |    -     |   -    |    -    |     -      |
+| `rolling`, `rolling-ros-base`       |     amd64      |      24.04       |      3.12.3       | rolling |            ros-base            |      3.28.3      |       12.6.37       |   -   |    -     |   -    |    -    |     -      |
+| `rolling-desktop-full`              |     amd64      |      24.04       |      3.12.3       | rolling |          desktop-full          |      3.28.3      |       12.6.37       |   -   |    -     |   -    |    -    |     -      |
 
 </details>
 </blockquote>
@@ -132,14 +132,15 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                   |      Arch      | Ubuntu  | Python  |  ROS   | ROS Package  |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
-| :------------------------------------ | :------------: | :-----: | :-----: | :----: | :----------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
-| `humble-ros-core`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
-| `latest`, `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
-| `humble-desktop-full`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
-| `iron-ros-core`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
-| `iron`, `iron-ros-base`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
-| `iron-desktop-full`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| Tag                         |      Arch      | Ubuntu  | Python  |  ROS   |  ROS Package   |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
+| :-------------------------- | :------------: | :-----: | :-----: | :----: | :------------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
+| `humble-ros-core`           | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| `humble-desktop-full`       | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| `iron-ros-core`             | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| `iron`, `iron-ros-base`     | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| `iron-desktop-full`         | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
+| `jazzy-desktop-full`        | amd64<br>arm64 | 22.04.3 | 3.10.12 | jazzy  | built from src | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
 
 </details>
 </blockquote>
@@ -152,20 +153,20 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                                |      Arch      | Ubuntu  | Python  |   ROS   | ROS Package  | CMake  |   CUDA   | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
-| :------------------------------------------------- | :------------: | :-----: | :-----: | :-----: | :----------: | :----: | :------: | :---: | :------: | :----: | :-----: | :--------: |
-| `humble-ros-core-triton2.48.0`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  |   ros-core   | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
-| `latest`, `humble`, `humble-ros-base-triton2.48.0` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  |   ros-base   | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
-| `humble-desktop-full-triton2.48.0`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble  | desktop-full | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
-| `iron-ros-core-triton2.48.0`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   |   ros-core   | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
-| `iron`, `iron-ros-base-triton2.48.0`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   |   ros-base   | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
-| `iron-desktop-full-triton2.48.0`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron   | desktop-full | 3.22.1 | 12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
-| `jazzy-ros-core-triton2.48.0`                      |     amd64      |  24.04  | 3.12.3  |  jazzy  |   ros-core   | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
-| `jazzy`, `jazzy-ros-base-triton2.48.0`             |     amd64      |  24.04  | 3.12.3  |  jazzy  |   ros-base   | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
-| `jazzy-desktop-full-triton2.48.0`                  |     amd64      |  24.04  | 3.12.3  |  jazzy  | desktop-full | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
-| `rolling-ros-core-triton2.48.0`                    |     amd64      |  24.04  | 3.12.3  | rolling |   ros-core   | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
-| `rolling`, `rolling-ros-base-triton2.48.0`         |     amd64      |  24.04  | 3.12.3  | rolling |   ros-base   | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
-| `rolling-desktop-full-triton2.48.0`                |     amd64      |  24.04  | 3.12.3  | rolling | desktop-full | 3.28.3 | 12.6.37  |   -   |    -     | 2.48.0 |    -    |     -      |
+| Tag                                              |      Arch      |      Ubuntu      |      Python       |   ROS   |          ROS Package           |      CMake       |        CUDA         | cuDNN | TensorRT | Triton | PyTorch | TensorFlow |
+| :----------------------------------------------- | :------------: | :--------------: | :---------------: | :-----: | :----------------------------: | :--------------: | :-----------------: | :---: | :------: | :----: | :-----: | :--------: |
+| `humble-ros-core-triton2.48.0`                   | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |            ros-core            |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
+| `humble`, `humble-ros-base-triton2.48.0`         | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |            ros-base            |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
+| `humble-desktop-full-triton2.48.0`               | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |          desktop-full          |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
+| `iron-ros-core-triton2.48.0`                     | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |            ros-core            |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
+| `iron`, `iron-ros-base-triton2.48.0`             | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |            ros-base            |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
+| `iron-desktop-full-triton2.48.0`                 | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |          desktop-full          |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
+| `jazzy-ros-core-triton2.48.0`                    |     amd64      |      24.04       |      3.12.3       |  jazzy  |            ros-core            |      3.28.3      |       12.6.37       |   -   |    -     | 2.48.0 |    -    |     -      |
+| `latest`, `jazzy`, `jazzy-ros-base-triton2.48.0` |     amd64      |      24.04       |      3.12.3       |  jazzy  |            ros-base            |      3.28.3      |       12.6.37       |   -   |    -     | 2.48.0 |    -    |     -      |
+| `jazzy-desktop-full-triton2.48.0`                | amd64<br>arm64 | 24.04<br>22.04.3 | 3.12.3<br>3.10.12 |  jazzy  | desktop-full<br>built from src | 3.28.3<br>3.22.1 | 12.6.37<br>12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
+| `rolling-ros-core-triton2.48.0`                  |     amd64      |      24.04       |      3.12.3       | rolling |            ros-core            |      3.28.3      |       12.6.37       |   -   |    -     | 2.48.0 |    -    |     -      |
+| `rolling`, `rolling-ros-base-triton2.48.0`       |     amd64      |      24.04       |      3.12.3       | rolling |            ros-base            |      3.28.3      |       12.6.37       |   -   |    -     | 2.48.0 |    -    |     -      |
+| `rolling-desktop-full-triton2.48.0`              |     amd64      |      24.04       |      3.12.3       | rolling |          desktop-full          |      3.28.3      |       12.6.37       |   -   |    -     | 2.48.0 |    -    |     -      |
 
 </details>
 </blockquote>
@@ -178,14 +179,15 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                              |      Arch      | Ubuntu  | Python  |  ROS   | ROS Package  |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
-| :----------------------------------------------- | :------------: | :-----: | :-----: | :----: | :----------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
-| `humble-ros-core-torch2.4.0`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
-| `latest`, `humble`, `humble-ros-base-torch2.4.0` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
-| `humble-desktop-full-torch2.4.0`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
-| `iron-ros-core-torch2.4.0`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
-| `iron`, `iron-ros-base-torch2.4.0`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
-| `iron-desktop-full-torch2.4.0`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| Tag                                    |      Arch      | Ubuntu  | Python  |  ROS   |  ROS Package   |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
+| :------------------------------------- | :------------: | :-----: | :-----: | :----: | :------------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
+| `humble-ros-core-torch2.3.0`           | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| `humble`, `humble-ros-base-torch2.3.0` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| `humble-desktop-full-torch2.3.0`       | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| `iron-ros-core-torch2.3.0`             | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| `iron`, `iron-ros-base-torch2.3.0`     | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| `iron-desktop-full-torch2.3.0`         | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
+| `jazzy-desktop-full-torch2.3.0`        | amd64<br>arm64 | 22.04.3 | 3.10.12 | jazzy  | built from src | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
 
 </details>
 </blockquote>
@@ -198,14 +200,15 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                            |      Arch      | Ubuntu  | Python  |  ROS   | ROS Package  |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
-| :--------------------------------------------- | :------------: | :-----: | :-----: | :----: | :----------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
-| `humble-ros-core-tf2.16.1`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
-| `latest`, `humble`, `humble-ros-base-tf2.16.1` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
-| `humble-desktop-full-tf2.16.1`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
-| `iron-ros-core-tf2.16.1`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
-| `iron`, `iron-ros-base-tf2.16.1`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
-| `iron-desktop-full-tf2.16.1`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| Tag                                  |      Arch      | Ubuntu  | Python  |  ROS   |  ROS Package   |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
+| :----------------------------------- | :------------: | :-----: | :-----: | :----: | :------------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
+| `humble-ros-core-tf2.16.1`           | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| `humble`, `humble-ros-base-tf2.16.1` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| `humble-desktop-full-tf2.16.1`       | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| `iron-ros-core-tf2.16.1`             | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| `iron`, `iron-ros-base-tf2.16.1`     | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| `iron-desktop-full-tf2.16.1`         | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
+| `jazzy-desktop-full-tf2.16.1`        | amd64<br>arm64 | 22.04.3 | 3.10.12 | jazzy  | built from src | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
 
 </details>
 </blockquote>
@@ -218,14 +221,15 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 <details><summary>Click to expand</summary>
 
-| Tag                                                       |      Arch      | Ubuntu  | Python  |  ROS   | ROS Package  |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
-| :-------------------------------------------------------- | :------------: | :-----: | :-----: | :----: | :----------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
-| `humble-ros-core-tf2.16.1-torch2.4.0`                     | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
-| `latest`, `humble`, `humble-ros-base-tf2.16.1-torch2.4.0` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
-| `humble-desktop-full-tf2.16.1-torch2.4.0`                 | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
-| `iron-ros-core-tf2.16.1-torch2.4.0`                       | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-core   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
-| `iron`, `iron-ros-base-tf2.16.1-torch2.4.0`               | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |   ros-base   | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
-| `iron-desktop-full-tf2.16.1-torch2.4.0`                   | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  | desktop-full | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| Tag                                             |      Arch      | Ubuntu  | Python  |  ROS   |  ROS Package   |      CMake       |         CUDA         |        cuDNN         |      TensorRT      | Triton | PyTorch | TensorFlow |
+| :---------------------------------------------- | :------------: | :-----: | :-----: | :----: | :------------: | :--------------: | :------------------: | :------------------: | :----------------: | :----: | :-----: | :--------: |
+| `humble-ros-core-tf2.16.1-torch2.3.0`           | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| `humble`, `humble-ros-base-tf2.16.1-torch2.3.0` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| `humble-desktop-full-tf2.16.1-torch2.3.0`       | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| `iron-ros-core-tf2.16.1-torch2.3.0`             | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| `iron`, `iron-ros-base-tf2.16.1-torch2.3.0`     | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| `iron-desktop-full-tf2.16.1-torch2.3.0`         | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
+| `jazzy-desktop-full-tf2.16.1-torch2.3.0`        | amd64<br>arm64 | 22.04.3 | 3.10.12 | jazzy  | built from src | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
 
 </details>
 </blockquote>

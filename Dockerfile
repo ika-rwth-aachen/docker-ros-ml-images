@@ -70,7 +70,7 @@ RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" && $BASE_IMAGE_TY
         rm -rf /tmp/cuda-keyring_1.0-1_all.deb; \
     fi
 
-# install essentials via apt
+# install essentials
 RUN apt-get update && \
     apt-get install -y \
         bsdmainutils \
@@ -141,8 +141,9 @@ RUN apt-get update && \
             python3-catkin-tools ; \
     elif [[ "$ROS_VERSION" == "2" ]]; then \
         apt-get install -y \
-            python3-colcon-common-extensions \
-        && pip install colcon-clean ; \
+            python3-colcon-common-extensions && \
+        pip install colcon-clean && \
+        pip install ros2-pkg-create ; \
     fi \
     && rm -rf /var/lib/apt/lists/*
 
@@ -176,7 +177,7 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
         rosdep update --rosdistro ${ROS_DISTRO} && \
         rosdep install -y --ignore-src --from-paths src --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers" && \
         mkdir -p /opt/ros/${ROS_DISTRO} && \
-        colcon build --parallel-workers 4 --install-base /opt/ros/${ROS_DISTRO} --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release && \
+        colcon build --parallel-workers 32 --install-base /opt/ros/${ROS_DISTRO} --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release && \
         cd - && \
         rm -rf /ros${ROS_VERSION}_${ROS_DISTRO} && \
         rm -rf /var/lib/apt/lists/*; \

@@ -24,18 +24,21 @@ def merge_tables(tables) -> Dict[str, pd.DataFrame]:
     merged_table = merged_table.fillna("-") # replace nan by -
     merged_table = merged_table.groupby("Tag").agg(lambda x: "<br>".join([str(e) for e in x]) if len(set(x)) > 1 else str(x.iloc[0])).reset_index() # group by tag, keep unique values joined by <br>
     merged_table["Repo"] = merged_table["Tag"].str.split(":").str[0].str.replace("`", "") # extract repo name
+    merged_table["Tag"] = "`" + merged_table["Tag"].str.split(":").str[1] # remove repo name from tag
     repo_tables = merged_table.groupby("Repo")
     table_by_repo = {repo: table.drop(columns=["Repo"]) for repo, table in repo_tables}
     return table_by_repo
 
 def print_markdown_table(data: pd.DataFrame):
     headers = list(data.columns)
-    header_line = " | ".join(headers)
-    separator_line = ":---" + " | " + " | ".join([":---:"] * (len(headers)-1))
+    header_line = "| " + " | ".join(headers) + " |"
+    separator_line = "| " + ":---" + " | " + " | ".join([":---:"] * (len(headers)-1)) + " |"
     print(header_line)
     print(separator_line)
     for index, row in data.iterrows():
-        print(" | ".join(row.values.astype(str)))
+        print("| ", end="")
+        print(" | ".join(row.values.astype(str)), end="")
+        print(" |")
 
 def main():
     args = parse_arguments()
