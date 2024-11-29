@@ -193,6 +193,24 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
 # source ROS
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
 
+# install NVIDIA Triton Client
+ARG TRITON_VERSION
+ENV TRITON_VERSION=${TRITON_VERSION}
+RUN if [[ -n $TRITON_VERSION ]]; then \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
+            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/v${TRITON_VERSION}_ubuntu2204.clients.tar.gz; \
+        elif [[ "$TARGETARCH" == "arm64" ]]; then \
+            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/tritonserver${TRITON_VERSION}-igpu.tar.gz; \
+        fi && \
+        mkdir -p /opt/tritonclient && \
+        tar -xzf /tmp/tritonclient.tar.gz -C /opt/tritonclient && \
+        rm /tmp/tritonclient.tar.gz ; \
+    fi
+
+# === install nothing on cuda base ================================================================
+FROM ros AS ros-cuda
+ARG TARGETARCH
+
 # === install ML frameworks on tensorrt base ======================================================
 FROM ros AS ros-tensorrt
 ARG TARGETARCH
@@ -242,11 +260,7 @@ RUN if [[ -n $TF_VERSION ]]; then \
         fi; \
     fi
 
-# === install tritonclient on cuda base ===========================================================
-FROM ros AS ros-cuda
-ARG TARGETARCH
-
-# install triton client
+# install NVIDIA Triton Client
 ARG TRITON_VERSION
 ENV TRITON_VERSION=${TRITON_VERSION}
 RUN if [[ -n $TRITON_VERSION ]]; then \
