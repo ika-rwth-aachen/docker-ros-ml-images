@@ -6,14 +6,13 @@ workflow:
 
 variables:
   ROS_DISTROS:
-    value: noetic,humble,iron,jazzy,rolling
-    description: Comma-separated list of ROS Distributions to build [noetic,humble,iron,jazzy,rolling]
+    value: noetic,humble,jazzy,rolling
+    description: Comma-separated list of ROS Distributions to build [noetic,humble,jazzy,rolling]
 
 
 stages:
   - ROS 1 Noetic
   - ROS 2 Humble
-  - ROS 2 Iron
   - ROS 2 Jazzy
   - ROS 2 Rolling
   - Postprocessing
@@ -80,38 +79,6 @@ ros2-humble-desktop-full:
       optional: true
   trigger:
     include: .gitlab-ci/ros2-humble/ros2-humble-desktop-full.yml
-    strategy: depend
-
-
-ros2-iron-ros-core:
-  stage: ROS 2 Iron
-  rules:
-    - if: $ROS_DISTROS =~ /.*iron.*/
-  needs: []
-  trigger:
-    include: .gitlab-ci/ros2-iron/ros2-iron-ros-core.yml
-    strategy: depend
-
-ros2-iron-ros-base:
-  stage: ROS 2 Iron
-  rules:
-    - if: $ROS_DISTROS =~ /.*iron.*/
-  needs:
-    - job: ros2-iron-ros-core
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-iron/ros2-iron-ros-base.yml
-    strategy: depend
-
-ros2-iron-desktop-full:
-  stage: ROS 2 Iron
-  rules:
-    - if: $ROS_DISTROS =~ /.*iron.*/
-  needs:
-    - job: ros2-iron-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-iron/ros2-iron-desktop-full.yml
     strategy: depend
 
 
