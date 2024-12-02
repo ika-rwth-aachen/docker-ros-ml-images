@@ -222,7 +222,7 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
                 pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
             else \
                 wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/${TARGETARCH}/cuda-keyring_1.1-1_all.deb && \
-                sudo dpkg -i cuda-keyring_1.1-1_all.deb && \
+                dpkg -i cuda-keyring_1.1-1_all.deb && \
                 apt-get update && \
                 apt-get install -y libcusparselt0 libcusparselt-dev cuda-cupti-12-6 && \
                 rm -rf /var/lib/apt/lists/* && \
