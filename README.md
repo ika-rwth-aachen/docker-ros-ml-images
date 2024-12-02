@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/github/v/release/ika-rwth-aachen/docker-ros-ml-images"/></a>
   <img src="https://img.shields.io/github/license/ika-rwth-aachen/docker-ros-ml-images"/>
   <img src="https://img.shields.io/badge/ROS-noetic-blueviolet"/>
-  <img src="https://img.shields.io/badge/ROS 2-humble|iron|jazzy|rolling-blueviolet"/>
+  <img src="https://img.shields.io/badge/ROS 2-humble|jazzy|rolling-blueviolet"/>
   <img src="https://img.shields.io/badge/NVIDIA Triton-2.48.0-darkgreen"/>
   <img src="https://img.shields.io/badge/PyTorch-2.3.0-red"/>
   <img src="https://img.shields.io/badge/TensorFlow-2.16.1-orange"/>
@@ -43,7 +43,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 
 | Component        | Variations                                                              |
 | ---------------- | ----------------------------------------------------------------------- |
-| ROS Distribution | noetic, humble, iron, jazzy, rolling                                    |
+| ROS Distribution | noetic, humble, jazzy, rolling                                          |
 | ROS Components   | core, base, desktop-full                                                |
 | ML Framework     | NVIDIA CUDA, NVIDIA TensorRT, NVIDIA Triton Client, PyTorch, TensorFlow |
 | Architecture     | amd64, arm64                                                            |
@@ -85,9 +85,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core`                   | amd64<br>arm64 | 22.04.5 | 3.10.12 | humble  |   ros-core   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
 | `humble`, `humble-ros-base`         | amd64<br>arm64 | 22.04.5 | 3.10.12 | humble  |   ros-base   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
 | `humble-desktop-full`               | amd64<br>arm64 | 22.04.5 | 3.10.12 | humble  | desktop-full | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `iron-ros-core`                     | amd64<br>arm64 | 22.04.5 | 3.10.12 |  iron   |   ros-core   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `iron`, `iron-ros-base`             | amd64<br>arm64 | 22.04.5 | 3.10.12 |  iron   |   ros-base   | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
-| `iron-desktop-full`                 | amd64<br>arm64 | 22.04.5 | 3.10.12 |  iron   | desktop-full | 3.22.1 |   -   |   -   |    -     |   -    |    -    |     -      |
 | `jazzy-ros-core`                    | amd64<br>arm64 | 24.04.1 | 3.12.3  |  jazzy  |   ros-core   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
 | `latest`, `jazzy`, `jazzy-ros-base` | amd64<br>arm64 | 24.04.1 | 3.12.3  |  jazzy  |   ros-base   | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
 | `jazzy-desktop-full`                | amd64<br>arm64 | 24.04.1 | 3.12.3  |  jazzy  | desktop-full | 3.28.3 |   -   |   -   |    -     |   -    |    -    |     -      |
@@ -111,9 +108,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core`                   | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |            ros-core            |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
 | `humble`, `humble-ros-base`         | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |            ros-base            |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
 | `humble-desktop-full`               | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |          desktop-full          |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
-| `iron-ros-core`                     | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |            ros-core            |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
-| `iron`, `iron-ros-base`             | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |            ros-base            |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
-| `iron-desktop-full`                 | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |          desktop-full          |      3.22.1      |      12.2.140       |   -   |    -     |   -    |    -    |     -      |
 | `jazzy-ros-core`                    |     amd64      |      24.04       |      3.12.3       |  jazzy  |            ros-core            |      3.28.3      |       12.6.37       |   -   |    -     |   -    |    -    |     -      |
 | `latest`, `jazzy`, `jazzy-ros-base` |     amd64      |      24.04       |      3.12.3       |  jazzy  |            ros-base            |      3.28.3      |       12.6.37       |   -   |    -     |   -    |    -    |     -      |
 | `jazzy-desktop-full`                | amd64<br>arm64 | 24.04<br>22.04.3 | 3.12.3<br>3.10.12 |  jazzy  | desktop-full<br>built from src | 3.28.3<br>3.22.1 | 12.6.37<br>12.2.140 |   -   |    -     |   -    |    -    |     -      |
@@ -137,9 +131,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core`           | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
 | `humble`, `humble-ros-base` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
 | `humble-desktop-full`       | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
-| `iron-ros-core`             | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
-| `iron`, `iron-ros-base`     | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
-| `iron-desktop-full`         | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
 | `jazzy-desktop-full`        | amd64<br>arm64 | 22.04.3 | 3.10.12 | jazzy  | built from src | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |     -      |
 
 </details>
@@ -158,9 +149,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core-triton2.48.0`                   | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |            ros-core            |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
 | `humble`, `humble-ros-base-triton2.48.0`         | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |            ros-base            |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
 | `humble-desktop-full-triton2.48.0`               | amd64<br>arm64 |     22.04.3      |      3.10.12      | humble  |          desktop-full          |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
-| `iron-ros-core-triton2.48.0`                     | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |            ros-core            |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
-| `iron`, `iron-ros-base-triton2.48.0`             | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |            ros-base            |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
-| `iron-desktop-full-triton2.48.0`                 | amd64<br>arm64 |     22.04.3      |      3.10.12      |  iron   |          desktop-full          |      3.22.1      |      12.2.140       |   -   |    -     | 2.48.0 |    -    |     -      |
 | `jazzy-ros-core-triton2.48.0`                    |     amd64      |      24.04       |      3.12.3       |  jazzy  |            ros-core            |      3.28.3      |       12.6.37       |   -   |    -     | 2.48.0 |    -    |     -      |
 | `latest`, `jazzy`, `jazzy-ros-base-triton2.48.0` |     amd64      |      24.04       |      3.12.3       |  jazzy  |            ros-base            |      3.28.3      |       12.6.37       |   -   |    -     | 2.48.0 |    -    |     -      |
 | `jazzy-desktop-full-triton2.48.0`                | amd64<br>arm64 | 24.04<br>22.04.3 | 3.12.3<br>3.10.12 |  jazzy  | desktop-full<br>built from src | 3.28.3<br>3.22.1 | 12.6.37<br>12.2.140 |   -   |    -     | 2.48.0 |    -    |     -      |
@@ -184,9 +172,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core-torch2.3.0`           | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
 | `humble`, `humble-ros-base-torch2.3.0` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
 | `humble-desktop-full-torch2.3.0`       | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
-| `iron-ros-core-torch2.3.0`             | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
-| `iron`, `iron-ros-base-torch2.3.0`     | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
-| `iron-desktop-full-torch2.3.0`         | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
 | `jazzy-desktop-full-torch2.3.0`        | amd64<br>arm64 | 22.04.3 | 3.10.12 | jazzy  | built from src | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |     -      |
 
 </details>
@@ -205,9 +190,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core-tf2.16.1`           | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
 | `humble`, `humble-ros-base-tf2.16.1` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
 | `humble-desktop-full-tf2.16.1`       | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
-| `iron-ros-core-tf2.16.1`             | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
-| `iron`, `iron-ros-base-tf2.16.1`     | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
-| `iron-desktop-full-tf2.16.1`         | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
 | `jazzy-desktop-full-tf2.16.1`        | amd64<br>arm64 | 22.04.3 | 3.10.12 | jazzy  | built from src | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |    -    |   2.16.1   |
 
 </details>
@@ -226,9 +208,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-ros-core-tf2.16.1-torch2.3.0`           | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
 | `humble`, `humble-ros-base-tf2.16.1-torch2.3.0` | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
 | `humble-desktop-full-tf2.16.1-torch2.3.0`       | amd64<br>arm64 | 22.04.3 | 3.10.12 | humble |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
-| `iron-ros-core-tf2.16.1-torch2.3.0`             | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-core    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
-| `iron`, `iron-ros-base-tf2.16.1-torch2.3.0`     | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |    ros-base    | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
-| `iron-desktop-full-tf2.16.1-torch2.3.0`         | amd64<br>arm64 | 22.04.3 | 3.10.12 |  iron  |  desktop-full  | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
 | `jazzy-desktop-full-tf2.16.1-torch2.3.0`        | amd64<br>arm64 | 22.04.3 | 3.10.12 | jazzy  | built from src | 3.24.0<br>3.22.1 | 12.2.128<br>12.2.140 | 8.9.5.27<br>8.9.4.25 | 8.6.1.6<br>8.6.2.3 |   -    |  2.3.0  |   2.16.1   |
 
 </details>
