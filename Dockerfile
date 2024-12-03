@@ -230,7 +230,8 @@ RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" ]]; then \
 ARG TORCH_VERSION
 RUN if [[ -n $TORCH_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
-            pip3 install torch==${TORCH_VERSION} && \
+            # --ignore-installed, because of dependency conflicts
+            pip3 install --ignore-installed torch==${TORCH_VERSION} && \
             if [[ "$TORCH_VERSION" == "2.5.0" ]]; then pip3 install torchvision==0.20.0; fi; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
