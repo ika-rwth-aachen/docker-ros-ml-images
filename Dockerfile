@@ -194,6 +194,26 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
 # source ROS
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
 
+# install NVIDIA Triton Client
+ARG TRITON_VERSION
+ENV TRITON_VERSION=${TRITON_VERSION}
+ENV TRITON_CLIENT_DIR="/opt/tritonclient"
+RUN if [[ -n $TRITON_VERSION ]]; then \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
+            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/v${TRITON_VERSION}_ubuntu${UBUNTU_VERSION/./}.clients.tar.gz; \
+        elif [[ "$TARGETARCH" == "arm64" ]]; then \
+            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/tritonserver${TRITON_VERSION}-igpu.tar.gz; \
+        fi && \
+        mkdir -p ${TRITON_CLIENT_DIR} && \
+        tar -xzf /tmp/tritonclient.tar.gz -C ${TRITON_CLIENT_DIR} && \
+        rm /tmp/tritonclient.tar.gz && \
+        echo "export LD_LIBRARY_PATH=$TRITON_CLIENT_DIR/lib:$LD_LIBRARY_PATH" >> ~/.bashrc ; \
+    fi
+
+# === install nothing on cuda base ================================================================
+FROM ros AS ros-cuda
+ARG TARGETARCH
+
 # === install ML frameworks on tensorrt base ======================================================
 FROM ros AS ros-tensorrt
 ARG TARGETARCH
@@ -251,27 +271,6 @@ RUN if [[ -n $TF_VERSION ]]; then \
                 pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v61 tensorflow==${TF_VERSION}+nv24.08; \
             fi; \
         fi; \
-    fi
-
-# === install tritonclient on cuda base ===========================================================
-FROM ros AS ros-cuda
-ARG TARGETARCH
-ARG UBUNTU_VERSION
-
-# install triton client
-ARG TRITON_VERSION
-ENV TRITON_VERSION=${TRITON_VERSION}
-ENV TRITON_CLIENT_DIR="/opt/tritonclient"
-RUN if [[ -n $TRITON_VERSION ]]; then \
-        if [[ "$TARGETARCH" == "amd64" ]]; then \
-            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/v${TRITON_VERSION}_ubuntu${UBUNTU_VERSION/./}.clients.tar.gz; \
-        elif [[ "$TARGETARCH" == "arm64" ]]; then \
-            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/tritonserver${TRITON_VERSION}-igpu.tar; \
-        fi && \
-        mkdir -p ${TRITON_CLIENT_DIR} && \
-        tar -xzf /tmp/tritonclient.tar.gz -C ${TRITON_CLIENT_DIR} && \
-        rm /tmp/tritonclient.tar.gz && \
-        echo "export LD_LIBRARY_PATH=$TRITON_CLIENT_DIR/lib:$LD_LIBRARY_PATH" >> ~/.bashrc ; \
     fi
 
 # === final ====================================================================
