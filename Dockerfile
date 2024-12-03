@@ -262,22 +262,6 @@ RUN if [[ -n $TF_VERSION ]]; then \
         fi; \
     fi
 
-# install NVIDIA Triton Client
-ARG TRITON_VERSION
-ENV TRITON_VERSION=${TRITON_VERSION}
-ENV TRITON_CLIENT_DIR="/opt/tritonclient"
-RUN if [[ -n $TRITON_VERSION ]]; then \
-        if [[ "$TARGETARCH" == "amd64" ]]; then \
-            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/v${TRITON_VERSION}_ubuntu2204.clients.tar.gz; \
-        elif [[ "$TARGETARCH" == "arm64" ]]; then \
-            wget -q -O /tmp/tritonclient.tar.gz https://github.com/triton-inference-server/server/releases/download/v${TRITON_VERSION}/tritonserver${TRITON_VERSION}-igpu.tar.gz; \
-        fi && \
-        mkdir -p ${TRITON_CLIENT_DIR} && \
-        tar -xzf /tmp/tritonclient.tar.gz -C ${TRITON_CLIENT_DIR} && \
-        rm /tmp/tritonclient.tar.gz && \
-        echo "export LD_LIBRARY_PATH=$TRITON_CLIENT_DIR/lib:$LD_LIBRARY_PATH" >> ~/.bashrc ; \
-    fi
-
 # === final ====================================================================
 FROM "ros${BASE_IMAGE_TYPE}" AS final
 
