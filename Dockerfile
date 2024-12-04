@@ -1,6 +1,7 @@
 # docker buildx build \
 #     --load \
 #     --platform $(uname)/$(uname -m) \
+#     --build-arg IMAGE_VERSION=$CI_COMMIT_TAG \
 #     --build-arg BASE_IMAGE_TYPE=$BASE_IMAGE_TYPE \
 #     --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
 #     --build-arg ROS_VERSION=$ROS_VERSION \
@@ -43,6 +44,12 @@ FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.5.2-runtime AS base-tensorr
 FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime AS base-tensorrt-ubuntu22.04-arm64
 # no l4t-tensorrt image for ubuntu24 available
 
+ARG IMAGE_VERSION=""
+LABEL maintainer="Institute for Automotive Engineering (ika), RWTH Aachen University <opensource@ika.rwth-aachen.de>" \
+      org.opencontainers.image.authors="Institute for Automotive Engineering (ika), RWTH Aachen University <opensource@ika.rwth-aachen.de>" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.url="https://github.com/ika-rwth-aachen/docker-ros-ml-images" \
+      org.opencontainers.image.version="$IMAGE_VERSION"
 
 # === dependencies ================================================================================
 FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}" AS dependencies
