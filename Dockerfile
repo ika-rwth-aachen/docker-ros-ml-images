@@ -281,6 +281,8 @@ FROM "ros${BASE_IMAGE_TYPE}" AS final
 ENV DOCKER_USER=dockeruser
 ENV DOCKER_UID=
 ENV DOCKER_GID=
+# remove user with uid 1000, if existing (standard user in ubuntu)
+RUN if id -u 1000 >/dev/null 2>&1; then userdel --force --remove $(getent passwd 1000 | cut -d: -f1); fi
 
 # print version information during login
 RUN echo "source /.version_information.sh" >> ~/.bashrc
