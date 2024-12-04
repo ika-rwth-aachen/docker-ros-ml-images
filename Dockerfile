@@ -44,15 +44,8 @@ FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.5.2-runtime AS base-tensorr
 FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime AS base-tensorrt-ubuntu22.04-arm64
 # no l4t-tensorrt image for ubuntu24 available
 
-ARG IMAGE_VERSION=""
-LABEL maintainer="Institute for Automotive Engineering (ika), RWTH Aachen University <opensource@ika.rwth-aachen.de>" \
-      org.opencontainers.image.authors="Institute for Automotive Engineering (ika), RWTH Aachen University <opensource@ika.rwth-aachen.de>" \
-      org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.url="https://github.com/ika-rwth-aachen/docker-ros-ml-images" \
-      org.opencontainers.image.version="$IMAGE_VERSION"
-
-# === dependencies ================================================================================
-FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}" AS dependencies
+# ================================================================================================
+FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}"
 
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
@@ -117,10 +110,7 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
     apt-get install git-lfs && \
     rm -rf /var/lib/apt/lists/*
 
-# === install and setup ROS =======================================================================
-FROM dependencies AS ros
-ARG TARGETARCH
-ARG UBUNTU_VERSION
+# --- install and setup ROS ----------------------------------------------------------------------
 
 # setup keys and sources.list
 ARG ROS_VERSION
@@ -217,15 +207,6 @@ RUN if [[ -n $TRITON_VERSION ]]; then \
         echo "export LD_LIBRARY_PATH=$TRITON_CLIENT_DIR/lib:\$LD_LIBRARY_PATH" >> ~/.bashrc ; \
     fi
 
-# === install nothing on cuda base ================================================================
-FROM ros AS ros-cuda
-ARG TARGETARCH
-
-# === install ML frameworks on tensorrt base ======================================================
-FROM ros AS ros-tensorrt
-ARG TARGETARCH
-ARG UBUNTU_VERSION
-
 # install libcudnn as it is not installed in nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime
 RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" ]]; then \
         apt-get update && \
@@ -281,8 +262,7 @@ RUN if [[ -n $TF_VERSION ]]; then \
         fi; \
     fi
 
-# === final ====================================================================
-FROM "ros${BASE_IMAGE_TYPE}" AS final
+# --- finalization -------------------------------------------------------------------------------
 
 # user setup
 ENV DOCKER_USER=dockeruser
@@ -299,9 +279,16 @@ COPY .version_information.sh /.version_information.sh
 ENV WORKSPACE=/docker-ros/ws
 WORKDIR $WORKSPACE
 ENV TINI_VERSION=v0.19.0
-ARG TARGETARCH
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${TARGETARCH} /tini
 RUN chmod +x /tini
 COPY entrypoint.sh /
 ENTRYPOINT ["/tini", "--", "/entrypoint.sh"]
 CMD ["bash"]
+
+# image labels
+ARG IMAGE_VERSION=""
+LABEL maintainer="Institute for Automotive Engineering (ika), RWTH Aachen University <opensource@ika.rwth-aachen.de>"
+LABEL org.opencontainers.image.authors="Institute for Automotive Engineering (ika), RWTH Aachen University <opensource@ika.rwth-aachen.de>"
+LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.url="https://github.com/ika-rwth-aachen/docker-ros-ml-images"
+LABEL org.opencontainers.image.version="$IMAGE_VERSION"
