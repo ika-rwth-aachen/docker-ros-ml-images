@@ -23,9 +23,11 @@ PT_PIP_VERSION=$(python -c "exec(\"try:\n  import torch; print(torch.__version__
 
 CMAKE_VERSION=$(cmake --version  | grep version | awk '{print $3}')
 if [[ $(command -v nvidia-smi) ]]; then
-  NUM_GPUS=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
+  GPU_INFOS=$(nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv | tail -n -1)
+  NUM_GPUS=$(echo $GPU_INFOS | wc -l)
 else
   NUM_GPUS="0"
+  GPU_INFOS=""
 fi
 
 # print information
@@ -46,7 +48,14 @@ printf "║ %12s | %-61s ║\n" "Ubuntu" "$VERSION"
 [[ -n "$TRITON_VERSION" ]] && printf "║ %12s | %-61s ║\n" "Triton Client" "$TRITON_VERSION"
 [[ -n "$TF_PIP_VERSION" ]] && printf "║ %12s | %-61s ║\n" "TensorFlow" "$TF_PIP_VERSION"
 [[ -n "$PT_PIP_VERSION" ]] && printf "║ %12s | %-61s ║\n" "PyTorch" "$PT_PIP_VERSION"
-[[ -n "$NUM_GPUS" ]] && printf "║ %12s | %-61s ║\n" "# GPUs" "$NUM_GPUS"
+[[ -n "$NUM_GPUS" ]] && printf "║ %12s | %-61s ║\n" "GPUs" "$NUM_GPUS"
+if [[ -n "$GPU_INFOS" ]]; then
+  IFS=$'\n'
+  for GPU_INFO in $GPU_INFOS; do
+    printf "║ %12s | %-61s ║\n" "" "$GPU_INFO"
+  done
+  unset IFS
+fi
 
 cat << EOF
 ╚══════════════════════════════════════════════════════════════════════════════╝
