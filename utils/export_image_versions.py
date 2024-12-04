@@ -11,7 +11,7 @@ import tqdm
 VERSION_GETTER_COMMANDS = {
     "Arch": "dpkg --print-architecture",
     "Ubuntu": "lsb_release -d | awk '{print \\$3}'",
-    "Jetson Linux": "if [[ -f /etc/nv_tegra_release ]]; then cat /etc/nv_tegra_release | grep -o \\\"R[0-9]* (release)\\\" | awk '{print \\$1}' | tr -d '()' | awk -F. '{\\$NF = \\$NF + 1;} 1' | sed 's/ /./g'; fi",
+    "Jetson Linux": "if [[ -f /etc/nv_tegra_release ]]; then cat /etc/nv_tegra_release | head -n 1 | sed 's/ (release), REVISION: /./g' | awk '{ print \\$2 }' | grep -oE '[0-9.]+'; fi",
     "Python": "python --version | awk '{print \\$2}'",
     "ROS": "echo \\$ROS_DISTRO",
     "ROS Package": "(dpkg -l | grep ros-\\$ROS_DISTRO-desktop-full || dpkg -l | grep ros-\\$ROS_DISTRO-ros-base || dpkg -l | grep ros-\\$ROS_DISTRO-ros-core) | awk '{print \\$2}' | cut -d- -f3-",
