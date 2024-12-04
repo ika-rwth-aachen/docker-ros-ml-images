@@ -208,7 +208,7 @@ RUN if [[ -n $TRITON_VERSION ]]; then \
     fi
 
 # install libcudnn as it is not installed in nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime
-RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" ]]; then \
+RUN if [[ $BASE_IMAGE_TYPE == "-tensorrt" && $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" ]]; then \
         apt-get update && \
         apt-get install -y cudnn9-cuda-12-6 && \
         rm -rf /var/lib/apt/lists/*; \
