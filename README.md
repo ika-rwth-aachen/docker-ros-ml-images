@@ -360,6 +360,7 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 docker buildx build \
   --pull \
   --platform $PLATFORM \
+  --build-arg IMAGE_VERSION=$CI_COMMIT_TAG \
   --build-arg BASE_IMAGE_TYPE=$BASE_IMAGE_TYPE \
   --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
   --build-arg ROS_VERSION=$ROS_VERSION \
