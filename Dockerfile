@@ -266,7 +266,9 @@ RUN if [[ -n $TF_VERSION ]]; then \
 # install ONNX Runtime
 ARG ONNX_RUNTIME_VERSION
 RUN if [[ -n $ONNX_RUNTIME_VERSION ]]; then \
-        pip3 install onnxruntime-gpu==${ONNX_RUNTIME_VERSION}; \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
+            pip3 install onnxruntime-gpu==${ONNX_RUNTIME_VERSION}; \
+        fi; \
     fi
 
 # --- finalization -------------------------------------------------------------------------------
