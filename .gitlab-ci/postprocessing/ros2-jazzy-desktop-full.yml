@@ -75,9 +75,9 @@ manifest-tf:
   script:
     - !reference [.docker-push-manifest, script]
   variables:
-    IMAGE_CI_AMD64: ${IMAGE_BASE_CI}/ros2-tf:${CI_COMMIT_REF_SLUG}_jazzy-desktop-full-tf2.16.1_ci-amd64
-    IMAGE_CI_ARM64: ${IMAGE_BASE_CI}/ros2-tf:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full-tf2.16.1_ci-arm64
-    IMAGE:          ${IMAGE_BASE}/ros2-tf:jazzy-desktop-full-tf2.16.1
+    IMAGE_CI_AMD64: ${IMAGE_BASE_CI}/ros2-tf:${CI_COMMIT_REF_SLUG}_jazzy-desktop-full-tf2.18.0_ci-amd64
+    IMAGE_CI_ARM64: ${IMAGE_BASE_CI}/ros2-tf:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full-tf2.18.0_ci-arm64
+    IMAGE:          ${IMAGE_BASE}/ros2-tf:jazzy-desktop-full-tf2.18.0
     TAGGED_IMAGE:   ${IMAGE}-v${CI_COMMIT_TAG}
 
 manifest-ml:
@@ -87,7 +87,7 @@ manifest-ml:
   script:
     - !reference [.docker-push-manifest, script]
   variables:
-    IMAGE_CI_AMD64: ${IMAGE_BASE_CI}/ros2-ml:${CI_COMMIT_REF_SLUG}_jazzy-desktop-full-tf2.16.1-torch2.5.0_ci-amd64
-    IMAGE_CI_ARM64: ${IMAGE_BASE_CI}/ros2-ml:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full-tf2.16.1-torch2.5.0_ci-arm64
-    IMAGE:          ${IMAGE_BASE}/ros2-ml:jazzy-desktop-full-tf2.16.1-torch2.5.0
+    IMAGE_CI_AMD64: ${IMAGE_BASE_CI}/ros2-ml:${CI_COMMIT_REF_SLUG}_jazzy-desktop-full-tf2.18.0-torch2.5.0_ci-amd64
+    IMAGE_CI_ARM64: ${IMAGE_BASE_CI}/ros2-ml:${CI_COMMIT_REF_SLUG}_jazzy-ubuntu22-desktop-full-tf2.18.0-torch2.5.0_ci-arm64
+    IMAGE:          ${IMAGE_BASE}/ros2-ml:jazzy-desktop-full-tf2.18.0-torch2.5.0
     TAGGED_IMAGE:   ${IMAGE}-v${CI_COMMIT_TAG}

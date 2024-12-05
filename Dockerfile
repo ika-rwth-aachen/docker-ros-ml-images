@@ -269,7 +269,7 @@ RUN if [[ -n $TF_VERSION ]]; then \
                 pip3 install h5py==3.7.0 && \
                 pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v512 tensorflow==${TF_VERSION}+nv23.06; \
             else \
-                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v61 tensorflow==${TF_VERSION}+nv24.08; \
+                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v61 tensorflow==2.16.1+nv24.08; \
             fi; \
         fi; \
     fi

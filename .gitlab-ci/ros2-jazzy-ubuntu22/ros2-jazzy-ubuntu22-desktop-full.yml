@@ -3,7 +3,7 @@ include:
 
 variables:
   UBUNTU_VERSION: "22.04"
-  _TF_VERSION: 2.16.1
+  _TF_VERSION: 2.18.0
   _TORCH_VERSION: 2.5.0
   _TRITON_VERSION: 2.52.0
 
