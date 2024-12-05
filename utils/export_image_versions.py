@@ -1,27 +1,31 @@
 #!/usr/bin/env python3
 
 import argparse
+import csv
 import os
 import subprocess
+
 import tqdm
-import csv
+
 
 VERSION_GETTER_COMMANDS = {
     "Arch": "dpkg --print-architecture",
     "Ubuntu": "lsb_release -d | awk '{print \\$3}'",
+    "Jetson Linux": "if [[ -f /etc/nv_tegra_release ]]; then cat /etc/nv_tegra_release | head -n 1 | sed 's/ (release), REVISION: /./g' | awk '{ print \\$2 }' | grep -oE '[0-9.]+'; fi",
     "Python": "python --version | awk '{print \\$2}'",
     "ROS": "echo \\$ROS_DISTRO",
     "ROS Package": "(dpkg -l | grep ros-\\$ROS_DISTRO-desktop-full || dpkg -l | grep ros-\\$ROS_DISTRO-ros-base || dpkg -l | grep ros-\\$ROS_DISTRO-ros-core) | awk '{print \\$2}' | cut -d- -f3-",
     "CMake": "cmake --version | grep version | awk '{print \\$3}'",
-    "CUDA": "dpkg -l 2> /dev/null | grep -E 'cuda-cudart-[0-9]' | awk '{ print \\$3 }' | cut -d+ -f1 | cut -d- -f1",
-    "cuDNN": "dpkg -l 2> /dev/null | grep -E 'libcudnn[0-9] ' | awk '{ print \\$3 }' | cut -d+ -f1 | cut -d- -f1",
-    "TensorRT": "dpkg -l 2> /dev/null | grep -E 'libnvinfer[0-9] ' | awk '{ print \\$3 }' | cut -d+ -f1 | cut -d- -f1",
+    "CUDA": "dpkg -l 2> /dev/null | grep -E 'cuda-cudart-[0-9]' | awk '{ print \\$3 }' | head -n 1 | cut -d+ -f1 | cut -d- -f1",
+    "cuDNN": "dpkg -l 2> /dev/null | grep -E 'libcudnn[0-9]' | awk '{ print \\$3 }' | head -n 1 | cut -d+ -f1 | cut -d- -f1",
+    "TensorRT": "dpkg -l 2> /dev/null | grep -E 'libnvinfer[0-9]' | awk '{ print \\$3 }' | head -n 1 | cut -d+ -f1 | cut -d- -f1",
     "Triton": "echo \\$TRITON_VERSION",
-    "PyTorch": "python -c 'exec(\\\"try:\\n  import torch; print(torch.__version__);\\n\\rexcept ImportError:\\n  pass\\\")' | cut -d+ -f1 | cut -d- -f1",
+    "PyTorch": "python -c 'exec(\\\"try:\\n  import torch; print(torch.__version__);\\n\\rexcept ImportError:\\n  pass\\\")' | cut -d+ -f1 | cut -d- -f1 | sed 's/a0//g'",
     "TensorFlow": "export TF_CPP_MIN_LOG_LEVEL='1' && python -c 'exec(\\\"try:\\n  import os; import tensorflow as tf; print(tf.__version__);\\n\\rexcept ImportError:\\n  pass\\\")' | cut -d+ -f1 | cut -d- -f1",
 }
 
 SCRIPT_PATH = os.path.dirname(os.path.abspath(__file__))
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Prints tool versions for docker-ros-ml-images")

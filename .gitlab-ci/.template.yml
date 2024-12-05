@@ -12,6 +12,19 @@ plain:
     when: never
   - when: on_success
 
+triton:
+  stage: Image Variations
+  needs:
+    - job: plain
+      optional: true
+  trigger:
+    include: .gitlab-ci/ml-variations/ros-triton.yml
+    strategy: depend
+  rules:
+  - if: $DISABLE_TRITON == 'true'
+    when: never
+  - when: on_success
+
 cuda:
   stage: Image Variations
   trigger:
@@ -29,19 +42,6 @@ tensorrt:
     strategy: depend
   rules:
   - if: $DISABLE_TENSORRT == 'true'
-    when: never
-  - when: on_success
-
-triton:
-  stage: Image Variations
-  needs:
-    - job: cuda
-      optional: true
-  trigger:
-    include: .gitlab-ci/ml-variations/ros-triton.yml
-    strategy: depend
-  rules:
-  - if: $DISABLE_TRITON == 'true'
     when: never
   - when: on_success
 
