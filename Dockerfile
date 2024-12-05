@@ -207,7 +207,7 @@ RUN if [[ -n $TRITON_VERSION ]]; then \
         mkdir -p ${TRITON_CLIENT_DIR} && \
         tar -xzf /tmp/tritonclient.tar.gz -C ${TRITON_CLIENT_DIR} && \
         rm /tmp/tritonclient.tar.gz && \
-        echo "export LD_LIBRARY_PATH=$TRITON_CLIENT_DIR/lib:$LD_LIBRARY_PATH" >> ~/.bashrc ; \
+        echo "export LD_LIBRARY_PATH=$TRITON_CLIENT_DIR/lib:\$LD_LIBRARY_PATH" >> ~/.bashrc ; \
     fi
 
 # === install nothing on cuda base ================================================================
