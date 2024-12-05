@@ -16,11 +16,11 @@ VERSION_GETTER_COMMANDS = {
     "ROS": "echo \\$ROS_DISTRO",
     "ROS Package": "(dpkg -l | grep ros-\\$ROS_DISTRO-desktop-full || dpkg -l | grep ros-\\$ROS_DISTRO-ros-base || dpkg -l | grep ros-\\$ROS_DISTRO-ros-core) | awk '{print \\$2}' | cut -d- -f3-",
     "CMake": "cmake --version | grep version | awk '{print \\$3}'",
-    "CUDA": "dpkg -l 2> /dev/null | grep -E 'cuda-cudart-[0-9]' | awk '{ print \\$3 }' | cut -d+ -f1 | cut -d- -f1",
-    "cuDNN": "dpkg -l 2> /dev/null | grep -E 'libcudnn[0-9] ' | awk '{ print \\$3 }' | cut -d+ -f1 | cut -d- -f1",
-    "TensorRT": "dpkg -l 2> /dev/null | grep -E 'libnvinfer[0-9] ' | awk '{ print \\$3 }' | cut -d+ -f1 | cut -d- -f1",
+    "CUDA": "dpkg -l 2> /dev/null | grep -E 'cuda-cudart-[0-9]' | awk '{ print \\$3 }' | head -n 1 | cut -d+ -f1 | cut -d- -f1",
+    "cuDNN": "dpkg -l 2> /dev/null | grep -E 'libcudnn[0-9]' | awk '{ print \\$3 }' | head -n 1 | cut -d+ -f1 | cut -d- -f1",
+    "TensorRT": "dpkg -l 2> /dev/null | grep -E 'libnvinfer[0-9]' | awk '{ print \\$3 }' | head -n 1 | cut -d+ -f1 | cut -d- -f1",
     "Triton": "echo \\$TRITON_VERSION",
-    "PyTorch": "python -c 'exec(\\\"try:\\n  import torch; print(torch.__version__);\\n\\rexcept ImportError:\\n  pass\\\")' | cut -d+ -f1 | cut -d- -f1",
+    "PyTorch": "python -c 'exec(\\\"try:\\n  import torch; print(torch.__version__);\\n\\rexcept ImportError:\\n  pass\\\")' | cut -d+ -f1 | cut -d- -f1 | sed 's/a0//g'",
     "TensorFlow": "export TF_CPP_MIN_LOG_LEVEL='1' && python -c 'exec(\\\"try:\\n  import os; import tensorflow as tf; print(tf.__version__);\\n\\rexcept ImportError:\\n  pass\\\")' | cut -d+ -f1 | cut -d- -f1",
 }
 
