@@ -1,8 +1,9 @@
 # *docker-ros-ml-images* – Machine Learning-Enabled ROS Docker Images
 
 <p align="center">
-  <img src="https://img.shields.io/github/v/release/ika-rwth-aachen/docker-ros-ml-images"/></a>
+  <img src="https://img.shields.io/github/v/release/ika-rwth-aachen/docker-ros-ml-images"/>
   <img src="https://img.shields.io/github/license/ika-rwth-aachen/docker-ros-ml-images"/>
+  <br>
   <img src="https://img.shields.io/badge/ROS-noetic-293754"/>
   <img src="https://img.shields.io/badge/ROS 2-humble|jazzy|rolling-293754"/>
   <img src="https://img.shields.io/badge/NVIDIA Triton-2.52.0-7abb08"/>
