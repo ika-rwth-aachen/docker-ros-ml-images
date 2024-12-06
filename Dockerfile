@@ -138,10 +138,11 @@ RUN apt-get update && \
         apt-get install -y \
             python3-catkin-tools ; \
     elif [[ "$ROS_VERSION" == "2" ]]; then \
-        pip install colcon-clean && \
-        pip install ros2-pkg-create && \
         apt-get install -y \
-            python3-colcon-common-extensions ; \
+            python3-colcon-common-extensions && \
+        pip install colcon-clean && \
+        # --ignore-installed to avoid conflicts with apt-installed argcomplete
+        pip install --ignore-installed ros2-pkg-create ; \
     fi \
     && rm -rf /var/lib/apt/lists/*
 
