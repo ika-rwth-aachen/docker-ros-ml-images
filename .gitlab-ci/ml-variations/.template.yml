@@ -26,6 +26,7 @@ stages:
         --build-arg ROS_BUILD_FROM_SRC=$ROS_BUILD_FROM_SRC
         --build-arg TORCH_VERSION=$TORCH_VERSION
         --build-arg TF_VERSION=$TF_VERSION
+        --build-arg ONNX_RUNTIME_VERSION=$ONNX_RUNTIME_VERSION
         --build-arg TRITON_VERSION=$TRITON_VERSION
         --tag $IMAGE .
 

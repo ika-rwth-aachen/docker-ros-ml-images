@@ -10,6 +10,7 @@
 #     --build-arg ROS_BUILD_FROM_SRC=$ROS_BUILD_FROM_SRC \
 #     --build-arg TORCH_VERSION=$TORCH_VERSION \
 #     --build-arg TF_VERSION=$TF_VERSION \
+#     --build-arg ONNX_RUNTIME_VERSION=$ONNX_RUNTIME_VERSION \
 #     --build-arg TRITON_VERSION=$TRITON_VERSION \
 #     --tag $IMAGE \
 #     .
@@ -259,6 +260,14 @@ RUN if [[ -n $TF_VERSION ]]; then \
             else \
                 pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v61 tensorflow==2.16.1+nv24.08; \
             fi; \
+        fi; \
+    fi
+
+# install ONNX Runtime
+ARG ONNX_RUNTIME_VERSION
+RUN if [[ -n $ONNX_RUNTIME_VERSION ]]; then \
+        if [[ "$TARGETARCH" == "amd64" ]]; then \
+            pip3 install onnxruntime-gpu==${ONNX_RUNTIME_VERSION}; \
         fi; \
     fi
 

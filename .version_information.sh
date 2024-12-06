@@ -20,6 +20,7 @@ TENSORRT_VERSION=$(dpkg -l 2> /dev/null | grep -E "libnvinfer[0-9]" | awk '{ pri
 PYTHON_VERSION=$(python --version | awk '{print $2}')
 TF_PIP_VERSION=$(python -c "exec(\"try:\n  import os; os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'; import tensorflow as tf; print(tf.__version__);\n\rexcept ImportError:\n  pass\")")
 PT_PIP_VERSION=$(python -c "exec(\"try:\n  import torch; print(torch.__version__);\n\rexcept ImportError:\n  pass\")")
+ONNX_RUNTIME_VERSION=$(python -c "exec(\"try:\n  import onnxruntime; print(onnxruntime.__version__);\n\rexcept ImportError:\n  pass\")")
 
 CMAKE_VERSION=$(cmake --version  | grep version | awk '{print $3}')
 if [[ $(command -v nvidia-smi) ]]; then
@@ -48,6 +49,7 @@ printf "║ %12s | %-61s ║\n" "Ubuntu" "$VERSION"
 [[ -n "$TRITON_VERSION" ]] && printf "║ %12s | %-61s ║\n" "Triton Client" "$TRITON_VERSION"
 [[ -n "$TF_PIP_VERSION" ]] && printf "║ %12s | %-61s ║\n" "TensorFlow" "$TF_PIP_VERSION"
 [[ -n "$PT_PIP_VERSION" ]] && printf "║ %12s | %-61s ║\n" "PyTorch" "$PT_PIP_VERSION"
+[[ -n "$ONNX_RUNTIME_VERSION" ]] && printf "║ %12s | %-61s ║\n" "ONNX RT" "$ONNX_RUNTIME_VERSION"
 [[ -n "$NUM_GPUS" ]] && printf "║ %12s | %-61s ║\n" "GPUs" "$NUM_GPUS"
 if [[ -n "$GPU_INFOS" ]]; then
   IFS=$'\n'
