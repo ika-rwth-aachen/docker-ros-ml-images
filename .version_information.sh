@@ -35,26 +35,26 @@ fi
 cat << EOF
 ╔══════════════════════════════════════════════════ CONTAINER INFORMATION ═════╗
 EOF
-printf "║ %12s | %-61s ║\n" "Architecture" "$ARCH"
-printf "║ %12s | %-61s ║\n" "Ubuntu" "$VERSION"
-[[ -n "$JETSON_LINUX_VERSION" ]] && printf "║ %12s | %-61s ║\n" "Jetson Linux" "$JETSON_LINUX_VERSION"
-[[ $(getent passwd $DOCKER_USER) ]] && printf "║ %12s | %-61s ║\n" "User:PW" "$DOCKER_USER:$DOCKER_USER"
-[[ -n "$PYTHON_VERSION" ]] && printf "║ %12s | %-61s ║\n" "Python" "$PYTHON_VERSION"
-[[ -n "$ROS_DISTRO" ]] && printf "║ %12s | %-61s ║\n" "ROS" "$ROS_DISTRO"
-[[ -n "$RMW_IMPLEMENTATION" ]] && printf "║ %12s | %-61s ║\n" "RMW" "$RMW_IMPLEMENTATION"
-[[ -n "$CMAKE_VERSION" ]] && printf "║ %12s | %-61s ║\n" "CMake" "$CMAKE_VERSION"
-[[ -n "$CUDA_VERSION" ]] && printf "║ %12s | %-61s ║\n" "CUDA" "$CUDA_VERSION"
-[[ -n "$CUDNN_VERSION" ]] && printf "║ %12s | %-61s ║\n" "cuDNN" "$CUDNN_VERSION"
-[[ -n "$TENSORRT_VERSION" ]] && printf "║ %12s | %-61s ║\n" "TensorRT" "$TENSORRT_VERSION"
-[[ -n "$TRITON_VERSION" ]] && printf "║ %12s | %-61s ║\n" "Triton Client" "$TRITON_VERSION"
-[[ -n "$TF_PIP_VERSION" ]] && printf "║ %12s | %-61s ║\n" "TensorFlow" "$TF_PIP_VERSION"
-[[ -n "$PT_PIP_VERSION" ]] && printf "║ %12s | %-61s ║\n" "PyTorch" "$PT_PIP_VERSION"
-[[ -n "$ONNX_RUNTIME_VERSION" ]] && printf "║ %12s | %-61s ║\n" "ONNX RT" "$ONNX_RUNTIME_VERSION"
-[[ -n "$NUM_GPUS" ]] && printf "║ %12s | %-61s ║\n" "GPUs" "$NUM_GPUS"
+printf "║ %13s | %-60s ║\n" "Architecture" "$ARCH"
+printf "║ %13s | %-60s ║\n" "Ubuntu" "$VERSION"
+[[ -n "$JETSON_LINUX_VERSION" ]] && printf "║ %13s | %-60s ║\n" "Jetson Linux" "$JETSON_LINUX_VERSION"
+[[ $(getent passwd $DOCKER_USER) ]] && printf "║ %13s | %-60s ║\n" "User:PW" "$DOCKER_USER:$DOCKER_USER"
+[[ -n "$PYTHON_VERSION" ]] && printf "║ %13s | %-60s ║\n" "Python" "$PYTHON_VERSION"
+[[ -n "$ROS_DISTRO" ]] && printf "║ %13s | %-60s ║\n" "ROS" "$ROS_DISTRO"
+[[ -n "$RMW_IMPLEMENTATION" ]] && printf "║ %13s | %-60s ║\n" "RMW" "$RMW_IMPLEMENTATION"
+[[ -n "$CMAKE_VERSION" ]] && printf "║ %13s | %-60s ║\n" "CMake" "$CMAKE_VERSION"
+[[ -n "$CUDA_VERSION" ]] && printf "║ %13s | %-60s ║\n" "CUDA" "$CUDA_VERSION"
+[[ -n "$CUDNN_VERSION" ]] && printf "║ %13s | %-60s ║\n" "cuDNN" "$CUDNN_VERSION"
+[[ -n "$TENSORRT_VERSION" ]] && printf "║ %13s | %-60s ║\n" "TensorRT" "$TENSORRT_VERSION"
+[[ -n "$TRITON_VERSION" ]] && printf "║ %13s | %-60s ║\n" "Triton Client" "$TRITON_VERSION"
+[[ -n "$TF_PIP_VERSION" ]] && printf "║ %13s | %-60s ║\n" "TensorFlow" "$TF_PIP_VERSION"
+[[ -n "$PT_PIP_VERSION" ]] && printf "║ %13s | %-60s ║\n" "PyTorch" "$PT_PIP_VERSION"
+[[ -n "$ONNX_RUNTIME_VERSION" ]] && printf "║ %13s | %-60s ║\n" "ONNX RT" "$ONNX_RUNTIME_VERSION"
+[[ -n "$NUM_GPUS" ]] && printf "║ %13s | %-60s ║\n" "GPUs" "$NUM_GPUS"
 if [[ -n "$GPU_INFOS" ]]; then
   IFS=$'\n'
   for GPU_INFO in $GPU_INFOS; do
-    printf "║ %12s | %-61s ║\n" "" "$GPU_INFO"
+    printf "║ %13s | %-60s ║\n" "" "$GPU_INFO"
   done
   unset IFS
 fi
