@@ -250,6 +250,7 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
 ARG TF_VERSION
 RUN if [[ -n $TF_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
+            if [[ $UBUNTU_VERSION == "22.04" ]]; then pip install opencv-python matplotlib; fi && \
             pip3 install tensorflow==${TF_VERSION}; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             apt-get update && \
