@@ -135,7 +135,7 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `humble-desktop-full`               | amd64<br>arm64 |      22.04.4       | -<br>36.4.0  |      3.10.12      | humble  |          desktop-full          | 3.24.0<br>3.22.1 | 12.6.37<br>12.6.68 |       9.3.0.75       |       10.3.0.26        |   -    |    -    |     -      |    -    |
 | `jazzy-ros-core`                    |     amd64      |      24.04.1       |      -       |      3.12.3       |  jazzy  |            ros-core            |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |     -      |    -    |
 | `latest`, `jazzy`, `jazzy-ros-base` |     amd64      |      24.04.1       |      -       |      3.12.3       |  jazzy  |            ros-base            |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |     -      |    -    |
-| `jazzy-desktop-full`                | amd64<br>arm64 | 24.04.1<br>22.04.1 | -<br>36.4.0  | 3.12.3<br>3.10.12 |  jazzy  | desktop-full<br>built from src | 3.24.0<br>3.22.1 | 12.6.77<br>12.6.68 | 9.5.1.17<br>9.3.0.75 | 10.6.0.26<br>10.3.0.26 |   -    |    -    |     -      |    -    |
+| `jazzy-desktop-full`                | amd64<br>arm64 | 24.04.1<br>22.04.4 | -<br>36.4.0  | 3.12.3<br>3.10.12 |  jazzy  | desktop-full<br>built from src | 3.24.0<br>3.22.1 | 12.6.77<br>12.6.68 | 9.5.1.17<br>9.3.0.75 | 10.6.0.26<br>10.3.0.26 |   -    |    -    |     -      |    -    |
 | `rolling-ros-core`                  |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling |            ros-core            |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |     -      |    -    |
 | `rolling`, `rolling-ros-base`       |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling |            ros-base            |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |     -      |    -    |
 | `rolling-desktop-full`              |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling |          desktop-full          |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |     -      |    -    |
@@ -332,9 +332,9 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 | Tag                                            |      Arch      |       Ubuntu       | Jetson Linux | Python |  ROS   | ROS Package  |      CMake       |         CUDA         |         cuDNN         |    TensorRT    | Triton | PyTorch | TensorFlow | ONNX RT |
 | :--------------------------------------------- | :------------: | :----------------: | :----------: | :----: | :----: | :----------: | :--------------: | :------------------: | :-------------------: | :------------: | :----: | :-----: | :--------: | :-----: |
-| `noetic-ros-core-tf2.12.0`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>36.4.0  | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |    -    |
-| `latest`, `noetic`, `noetic-ros-base-tf2.12.0` | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>36.4.0  | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |    -    |
-| `noetic-desktop-full-tf2.12.0`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>36.4.0  | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |    -    |
+| `noetic-ros-core-tf2.12.0`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |    -    |
+| `latest`, `noetic`, `noetic-ros-base-tf2.12.0` | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |    -    |
+| `noetic-desktop-full-tf2.12.0`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |    -    |
 
 </details>
 </blockquote>
@@ -349,9 +349,9 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 | Tag                                                       |      Arch      |       Ubuntu       | Jetson Linux | Python |  ROS   | ROS Package  |      CMake       |         CUDA         |         cuDNN         |    TensorRT    | Triton | PyTorch | TensorFlow |   ONNX RT   |
 | :-------------------------------------------------------- | :------------: | :----------------: | :----------: | :----: | :----: | :----------: | :--------------: | :------------------: | :-------------------: | :------------: | :----: | :-----: | :--------: | :---------: |
-| `noetic-ros-core-tf2.12.0-torch2.1.0`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>36.4.0  | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 | 2.52.0 |  2.1.0  |   2.12.0   | 1.13.1<br>- |
-| `latest`, `noetic`, `noetic-ros-base-tf2.12.0-torch2.1.0` | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>36.4.0  | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 | 2.52.0 |  2.1.0  |   2.12.0   | 1.13.1<br>- |
-| `noetic-desktop-full-tf2.12.0-torch2.1.0`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>36.4.0  | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 | 2.52.0 |  2.1.0  |   2.12.0   | 1.13.1<br>- |
+| `noetic-ros-core-tf2.12.0-torch2.1.0`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 | 2.52.0 |  2.1.0  |   2.12.0   | 1.13.1<br>- |
+| `latest`, `noetic`, `noetic-ros-base-tf2.12.0-torch2.1.0` | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 | 2.52.0 |  2.1.0  |   2.12.0   | 1.13.1<br>- |
+| `noetic-desktop-full-tf2.12.0-torch2.1.0`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 | 2.52.0 |  2.1.0  |   2.12.0   | 1.13.1<br>- |
 
 </details>
 </blockquote>
