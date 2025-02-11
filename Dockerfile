@@ -50,9 +50,24 @@ FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}"
 
 ARG DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
-ENV LC_ALL=C
 
 USER root
+
+# set all locale settings to a sensible default, allowing to override via LC_ALL
+ENV LANG="C.utf8"
+ENV LANGUAGE="C.utf8"
+ENV LC_CTYPE="C.utf8"
+ENV LC_NUMERIC="C.utf8"
+ENV LC_TIME="C.utf8"
+ENV LC_COLLATE="C.utf8"
+ENV LC_MONETARY="C.utf8"
+ENV LC_MESSAGES="C.utf8"
+ENV LC_PAPER="C.utf8"
+ENV LC_NAME="C.utf8"
+ENV LC_ADDRESS="C.utf8"
+ENV LC_TELEPHONE="C.utf8"
+ENV LC_MEASUREMENT="C.utf8"
+ENV LC_IDENTIFICATION="C.utf8"
 
 ARG BASE_IMAGE_TYPE
 ARG TARGETARCH
