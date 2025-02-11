@@ -135,14 +135,14 @@ RUN apt-get update && \
 
 ARG ROS_DISTRO
 ENV ROS_DISTRO=${ROS_DISTRO}
-# add apt key for ros2-tier3-pkgs and add rosdep list for jazzy (ubuntu 22.04)
+# set up 3rd party ROS deb sources for arm64 | Ubuntu 22 | Jazzy (required due to NVIDIA base images being stuck at Ubuntu 22)
 RUN if [[ "$ROS_DISTRO" == "jazzy" && $UBUNTU_VERSION == "22.04" ]]; then \
         add-apt-repository universe && \
         wget -O /etc/apt/keyrings/ros2-tier3-pkgs-pub.gpg.key https://raw.githubusercontent.com/meetgandhi-dev/ros2_tier3_packages/main/ros2-tier3-pkgs-pub.gpg.key && \
         echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/ros2-tier3-pkgs-pub.gpg.key] https://raw.githubusercontent.com/meetgandhi-dev/ros2_tier3_packages/main/debian_packages $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2-tier3-pkgs.list > /dev/null && \
-        apt-get update && apt-get install -y ros-jazzy-rosdep-jammy && \
-        (rosdep init || true) && \
-        rosdep update && \
+        apt-get update && \
+        apt-get install -y ros-jazzy-rosdep-jammy && \
+        rosdep update --rosdistro ${ROS_DISTRO} && \
         rm -rf /var/lib/apt/lists/* ; \
     fi
 
