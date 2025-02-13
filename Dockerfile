@@ -53,6 +53,22 @@ SHELL ["/bin/bash", "-c"]
 
 USER root
 
+# set all locale settings to a sensible default, allowing to override via LC_ALL
+ENV LANG="C.utf8"
+ENV LANGUAGE="C.utf8"
+ENV LC_CTYPE="C.utf8"
+ENV LC_NUMERIC="C.utf8"
+ENV LC_TIME="C.utf8"
+ENV LC_COLLATE="C.utf8"
+ENV LC_MONETARY="C.utf8"
+ENV LC_MESSAGES="C.utf8"
+ENV LC_PAPER="C.utf8"
+ENV LC_NAME="C.utf8"
+ENV LC_ADDRESS="C.utf8"
+ENV LC_TELEPHONE="C.utf8"
+ENV LC_MEASUREMENT="C.utf8"
+ENV LC_IDENTIFICATION="C.utf8"
+
 ARG BASE_IMAGE_TYPE
 ARG TARGETARCH
 ARG UBUNTU_VERSION
@@ -132,6 +148,19 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* && \
     rosdep init
 
+ARG ROS_DISTRO
+ENV ROS_DISTRO=${ROS_DISTRO}
+# set up 3rd party ROS deb sources for arm64 | Ubuntu 22 | Jazzy (required due to NVIDIA base images being stuck at Ubuntu 22)
+RUN if [[ "$ROS_DISTRO" == "jazzy" && $UBUNTU_VERSION == "22.04" ]]; then \
+        add-apt-repository universe && \
+        wget -O /etc/apt/keyrings/ros2-tier3-pkgs-pub.gpg.key https://raw.githubusercontent.com/meetgandhi-dev/ros2_tier3_packages/main/ros2-tier3-pkgs-pub.gpg.key && \
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/ros2-tier3-pkgs-pub.gpg.key] https://raw.githubusercontent.com/meetgandhi-dev/ros2_tier3_packages/main/debian_packages $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2-tier3-pkgs.list > /dev/null && \
+        apt-get update && \
+        apt-get install -y ros-jazzy-rosdep-jammy && \
+        rosdep update --rosdistro ${ROS_DISTRO} && \
+        rm -rf /var/lib/apt/lists/* ; \
+    fi
+
 # install essential ROS CLI tools
 RUN apt-get update && \
     if [[ "$ROS_VERSION" == "1" ]]; then \
@@ -147,8 +176,6 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # install ROS
-ARG ROS_DISTRO
-ENV ROS_DISTRO=${ROS_DISTRO}
 ARG ROS_PACKAGE=ros-core
 ARG ROS_BUILD_FROM_SRC=false
 RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
