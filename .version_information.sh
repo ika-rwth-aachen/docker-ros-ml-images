@@ -25,7 +25,7 @@ ONNX_RUNTIME_VERSION=$(python -c "exec(\"try:\n  import onnxruntime; print(onnxr
 CMAKE_VERSION=$(cmake --version  | grep version | awk '{print $3}')
 if [[ $(command -v nvidia-smi) ]]; then
   GPU_INFOS=$(nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader)
-  NUM_GPUS=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
+  NUM_GPUS=$(echo "$GPU_INFOS" | wc -l)
 else
   NUM_GPUS="0"
   GPU_INFOS=""
