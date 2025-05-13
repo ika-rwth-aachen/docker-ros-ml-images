@@ -6,48 +6,15 @@ workflow:
 
 variables:
   ROS_DISTROS:
-    value: noetic,humble,jazzy,rolling
-    description: Comma-separated list of ROS Distributions to build [noetic,humble,jazzy,rolling]
+    value: humble,jazzy,rolling
+    description: Comma-separated list of ROS Distributions to build [humble,jazzy,rolling]
 
 
 stages:
-  - ROS 1 Noetic
   - ROS 2 Humble
   - ROS 2 Jazzy
   - ROS 2 Rolling
   - Postprocessing
-
-
-ros-noetic-ros-core:
-  stage: ROS 1 Noetic
-  rules:
-    - if: $ROS_DISTROS =~ /.*noetic.*/
-  needs: []
-  trigger:
-    include: .gitlab-ci/ros-noetic/ros-noetic-ros-core.yml
-    strategy: depend
-
-ros-noetic-ros-base:
-  stage: ROS 1 Noetic
-  rules:
-    - if: $ROS_DISTROS =~ /.*noetic.*/
-  needs:
-    - job: ros-noetic-ros-core
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros-noetic/ros-noetic-ros-base.yml
-    strategy: depend
-
-ros-noetic-desktop-full:
-  stage: ROS 1 Noetic
-  rules:
-    - if: $ROS_DISTROS =~ /.*noetic.*/
-  needs:
-    - job: ros-noetic-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros-noetic/ros-noetic-desktop-full.yml
-    strategy: depend
 
 
 ros2-humble-ros-core:
