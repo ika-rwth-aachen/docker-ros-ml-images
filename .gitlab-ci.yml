@@ -6,8 +6,8 @@ workflow:
 
 variables:
   ROS_DISTROS:
-    value: humble,jazzy,rolling
-    description: Comma-separated list of ROS Distributions to build [humble,jazzy,rolling]
+    value: humble,jazzy,kilted,rolling
+    description: Comma-separated list of ROS Distributions to build [humble,jazzy,kilted,rolling]
 
 
 stages:
