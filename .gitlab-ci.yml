@@ -144,6 +144,39 @@ post-ros2-jazzy-desktop-full:
     include: .gitlab-ci/postprocessing/ros2-jazzy-desktop-full.yml
     strategy: depend
 
+
+ros2-kilted-ros-core:
+  stage: ROS 2 Kilted
+  rules:
+    - if: $ROS_DISTROS =~ /.*kilted.*/
+  needs: []
+  trigger:
+    include: .gitlab-ci/ros2-kilted/ros2-kilted-ros-core.yml
+    strategy: depend
+
+ros2-kilted-ros-base:
+  stage: ROS 2 Kilted
+  rules:
+    - if: $ROS_DISTROS =~ /.*kilted.*/
+  needs:
+    - job: ros2-kilted-ros-core
+      optional: true
+  trigger:
+    include: .gitlab-ci/ros2-kilted/ros2-kilted-ros-base.yml
+    strategy: depend
+
+ros2-kilted-desktop-full:
+  stage: ROS 2 Kilted
+  rules:
+    - if: $ROS_DISTROS =~ /.*kilted.*/
+  needs:
+    - job: ros2-kilted-ros-base
+      optional: true
+  trigger:
+    include: .gitlab-ci/ros2-kilted/ros2-kilted-desktop-full.yml
+    strategy: depend
+
+
 ros2-rolling-ros-core:
   stage: ROS 2 Rolling
   rules:
