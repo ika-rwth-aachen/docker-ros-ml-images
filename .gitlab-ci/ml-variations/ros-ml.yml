@@ -7,7 +7,6 @@ include:
 
 variables:
   IMAGE_TYPE:         "ml"
-  IMAGE_REPO_SUFFIX:  "ros2-${IMAGE_TYPE}"
   IMAGE_REPO:         "${IMAGE_BASE}/${IMAGE_REPO_SUFFIX}"
   IMAGE_REPO_CI:      "${IMAGE_BASE_CI}/${IMAGE_REPO_SUFFIX}"
   IMAGE_CI_CACHE:     "${IMAGE_BASE_CI}/ros2-torch:${CI_COMMIT_REF_SLUG}_${ROS_DISTRO}-${ROS_PACKAGE}-torch${TORCH_VERSION}_ci"

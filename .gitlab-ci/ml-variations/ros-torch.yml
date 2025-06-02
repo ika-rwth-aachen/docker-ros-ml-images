@@ -4,7 +4,6 @@ include:
 
 variables:
   IMAGE_TYPE:         "torch"
-  IMAGE_REPO_SUFFIX:  "ros2-${IMAGE_TYPE}"
   IMAGE_REPO:         "${IMAGE_BASE}/${IMAGE_REPO_SUFFIX}"
   IMAGE_REPO_CI:      "${IMAGE_BASE_CI}/${IMAGE_REPO_SUFFIX}"
   TAG:                "${ROS_DISTRO}-${ROS_PACKAGE}-torch${TORCH_VERSION}"
