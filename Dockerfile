@@ -15,32 +15,26 @@
 #     .
 
 ARG BASE_IMAGE_TYPE
-ARG UBUNTU_VERSION="22.04"
+ARG UBUNTU_VERSION="24.04"
 
 # === ubuntu base images ==========================================================================
-FROM --platform=amd64 ubuntu:20.04 AS base-ubuntu20.04-amd64
 FROM --platform=amd64 ubuntu:22.04 AS base-ubuntu22.04-amd64
 FROM --platform=amd64 ubuntu:24.04 AS base-ubuntu24.04-amd64
 
-FROM --platform=arm64 ubuntu:20.04 AS base-ubuntu20.04-arm64
 FROM --platform=arm64 ubuntu:22.04 AS base-ubuntu22.04-arm64
 FROM --platform=arm64 ubuntu:24.04 AS base-ubuntu24.04-arm64
 
 # === cuda base images ============================================================================
-FROM --platform=amd64 nvcr.io/nvidia/cuda:11.4.3-runtime-ubuntu20.04 AS base-cuda-ubuntu20.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu22.04 AS base-cuda-ubuntu22.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-amd64
 
-FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:11.4.19-runtime AS base-cuda-ubuntu20.04-arm64
 FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.6.11-runtime AS base-cuda-ubuntu22.04-arm64
 # no l4t-cuda image for ubuntu24 available
 
 # === tensorrt base images ========================================================================
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:21.08-py3 AS base-tensorrt-ubuntu20.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.08-py3 AS base-tensorrt-ubuntu22.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.11-py3 AS base-tensorrt-ubuntu24.04-amd64
 
-FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.5.2-runtime AS base-tensorrt-ubuntu20.04-arm64
 FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime AS base-tensorrt-ubuntu22.04-arm64
 # no l4t-tensorrt image for ubuntu24 available
 
@@ -195,10 +189,6 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
         rm -rf /var/lib/apt/lists/*; \
     else \
         apt-get update && \
-        if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "20.04" ]]; then \
-            apt-get upgrade -y && \
-            apt-get purge -y '*opencv*' ; \
-        fi && \
         apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-${ROS_PACKAGE} && \
         rm -rf /var/lib/apt/lists/*; \
     fi
@@ -241,21 +231,17 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
             apt-get update && \
             apt-get install -y libopenblas-base libopenmpi-dev libomp-dev && \
-            rm -rf /var/lib/apt/lists/* ; \
-            if [[ $UBUNTU_VERSION == "20.04" ]]; then \
-                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
-            else \
-                wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/${TARGETARCH}/cuda-keyring_1.1-1_all.deb && \
-                dpkg -i cuda-keyring_1.1-1_all.deb && \
-                apt-get update && \
-                apt-get install -y libcusparselt0 libcusparselt-dev cuda-cupti-12-6 && \
-                rm -rf /var/lib/apt/lists/* && \
-                wget -q -O /tmp/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl https://developer.download.nvidia.com/compute/redist/jp/v61/pytorch/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl && \
-                wget -q -O /tmp/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl http://jetson.webredirect.org/jp6/cu126/+f/5f9/67f920de3953f/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl && \
-                python3 -m pip install numpy=="1.26.1" && \
-                python3 -m pip install --ignore-installed --no-cache /tmp/torch*.whl && \
-                rm -f /tmp/torch*.whl; \
-            fi; \
+            rm -rf /var/lib/apt/lists/* && \
+            wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/${TARGETARCH}/cuda-keyring_1.1-1_all.deb && \
+            dpkg -i cuda-keyring_1.1-1_all.deb && \
+            apt-get update && \
+            apt-get install -y libcusparselt0 libcusparselt-dev cuda-cupti-12-6 && \
+            rm -rf /var/lib/apt/lists/* && \
+            wget -q -O /tmp/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl https://developer.download.nvidia.com/compute/redist/jp/v61/pytorch/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl && \
+            wget -q -O /tmp/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl http://jetson.webredirect.org/jp6/cu126/+f/5f9/67f920de3953f/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl && \
+            python3 -m pip install numpy=="1.26.1" && \
+            python3 -m pip install --ignore-installed --no-cache /tmp/torch*.whl && \
+            rm -f /tmp/torch*.whl; \
         fi; \
     fi
 
@@ -269,12 +255,7 @@ RUN if [[ -n $TF_VERSION ]]; then \
             apt-get update && \
             apt-get install -y libhdf5-dev && \
             rm -rf /var/lib/apt/lists/* && \
-            if [[ $UBUNTU_VERSION == "20.04" ]]; then \
-                pip3 install h5py==3.7.0 && \
-                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v512 tensorflow==${TF_VERSION}+nv23.06; \
-            else \
-                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v61 tensorflow==2.16.1+nv24.08; \
-            fi; \
+            pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v61 tensorflow==2.16.1+nv24.08; \
         fi; \
     fi
 
