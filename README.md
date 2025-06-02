@@ -4,7 +4,6 @@
   <img src="https://img.shields.io/github/v/release/ika-rwth-aachen/docker-ros-ml-images"/>
   <img src="https://img.shields.io/github/license/ika-rwth-aachen/docker-ros-ml-images"/>
   <br>
-  <img src="https://img.shields.io/badge/ROS-noetic-293754"/>
   <img src="https://img.shields.io/badge/ROS 2-humble|jazzy|rolling-293754"/>
   <img src="https://img.shields.io/badge/NVIDIA Triton-2.52.0-7abb08"/>
   <img src="https://img.shields.io/badge/PyTorch-2.5.0-ef5233"/>
@@ -28,7 +27,6 @@ We recommend to use *docker-ros-ml-images* in combination with our other tools f
 ## Quick Links to Available Images
 
 [`ros2`](#rwthikaros2-ros-2) | [`ros2-cuda`](#rwthikaros2-cuda-ros-2-nvidia-cuda) | [`ros2-tensorrt`](#rwthikaros2-tensorrt-ros-2-nvidia-cuda-nvidia-tensorrt) | [`ros2-triton`](#rwthikaros2-triton-ros-2-nvidia-cuda-nvidia-triton-client) | [`ros2-torch`](#rwthikaros2-torch-ros-2-nvidia-cuda-nvidia-tensorrt-pytorch) | [`ros2-tf`](#rwthikaros2-tf-ros-2-nvidia-cuda-nvidia-tensorrt-tensorflow) | [`ros2-ml`](#rwthikaros2-ml-ros-2-nvidia-cuda-nvidia-tensorrt-pytorch-tensorflow)  
-[`ros`](#rwthikaros-ros) | [`ros-cuda`](#rwthikaros-cuda-ros-nvidia-cuda) | [`ros-tensorrt`](#rwthikaros-tensorrt-ros-nvidia-cuda-nvidia-tensorrt) | [`ros-triton`](#rwthikaros-triton-ros-nvidia-cuda-nvidia-triton-client) | [`ros-torch`](#rwthikaros-torch-ros-nvidia-cuda-nvidia-tensorrt-pytorch) | [`ros-tf`](#rwthikaros-tf-ros-nvidia-cuda-nvidia-tensorrt-tensorflow) | [`ros-ml`](#rwthikaros-ml-ros-nvidia-cuda-nvidia-tensorrt-pytorch-tensorflow)
 
 
 ## Quick Start
@@ -43,12 +41,12 @@ docker run --rm rwthika/ros2-ml:humble \
 
 With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch machine learning-enabled ROS Docker images. Starting with plain ROS images, we offer successively larger ROS base images that also come with [*NVIDIA CUDA*](https://developer.nvidia.com/cuda-toolkit), [*NVIDIA TensorRT*](https://developer.nvidia.com/tensorrt), [*NVIDIA Triton Client*](https://developer.nvidia.com/triton-inference-server), [*PyTorch*](https://pytorch.org/) and/or [*TensorFlow*](https://www.tensorflow.org/) installations. Combining the components listed in the table below, we have built more than 100 multi-arch images and make them publicly available on [DockerHub](https://hub.docker.com/u/rwthika). In addition to the provided images, we also publish the [generic Dockerfile](./Dockerfile) used to flexibly build images combining the different components.
 
-| Component        | Variations                                                                            |
-| ---------------- | ------------------------------------------------------------------------------------- |
-| ROS Distribution | noetic, humble, jazzy, rolling                                                        |
-| ROS Components   | core, base, desktop-full                                                              |
-| ML Framework     | NVIDIA CUDA, NVIDIA TensorRT, NVIDIA Triton Client, PyTorch, TensorFlow, ONNX Runtime |
-| Architecture     | amd64, arm64                                                                          |
+| Component          | Variations                                                                            |
+| ------------------ | ------------------------------------------------------------------------------------- |
+| ROS 2 Distribution | humble, jazzy, rolling                                                                |
+| ROS 2 Components   | core, base, desktop-full                                                              |
+| ML Framework       | NVIDIA CUDA, NVIDIA TensorRT, NVIDIA Triton Client, PyTorch, TensorFlow, ONNX Runtime |
+| Architecture       | amd64, arm64                                                                          |
 
 > [!NOTE]
 > All images are targeted at NVIDIA GPUs and therefore base off of official [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). The arm64 images, in particular, target NVIDIA Jetson SoCs and are based off of [NVIDIA L4T base images](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base). Ubuntu 22 images are provided with JetPack 6, Ubuntu 20 images with JetPack 5.
@@ -237,124 +235,8 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 ### ROS
 
-#### [`rwthika/ros`](https://hub.docker.com/r/rwthika/ros) (ROS)
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros"><img src="https://img.shields.io/docker/pulls/rwthika/ros"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                   |      Arch      | Ubuntu  | Jetson Linux | Python |  ROS   | ROS Package  | CMake  | CUDA  | cuDNN | TensorRT | Triton | PyTorch | TensorFlow | ONNX RT |
-| :------------------------------------ | :------------: | :-----: | :----------: | :----: | :----: | :----------: | :----: | :---: | :---: | :------: | :----: | :-----: | :--------: | :-----: |
-| `noetic-ros-core`                     | amd64<br>arm64 | 20.04.6 |      -       | 3.8.10 | noetic |   ros-core   | 3.16.3 |   -   |   -   |    -     |   -    |    -    |     -      |    -    |
-| `latest`, `noetic`, `noetic-ros-base` | amd64<br>arm64 | 20.04.6 |      -       | 3.8.10 | noetic |   ros-base   | 3.16.3 |   -   |   -   |    -     |   -    |    -    |     -      |    -    |
-| `noetic-desktop-full`                 | amd64<br>arm64 | 20.04.6 |      -       | 3.8.10 | noetic | desktop-full | 3.16.3 |   -   |   -   |    -     |   -    |    -    |     -      |    -    |
-
-</details>
-</blockquote>
-
-#### [`rwthika/ros-cuda`](https://hub.docker.com/r/rwthika/ros-cuda) (ROS, NVIDIA CUDA)
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros-cuda"><img src="https://img.shields.io/docker/pulls/rwthika/ros-cuda"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                   |      Arch      | Ubuntu  | Jetson Linux | Python |  ROS   | ROS Package  | CMake  |         CUDA         | cuDNN | TensorRT | Triton | PyTorch | TensorFlow | ONNX RT |
-| :------------------------------------ | :------------: | :-----: | :----------: | :----: | :----: | :----------: | :----: | :------------------: | :---: | :------: | :----: | :-----: | :--------: | :-----: |
-| `noetic-ros-core`                     | amd64<br>arm64 | 20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-core   | 3.16.3 | 11.4.148<br>11.4.298 |   -   |    -     |   -    |    -    |     -      |    -    |
-| `latest`, `noetic`, `noetic-ros-base` | amd64<br>arm64 | 20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-base   | 3.16.3 | 11.4.148<br>11.4.298 |   -   |    -     |   -    |    -    |     -      |    -    |
-| `noetic-desktop-full`                 | amd64<br>arm64 | 20.04.6 | -<br>35.4.0  | 3.8.10 | noetic | desktop-full | 3.16.3 | 11.4.148<br>11.4.298 |   -   |    -     |   -    |    -    |     -      |    -    |
-
-</details>
-</blockquote>
-
-#### [`rwthika/ros-tensorrt`](https://hub.docker.com/r/rwthika/ros-tensorrt) (ROS, NVIDIA CUDA, NVIDIA TensorRT)
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros-tensorrt"><img src="https://img.shields.io/docker/pulls/rwthika/ros-tensorrt"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                   |      Arch      |       Ubuntu       | Jetson Linux | Python |  ROS   | ROS Package  |      CMake       |         CUDA         |         cuDNN         |    TensorRT    | Triton | PyTorch | TensorFlow | ONNX RT |
-| :------------------------------------ | :------------: | :----------------: | :----------: | :----: | :----: | :----------: | :--------------: | :------------------: | :-------------------: | :------------: | :----: | :-----: | :--------: | :-----: |
-| `noetic-ros-core`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |     -      |    -    |
-| `latest`, `noetic`, `noetic-ros-base` | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |     -      |    -    |
-| `noetic-desktop-full`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |     -      |    -    |
-
-</details>
-</blockquote>
-
-#### [`rwthika/ros-triton`](https://hub.docker.com/r/rwthika/ros-triton) (ROS, NVIDIA CUDA, NVIDIA Triton Client)
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros-triton"><img src="https://img.shields.io/docker/pulls/rwthika/ros-triton"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                                |      Arch      | Ubuntu  | Jetson Linux | Python |  ROS   | ROS Package  | CMake  | CUDA  | cuDNN | TensorRT | Triton | PyTorch | TensorFlow | ONNX RT |
-| :------------------------------------------------- | :------------: | :-----: | :----------: | :----: | :----: | :----------: | :----: | :---: | :---: | :------: | :----: | :-----: | :--------: | :-----: |
-| `noetic-ros-core-triton2.52.0`                     | amd64<br>arm64 | 20.04.6 |      -       | 3.8.10 | noetic |   ros-core   | 3.16.3 |   -   |   -   |    -     | 2.52.0 |    -    |     -      |    -    |
-| `latest`, `noetic`, `noetic-ros-base-triton2.52.0` | amd64<br>arm64 | 20.04.6 |      -       | 3.8.10 | noetic |   ros-base   | 3.16.3 |   -   |   -   |    -     | 2.52.0 |    -    |     -      |    -    |
-| `noetic-desktop-full-triton2.52.0`                 | amd64<br>arm64 | 20.04.6 |      -       | 3.8.10 | noetic | desktop-full | 3.16.3 |   -   |   -   |    -     | 2.52.0 |    -    |     -      |    -    |
-
-</details>
-</blockquote>
-
-#### [`rwthika/ros-torch`](https://hub.docker.com/r/rwthika/ros-torch) (ROS, NVIDIA CUDA, NVIDIA TensorRT, PyTorch)
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros-torch"><img src="https://img.shields.io/docker/pulls/rwthika/ros-torch"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                              |      Arch      |       Ubuntu       | Jetson Linux | Python |  ROS   | ROS Package  |      CMake       |         CUDA         |         cuDNN         |    TensorRT    | Triton | PyTorch | TensorFlow | ONNX RT |
-| :----------------------------------------------- | :------------: | :----------------: | :----------: | :----: | :----: | :----------: | :--------------: | :------------------: | :-------------------: | :------------: | :----: | :-----: | :--------: | :-----: |
-| `noetic-ros-core-torch2.1.0`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |  2.1.0  |     -      |    -    |
-| `latest`, `noetic`, `noetic-ros-base-torch2.1.0` | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |  2.1.0  |     -      |    -    |
-| `noetic-desktop-full-torch2.1.0`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |  2.1.0  |     -      |    -    |
-
-</details>
-</blockquote>
-
-#### [`rwthika/ros-tf`](https://hub.docker.com/r/rwthika/ros-tf) (ROS, NVIDIA CUDA, NVIDIA TensorRT, TensorFlow)
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros-tf"><img src="https://img.shields.io/docker/pulls/rwthika/ros-tf"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                            |      Arch      |       Ubuntu       | Jetson Linux | Python |  ROS   | ROS Package  |      CMake       |         CUDA         |         cuDNN         |    TensorRT    | Triton | PyTorch | TensorFlow | ONNX RT |
-| :--------------------------------------------- | :------------: | :----------------: | :----------: | :----: | :----: | :----------: | :--------------: | :------------------: | :-------------------: | :------------: | :----: | :-----: | :--------: | :-----: |
-| `noetic-ros-core-tf2.12.0`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |    -    |
-| `latest`, `noetic`, `noetic-ros-base-tf2.12.0` | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |    -    |
-| `noetic-desktop-full-tf2.12.0`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 |   -    |    -    |   2.12.0   |    -    |
-
-</details>
-</blockquote>
-
-#### [`rwthika/ros-ml`](https://hub.docker.com/r/rwthika/ros-ml) (ROS, NVIDIA CUDA, NVIDIA TensorRT, PyTorch, TensorFlow)
-
-<blockquote>
-
-<a href="https://hub.docker.com/r/rwthika/ros-ml"><img src="https://img.shields.io/docker/pulls/rwthika/ros-ml"/></a>
-
-<details><summary>Click to expand</summary>
-
-| Tag                                                       |      Arch      |       Ubuntu       | Jetson Linux | Python |  ROS   | ROS Package  |      CMake       |         CUDA         |         cuDNN         |    TensorRT    | Triton | PyTorch | TensorFlow |   ONNX RT   |
-| :-------------------------------------------------------- | :------------: | :----------------: | :----------: | :----: | :----: | :----------: | :--------------: | :------------------: | :-------------------: | :------------: | :----: | :-----: | :--------: | :---------: |
-| `noetic-ros-core-tf2.12.0-torch2.1.0`                     | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-core   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 | 2.52.0 |  2.1.0  |   2.12.0   | 1.13.1<br>- |
-| `latest`, `noetic`, `noetic-ros-base-tf2.12.0-torch2.1.0` | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic |   ros-base   | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 | 2.52.0 |  2.1.0  |   2.12.0   | 1.13.1<br>- |
-| `noetic-desktop-full-tf2.12.0-torch2.1.0`                 | amd64<br>arm64 | 20.04.2<br>20.04.6 | -<br>35.4.0  | 3.8.10 | noetic | desktop-full | 3.14.4<br>3.16.3 | 11.4.108<br>11.4.298 | 8.2.2.26<br>8.6.0.166 | 8.0.1<br>8.5.2 | 2.52.0 |  2.1.0  |   2.12.0   | 1.13.1<br>- |
-
-</details>
-</blockquote>
+> [!NOTE]
+> As of May 2025, [ROS (1) has gone end-of-life](http://wiki.ros.org/Distributions). The last release of *docker-ros-ml-images* to include ROS Noetic images is [release 25.02](https://github.com/ika-rwth-aachen/docker-ros-ml-images/tree/25.02). These images will remain available.
 
 
 ## Manual Build
@@ -366,7 +248,6 @@ docker buildx build \
   --build-arg IMAGE_VERSION=$CI_COMMIT_TAG \
   --build-arg BASE_IMAGE_TYPE=$BASE_IMAGE_TYPE \
   --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
-  --build-arg ROS_VERSION=$ROS_VERSION \
   --build-arg ROS_DISTRO=$ROS_DISTRO \
   --build-arg ROS_PACKAGE=$ROS_PACKAGE \
   --build-arg ROS_BUILD_FROM_SRC=$ROS_BUILD_FROM_SRC \

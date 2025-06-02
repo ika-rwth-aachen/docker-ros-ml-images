@@ -1,4 +1,0 @@
-include:
-  - .gitlab-ci/.template.yml
-  - .gitlab-ci/ros-noetic/.ros-noetic.yml
-  - .gitlab-ci/ros-packages/.ros-core.yml

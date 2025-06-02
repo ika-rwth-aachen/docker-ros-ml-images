@@ -4,7 +4,6 @@
 #     --build-arg IMAGE_VERSION=$CI_COMMIT_TAG \
 #     --build-arg BASE_IMAGE_TYPE=$BASE_IMAGE_TYPE \
 #     --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
-#     --build-arg ROS_VERSION=$ROS_VERSION \
 #     --build-arg ROS_DISTRO=$ROS_DISTRO \
 #     --build-arg ROS_PACKAGE=$ROS_PACKAGE \
 #     --build-arg ROS_BUILD_FROM_SRC=$ROS_BUILD_FROM_SRC \
@@ -16,32 +15,26 @@
 #     .
 
 ARG BASE_IMAGE_TYPE
-ARG UBUNTU_VERSION="22.04"
+ARG UBUNTU_VERSION="24.04"
 
 # === ubuntu base images ==========================================================================
-FROM --platform=amd64 ubuntu:20.04 AS base-ubuntu20.04-amd64
 FROM --platform=amd64 ubuntu:22.04 AS base-ubuntu22.04-amd64
 FROM --platform=amd64 ubuntu:24.04 AS base-ubuntu24.04-amd64
 
-FROM --platform=arm64 ubuntu:20.04 AS base-ubuntu20.04-arm64
 FROM --platform=arm64 ubuntu:22.04 AS base-ubuntu22.04-arm64
 FROM --platform=arm64 ubuntu:24.04 AS base-ubuntu24.04-arm64
 
 # === cuda base images ============================================================================
-FROM --platform=amd64 nvcr.io/nvidia/cuda:11.4.3-runtime-ubuntu20.04 AS base-cuda-ubuntu20.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu22.04 AS base-cuda-ubuntu22.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-amd64
 
-FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:11.4.19-runtime AS base-cuda-ubuntu20.04-arm64
 FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.6.11-runtime AS base-cuda-ubuntu22.04-arm64
 # no l4t-cuda image for ubuntu24 available
 
 # === tensorrt base images ========================================================================
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:21.08-py3 AS base-tensorrt-ubuntu20.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.08-py3 AS base-tensorrt-ubuntu22.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.11-py3 AS base-tensorrt-ubuntu24.04-amd64
 
-FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r8.5.2-runtime AS base-tensorrt-ubuntu20.04-arm64
 FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime AS base-tensorrt-ubuntu22.04-arm64
 # no l4t-tensorrt image for ubuntu24 available
 
@@ -130,15 +123,8 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
 # --- install and setup ROS ----------------------------------------------------------------------
 
 # setup keys and sources.list
-ARG ROS_VERSION
-ENV ROS_VERSION=${ROS_VERSION}
-RUN if [[ "$ROS_VERSION" == "1" ]]; then \
-        apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
-        echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros1-latest.list ; \
-    elif [[ "$ROS_VERSION" == "2" ]]; then \
-        curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null ; \
-    fi
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
 # install ROS bootstrapping tools
 RUN apt-get update && \
@@ -163,17 +149,11 @@ RUN if [[ "$ROS_DISTRO" == "jazzy" && $UBUNTU_VERSION == "22.04" ]]; then \
 
 # install essential ROS CLI tools
 RUN apt-get update && \
-    if [[ "$ROS_VERSION" == "1" ]]; then \
-        apt-get install -y \
-            python3-catkin-tools ; \
-    elif [[ "$ROS_VERSION" == "2" ]]; then \
-        apt-get install -y \
-            python3-colcon-common-extensions && \
-        pip install colcon-clean && \
-        # --ignore-installed to avoid conflicts with apt-installed argcomplete
-        pip install --ignore-installed ros2-pkg-create ; \
-    fi \
-    && rm -rf /var/lib/apt/lists/*
+    apt-get install -y \
+        python3-colcon-common-extensions && \
+    pip install colcon-clean && \
+    pip install --ignore-installed ros2-pkg-create && \
+    rm -rf /var/lib/apt/lists/*
 
 # install ROS
 ARG ROS_PACKAGE=ros-core
@@ -197,22 +177,18 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
         if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "22.04" && "$BASE_IMAGE_TYPE" != "" ]]; then \
             apt-get install -y libopencv; \
         fi && \
-        mkdir -p /ros${ROS_VERSION}_${ROS_DISTRO}/src && \
-        cd /ros${ROS_VERSION}_${ROS_DISTRO} && \
-        vcs import --input https://raw.githubusercontent.com/ros${ROS_VERSION}/ros${ROS_VERSION}/${ROS_DISTRO}/ros${ROS_VERSION}.repos src && \
+        mkdir -p /ros2_${ROS_DISTRO}/src && \
+        cd /ros2_${ROS_DISTRO} && \
+        vcs import --input https://raw.githubusercontent.com/ros2/ros2/${ROS_DISTRO}/ros2.repos src && \
         rosdep update --rosdistro ${ROS_DISTRO} && \
         rosdep install -y --ignore-src --from-paths src --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers" && \
         mkdir -p /opt/ros/${ROS_DISTRO} && \
         colcon build --parallel-workers 32 --install-base /opt/ros/${ROS_DISTRO} --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release && \
         cd - && \
-        rm -rf /ros${ROS_VERSION}_${ROS_DISTRO} && \
+        rm -rf /ros2_${ROS_DISTRO} && \
         rm -rf /var/lib/apt/lists/*; \
     else \
         apt-get update && \
-        if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "20.04" ]]; then \
-            apt-get upgrade -y && \
-            apt-get purge -y '*opencv*' ; \
-        fi && \
         apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-${ROS_PACKAGE} && \
         rm -rf /var/lib/apt/lists/*; \
     fi
@@ -255,21 +231,17 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
             apt-get update && \
             apt-get install -y libopenblas-base libopenmpi-dev libomp-dev && \
-            rm -rf /var/lib/apt/lists/* ; \
-            if [[ $UBUNTU_VERSION == "20.04" ]]; then \
-                pip install --no-cache https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch-${TORCH_VERSION}a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl; \
-            else \
-                wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/${TARGETARCH}/cuda-keyring_1.1-1_all.deb && \
-                dpkg -i cuda-keyring_1.1-1_all.deb && \
-                apt-get update && \
-                apt-get install -y libcusparselt0 libcusparselt-dev cuda-cupti-12-6 && \
-                rm -rf /var/lib/apt/lists/* && \
-                wget -q -O /tmp/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl https://developer.download.nvidia.com/compute/redist/jp/v61/pytorch/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl && \
-                wget -q -O /tmp/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl http://jetson.webredirect.org/jp6/cu126/+f/5f9/67f920de3953f/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl && \
-                python3 -m pip install numpy=="1.26.1" && \
-                python3 -m pip install --ignore-installed --no-cache /tmp/torch*.whl && \
-                rm -f /tmp/torch*.whl; \
-            fi; \
+            rm -rf /var/lib/apt/lists/* && \
+            wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/${TARGETARCH}/cuda-keyring_1.1-1_all.deb && \
+            dpkg -i cuda-keyring_1.1-1_all.deb && \
+            apt-get update && \
+            apt-get install -y libcusparselt0 libcusparselt-dev cuda-cupti-12-6 && \
+            rm -rf /var/lib/apt/lists/* && \
+            wget -q -O /tmp/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl https://developer.download.nvidia.com/compute/redist/jp/v61/pytorch/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl && \
+            wget -q -O /tmp/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl http://jetson.webredirect.org/jp6/cu126/+f/5f9/67f920de3953f/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl && \
+            python3 -m pip install numpy=="1.26.1" && \
+            python3 -m pip install --ignore-installed --no-cache /tmp/torch*.whl && \
+            rm -f /tmp/torch*.whl; \
         fi; \
     fi
 
@@ -283,12 +255,7 @@ RUN if [[ -n $TF_VERSION ]]; then \
             apt-get update && \
             apt-get install -y libhdf5-dev && \
             rm -rf /var/lib/apt/lists/* && \
-            if [[ $UBUNTU_VERSION == "20.04" ]]; then \
-                pip3 install h5py==3.7.0 && \
-                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v512 tensorflow==${TF_VERSION}+nv23.06; \
-            else \
-                pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v61 tensorflow==2.16.1+nv24.08; \
-            fi; \
+            pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v61 tensorflow==2.16.1+nv24.08; \
         fi; \
     fi
 
