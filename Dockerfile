@@ -4,7 +4,6 @@
 #     --build-arg IMAGE_VERSION=$CI_COMMIT_TAG \
 #     --build-arg BASE_IMAGE_TYPE=$BASE_IMAGE_TYPE \
 #     --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
-#     --build-arg ROS_VERSION=$ROS_VERSION \
 #     --build-arg ROS_DISTRO=$ROS_DISTRO \
 #     --build-arg ROS_PACKAGE=$ROS_PACKAGE \
 #     --build-arg ROS_BUILD_FROM_SRC=$ROS_BUILD_FROM_SRC \
@@ -130,15 +129,8 @@ RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.d
 # --- install and setup ROS ----------------------------------------------------------------------
 
 # setup keys and sources.list
-ARG ROS_VERSION
-ENV ROS_VERSION=${ROS_VERSION}
-RUN if [[ "$ROS_VERSION" == "1" ]]; then \
-        apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 && \
-        echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros1-latest.list ; \
-    elif [[ "$ROS_VERSION" == "2" ]]; then \
-        curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null ; \
-    fi
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
 # install ROS bootstrapping tools
 RUN apt-get update && \
@@ -163,17 +155,11 @@ RUN if [[ "$ROS_DISTRO" == "jazzy" && $UBUNTU_VERSION == "22.04" ]]; then \
 
 # install essential ROS CLI tools
 RUN apt-get update && \
-    if [[ "$ROS_VERSION" == "1" ]]; then \
-        apt-get install -y \
-            python3-catkin-tools ; \
-    elif [[ "$ROS_VERSION" == "2" ]]; then \
-        apt-get install -y \
-            python3-colcon-common-extensions && \
-        pip install colcon-clean && \
-        # --ignore-installed to avoid conflicts with apt-installed argcomplete
-        pip install --ignore-installed ros2-pkg-create ; \
-    fi \
-    && rm -rf /var/lib/apt/lists/*
+    apt-get install -y \
+        python3-colcon-common-extensions && \
+    pip install colcon-clean && \
+    pip install --ignore-installed ros2-pkg-create && \
+    rm -rf /var/lib/apt/lists/*
 
 # install ROS
 ARG ROS_PACKAGE=ros-core
@@ -197,15 +183,15 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
         if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "22.04" && "$BASE_IMAGE_TYPE" != "" ]]; then \
             apt-get install -y libopencv; \
         fi && \
-        mkdir -p /ros${ROS_VERSION}_${ROS_DISTRO}/src && \
-        cd /ros${ROS_VERSION}_${ROS_DISTRO} && \
-        vcs import --input https://raw.githubusercontent.com/ros${ROS_VERSION}/ros${ROS_VERSION}/${ROS_DISTRO}/ros${ROS_VERSION}.repos src && \
+        mkdir -p /ros2_${ROS_DISTRO}/src && \
+        cd /ros2_${ROS_DISTRO} && \
+        vcs import --input https://raw.githubusercontent.com/ros2/ros2/${ROS_DISTRO}/ros2.repos src && \
         rosdep update --rosdistro ${ROS_DISTRO} && \
         rosdep install -y --ignore-src --from-paths src --skip-keys "fastcdr rti-connext-dds-6.0.1 urdfdom_headers" && \
         mkdir -p /opt/ros/${ROS_DISTRO} && \
         colcon build --parallel-workers 32 --install-base /opt/ros/${ROS_DISTRO} --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release && \
         cd - && \
-        rm -rf /ros${ROS_VERSION}_${ROS_DISTRO} && \
+        rm -rf /ros2_${ROS_DISTRO} && \
         rm -rf /var/lib/apt/lists/*; \
     else \
         apt-get update && \

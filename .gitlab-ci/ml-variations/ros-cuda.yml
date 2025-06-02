@@ -1,7 +1,8 @@
 include: .gitlab-ci/ml-variations/ros.yml
 
 variables:
-  IMAGE_TYPE:       cuda
-  BASE_IMAGE_TYPE:  "-cuda"
-  IMAGE_REPO:       ${IMAGE_BASE}/${ROS_VERSION_NAME}-cuda
-  IMAGE_REPO_CI:    ${IMAGE_BASE_CI}/${ROS_VERSION_NAME}-cuda
+  IMAGE_TYPE:         "cuda"
+  BASE_IMAGE_TYPE:    "-${IMAGE_TYPE}"
+  IMAGE_REPO_SUFFIX:  "ros2-${IMAGE_TYPE}"
+  IMAGE_REPO:         "${IMAGE_BASE}/${IMAGE_REPO_SUFFIX}"
+  IMAGE_REPO_CI:      "${IMAGE_BASE_CI}/${IMAGE_REPO_SUFFIX}"

@@ -16,8 +16,5 @@ variables:
   DISABLE_TF_AMD64: "true"
   DISABLE_ML_AMD64: "true"
 
-  ROS_VERSION: 2
-  ROS_VERSION_NAME: ros2
   ROS_DISTRO: jazzy
-
   ROS_PACKAGE: desktop-full

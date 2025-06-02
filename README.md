@@ -248,7 +248,6 @@ docker buildx build \
   --build-arg IMAGE_VERSION=$CI_COMMIT_TAG \
   --build-arg BASE_IMAGE_TYPE=$BASE_IMAGE_TYPE \
   --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
-  --build-arg ROS_VERSION=$ROS_VERSION \
   --build-arg ROS_DISTRO=$ROS_DISTRO \
   --build-arg ROS_PACKAGE=$ROS_PACKAGE \
   --build-arg ROS_BUILD_FROM_SRC=$ROS_BUILD_FROM_SRC \
