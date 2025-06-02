@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/github/v/release/ika-rwth-aachen/docker-ros-ml-images"/>
   <img src="https://img.shields.io/github/license/ika-rwth-aachen/docker-ros-ml-images"/>
   <br>
-  <img src="https://img.shields.io/badge/ROS 2-humble|jazzy|rolling-293754"/>
+  <img src="https://img.shields.io/badge/ROS 2-humble|jazzy|kilted|rolling-293754"/>
   <img src="https://img.shields.io/badge/NVIDIA Triton-2.52.0-7abb08"/>
   <img src="https://img.shields.io/badge/PyTorch-2.5.0-ef5233"/>
   <img src="https://img.shields.io/badge/TensorFlow-2.18.0-ff8500"/>
@@ -43,7 +43,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 
 | Component          | Variations                                                                            |
 | ------------------ | ------------------------------------------------------------------------------------- |
-| ROS 2 Distribution | humble, jazzy, rolling                                                                |
+| ROS 2 Distribution | humble, jazzy, kilted, rolling                                                        |
 | ROS 2 Components   | core, base, desktop-full                                                              |
 | ML Framework       | NVIDIA CUDA, NVIDIA TensorRT, NVIDIA Triton Client, PyTorch, TensorFlow, ONNX Runtime |
 | Architecture       | amd64, arm64                                                                          |
