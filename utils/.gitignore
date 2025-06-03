@@ -1,2 +1,3 @@
-images.txt
 *.csv
+*.txt
+!images.txt

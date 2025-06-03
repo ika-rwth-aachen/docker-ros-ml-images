@@ -1,0 +1,4 @@
+include:
+  - .gitlab-ci/.template.yml
+  - .gitlab-ci/ros2-kilted/.ros2-kilted.yml
+  - .gitlab-ci/ros-packages/.desktop-full.yml

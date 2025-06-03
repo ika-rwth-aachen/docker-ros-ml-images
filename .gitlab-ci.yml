@@ -6,13 +6,14 @@ workflow:
 
 variables:
   ROS_DISTROS:
-    value: humble,jazzy,rolling
-    description: Comma-separated list of ROS Distributions to build [humble,jazzy,rolling]
+    value: humble,jazzy,kilted,rolling
+    description: Comma-separated list of ROS Distributions to build [humble,jazzy,kilted,rolling]
 
 
 stages:
   - ROS 2 Humble
   - ROS 2 Jazzy
+  - ROS 2 Kilted
   - ROS 2 Rolling
   - Postprocessing
 
@@ -143,6 +144,39 @@ post-ros2-jazzy-desktop-full:
   trigger:
     include: .gitlab-ci/postprocessing/ros2-jazzy-desktop-full.yml
     strategy: depend
+
+
+ros2-kilted-ros-core:
+  stage: ROS 2 Kilted
+  rules:
+    - if: $ROS_DISTROS =~ /.*kilted.*/
+  needs: []
+  trigger:
+    include: .gitlab-ci/ros2-kilted/ros2-kilted-ros-core.yml
+    strategy: depend
+
+ros2-kilted-ros-base:
+  stage: ROS 2 Kilted
+  rules:
+    - if: $ROS_DISTROS =~ /.*kilted.*/
+  needs:
+    - job: ros2-kilted-ros-core
+      optional: true
+  trigger:
+    include: .gitlab-ci/ros2-kilted/ros2-kilted-ros-base.yml
+    strategy: depend
+
+ros2-kilted-desktop-full:
+  stage: ROS 2 Kilted
+  rules:
+    - if: $ROS_DISTROS =~ /.*kilted.*/
+  needs:
+    - job: ros2-kilted-ros-base
+      optional: true
+  trigger:
+    include: .gitlab-ci/ros2-kilted/ros2-kilted-desktop-full.yml
+    strategy: depend
+
 
 ros2-rolling-ros-core:
   stage: ROS 2 Rolling
