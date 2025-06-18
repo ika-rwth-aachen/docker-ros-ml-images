@@ -7,6 +7,10 @@ ARCH=$(uname -m)
 
 [[ -f /etc/nv_tegra_release ]] && JETSON_LINUX_VERSION=$(cat /etc/nv_tegra_release | head -n 1 | sed 's/ (release), REVISION: /./g' | awk '{print $2}' | grep -oE '[0-9.]+')
 
+if [[ -z "$ROS_DOMAIN_ID" ]]; then
+  export ROS_DOMAIN_ID=0
+fi
+
 if [[ -z "$RMW_IMPLEMENTATION" ]]; then
   if ros2 pkg list | grep -q "rmw_fastrtps_cpp"; then
     export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
@@ -41,6 +45,7 @@ printf "║ %13s | %-60s ║\n" "Ubuntu" "$VERSION"
 [[ $(getent passwd $DOCKER_USER) ]] && printf "║ %13s | %-60s ║\n" "User:PW" "$DOCKER_USER:$DOCKER_USER"
 [[ -n "$PYTHON_VERSION" ]] && printf "║ %13s | %-60s ║\n" "Python" "$PYTHON_VERSION"
 [[ -n "$ROS_DISTRO" ]] && printf "║ %13s | %-60s ║\n" "ROS" "$ROS_DISTRO"
+[[ -n "$ROS_DOMAIN_ID" ]] && printf "║ %13s | %-60s ║\n" "ROS Domain ID" "$ROS_DOMAIN_ID"
 [[ -n "$RMW_IMPLEMENTATION" ]] && printf "║ %13s | %-60s ║\n" "RMW" "$RMW_IMPLEMENTATION"
 [[ -n "$CMAKE_VERSION" ]] && printf "║ %13s | %-60s ║\n" "CMake" "$CMAKE_VERSION"
 [[ -n "$CUDA_VERSION" ]] && printf "║ %13s | %-60s ║\n" "CUDA" "$CUDA_VERSION"
