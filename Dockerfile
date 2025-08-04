@@ -281,7 +281,7 @@ RUN if id -u 1000 >/dev/null 2>&1; then userdel --force --remove $(getent passwd
 RUN echo "source /.version_information.sh" >> ~/.bashrc
 COPY .version_information.sh /.version_information.sh
 
-# nvidia support
+# enable all GPU capabilities
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=all
 
