@@ -239,7 +239,8 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
             apt-get install -y libcusparselt0 libcusparselt-dev cuda-cupti-12-6 && \
             rm -rf /var/lib/apt/lists/* && \
             wget -q -O /tmp/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl https://developer.download.nvidia.com/compute/redist/jp/v61/pytorch/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl && \
-            wget -q -O /tmp/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl http://jetson.webredirect.org/jp6/cu126/+f/5f9/67f920de3953f/torchvision-0.20.0-cp310-cp310-linux_aarch64.whl && \
+            # install torchvision 0.23.0, as the link to 0.20.0 is down 
+            wget -q -O /tmp/torchvision-0.23.0-cp310-cp310-linux_aarch64.whl https://pypi.jetson-ai-lab.io/jp6/cu126/+f/907/c4c1933789645/torchvision-0.23.0-cp310-cp310-linux_aarch64.whl && \
             python3 -m pip install numpy=="1.26.1" && \
             python3 -m pip install --ignore-installed --no-cache /tmp/torch*.whl && \
             rm -f /tmp/torch*.whl; \
