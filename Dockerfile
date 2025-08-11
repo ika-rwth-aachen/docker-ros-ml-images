@@ -226,7 +226,9 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
             # --ignore-installed, because of dependency conflicts
             pip3 install --ignore-installed torch==${TORCH_VERSION} && \
-            if [[ "$TORCH_VERSION" == "2.5.0" ]]; then pip3 install torchvision==0.20.0; fi; \
+            if [[ "$TORCH_VERSION" == "2.5.0" ]]; then pip3 install torchvision==0.20.0; \
+            elif [[ "$TORCH_VERSION" == "2.8.0" ]]; then pip3 install torchvision==0.23.0; \
+            fi ; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
@@ -238,10 +240,10 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
             apt-get update && \
             apt-get install -y libcusparselt0 libcusparselt-dev cuda-cupti-12-6 && \
             rm -rf /var/lib/apt/lists/* && \
-            wget -q -O /tmp/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl https://developer.download.nvidia.com/compute/redist/jp/v61/pytorch/torch-${TORCH_VERSION}a0+872d972e41.nv24.08.17622132-cp310-cp310-linux_aarch64.whl && \
-            # install torchvision 0.23.0, as the link to 0.20.0 is down 
+            # install torch and torchvision via pypi.jetson-ai-lab.io as the official source is down
+            wget -q -O /tmp/torch-${TORCH_VERSION}-cp310-cp310-linux_aarch64.whl https://pypi.jetson-ai-lab.io/jp6/cu126/+f/62a/1beee9f2f1470/torch-${TORCH_VERSION}-cp310-cp310-linux_aarch64.whl && \
             wget -q -O /tmp/torchvision-0.23.0-cp310-cp310-linux_aarch64.whl https://pypi.jetson-ai-lab.io/jp6/cu126/+f/907/c4c1933789645/torchvision-0.23.0-cp310-cp310-linux_aarch64.whl && \
-            python3 -m pip install numpy=="1.26.1" && \
+            if [[ "$TORCH_VERSION" == "2.5.0" ]]; then python3 -m pip install numpy=="1.26.1"; fi && \
             python3 -m pip install --ignore-installed --no-cache /tmp/torch*.whl && \
             rm -f /tmp/torch*.whl; \
         fi; \
