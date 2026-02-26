@@ -12,9 +12,7 @@ if [[ -z "$ROS_DOMAIN_ID" ]]; then
 fi
 
 if [[ -z "$RMW_IMPLEMENTATION" ]]; then
-  if ros2 pkg list | grep -q "rmw_fastrtps_cpp"; then
-    export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-  fi
+  export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 fi
 
 CUDA_VERSION=$(dpkg -l 2> /dev/null | grep -E "cuda-cudart-[0-9]" | awk '{ print $3 }' | head -n 1)
