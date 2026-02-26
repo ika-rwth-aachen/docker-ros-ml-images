@@ -12,9 +12,7 @@ if [[ -z "$ROS_DOMAIN_ID" ]]; then
 fi
 
 if [[ -z "$RMW_IMPLEMENTATION" ]]; then
-  if ros2 pkg list | grep -q "rmw_fastrtps_cpp"; then
-    export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-  fi
+  export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 fi
 
 CUDA_VERSION=$(dpkg -l 2> /dev/null | grep -E "cuda-cudart-[0-9]" | awk '{ print $3 }' | head -n 1)
@@ -36,35 +34,67 @@ else
 fi
 
 # print information
-cat << EOF
-╔══════════════════════════════════════════════════ CONTAINER INFORMATION ═════╗
-EOF
-printf "║ %13s | %-60s ║\n" "Architecture" "$ARCH"
-printf "║ %13s | %-60s ║\n" "Ubuntu" "$VERSION"
-[[ -n "$JETSON_LINUX_VERSION" ]] && printf "║ %13s | %-60s ║\n" "Jetson Linux" "$JETSON_LINUX_VERSION"
-[[ $(getent passwd $DOCKER_USER) ]] && printf "║ %13s | %-60s ║\n" "User:PW" "$DOCKER_USER:$DOCKER_USER"
-[[ -n "$PYTHON_VERSION" ]] && printf "║ %13s | %-60s ║\n" "Python" "$PYTHON_VERSION"
-[[ -n "$ROS_DISTRO" ]] && printf "║ %13s | %-60s ║\n" "ROS" "$ROS_DISTRO"
-[[ -n "$ROS_DOMAIN_ID" ]] && printf "║ %13s | %-60s ║\n" "ROS Domain ID" "$ROS_DOMAIN_ID"
-[[ -n "$RMW_IMPLEMENTATION" ]] && printf "║ %13s | %-60s ║\n" "RMW" "$RMW_IMPLEMENTATION"
-[[ -n "$CMAKE_VERSION" ]] && printf "║ %13s | %-60s ║\n" "CMake" "$CMAKE_VERSION"
-[[ -n "$CUDA_VERSION" ]] && printf "║ %13s | %-60s ║\n" "CUDA" "$CUDA_VERSION"
-[[ -n "$CUDNN_VERSION" ]] && printf "║ %13s | %-60s ║\n" "cuDNN" "$CUDNN_VERSION"
-[[ -n "$TENSORRT_VERSION" ]] && printf "║ %13s | %-60s ║\n" "TensorRT" "$TENSORRT_VERSION"
-[[ -n "$TRITON_VERSION" ]] && printf "║ %13s | %-60s ║\n" "Triton Client" "$TRITON_VERSION"
-[[ -n "$TF_PIP_VERSION" ]] && printf "║ %13s | %-60s ║\n" "TensorFlow" "$TF_PIP_VERSION"
-[[ -n "$PT_PIP_VERSION" ]] && printf "║ %13s | %-60s ║\n" "PyTorch" "$PT_PIP_VERSION"
-[[ -n "$ONNX_RUNTIME_VERSION" ]] && printf "║ %13s | %-60s ║\n" "ONNX RT" "$ONNX_RUNTIME_VERSION"
-[[ -n "$NUM_GPUS" ]] && printf "║ %13s | %-60s ║\n" "GPUs" "$NUM_GPUS"
+ENTRY_KEYS=()
+ENTRY_VALUES=()
+
+add_entry() {
+  local key="$1"
+  local value="$2"
+  ENTRY_KEYS+=("$key")
+  ENTRY_VALUES+=("$value")
+}
+
+add_entry "Architecture" "$ARCH"
+add_entry "Ubuntu" "$VERSION"
+[[ -n "$JETSON_LINUX_VERSION" ]] && add_entry "Jetson Linux" "$JETSON_LINUX_VERSION"
+[[ $(getent passwd $DOCKER_USER) ]] && add_entry "User:PW" "$DOCKER_USER:$DOCKER_USER"
+[[ -n "$PYTHON_VERSION" ]] && add_entry "Python" "$PYTHON_VERSION"
+[[ -n "$ROS_DISTRO" ]] && add_entry "ROS" "$ROS_DISTRO"
+[[ -n "$ROS_DOMAIN_ID" ]] && add_entry "ROS Domain ID" "$ROS_DOMAIN_ID"
+[[ -n "$RMW_IMPLEMENTATION" ]] && add_entry "RMW" "$RMW_IMPLEMENTATION"
+[[ -n "$CMAKE_VERSION" ]] && add_entry "CMake" "$CMAKE_VERSION"
+[[ -n "$CUDA_VERSION" ]] && add_entry "CUDA" "$CUDA_VERSION"
+[[ -n "$CUDNN_VERSION" ]] && add_entry "cuDNN" "$CUDNN_VERSION"
+[[ -n "$TENSORRT_VERSION" ]] && add_entry "TensorRT" "$TENSORRT_VERSION"
+[[ -n "$TRITON_VERSION" ]] && add_entry "Triton Client" "$TRITON_VERSION"
+[[ -n "$TF_PIP_VERSION" ]] && add_entry "TensorFlow" "$TF_PIP_VERSION"
+[[ -n "$PT_PIP_VERSION" ]] && add_entry "PyTorch" "$PT_PIP_VERSION"
+[[ -n "$ONNX_RUNTIME_VERSION" ]] && add_entry "ONNX RT" "$ONNX_RUNTIME_VERSION"
+[[ -n "$NUM_GPUS" ]] && add_entry "GPUs" "$NUM_GPUS"
 if [[ -n "$GPU_INFOS" ]]; then
-  IFS=$'\n'
-  for GPU_INFO in $GPU_INFOS; do
-    printf "║ %13s | %-60s ║\n" "" "$GPU_INFO"
-  done
-  unset IFS
+  while IFS= read -r GPU_INFO; do
+    add_entry "" "$GPU_INFO"
+  done <<< "$GPU_INFOS"
 fi
 
-cat << EOF
-╚══════════════════════════════════════════════════════════════════════════════╝
+KEY_WIDTH=13
+VALUE_WIDTH=60
+for ((i = 0; i < ${#ENTRY_KEYS[@]}; i++)); do
+  (( ${#ENTRY_KEYS[$i]} > KEY_WIDTH )) && KEY_WIDTH=${#ENTRY_KEYS[$i]}
+  (( ${#ENTRY_VALUES[$i]} > VALUE_WIDTH )) && VALUE_WIDTH=${#ENTRY_VALUES[$i]}
+done
 
-EOF
+TITLE=" CONTAINER INFORMATION "
+INNER_WIDTH=$((KEY_WIDTH + VALUE_WIDTH + 5))
+if (( ${#TITLE} > INNER_WIDTH )); then
+  VALUE_WIDTH=$((VALUE_WIDTH + ${#TITLE} - INNER_WIDTH))
+  INNER_WIDTH=$((KEY_WIDTH + VALUE_WIDTH + 5))
+fi
+
+LEFT_BORDER_WIDTH=$(((INNER_WIDTH - ${#TITLE}) / 2))
+RIGHT_BORDER_WIDTH=$((INNER_WIDTH - ${#TITLE} - LEFT_BORDER_WIDTH))
+
+LEFT_FILL="$(printf '%*s' "$LEFT_BORDER_WIDTH" '')"
+LEFT_FILL="${LEFT_FILL// /═}"
+RIGHT_FILL="$(printf '%*s' "$RIGHT_BORDER_WIDTH" '')"
+RIGHT_FILL="${RIGHT_FILL// /═}"
+
+printf "╔%s%s%s╗\n" "$LEFT_FILL" "$TITLE" "$RIGHT_FILL"
+
+for ((i = 0; i < ${#ENTRY_KEYS[@]}; i++)); do
+  printf "║ %${KEY_WIDTH}s | %-${VALUE_WIDTH}s ║\n" "${ENTRY_KEYS[$i]}" "${ENTRY_VALUES[$i]}"
+done
+
+BOTTOM_FILL="$(printf '%*s' "$INNER_WIDTH" '')"
+BOTTOM_FILL="${BOTTOM_FILL// /═}"
+printf "╚%s╝\n\n" "$BOTTOM_FILL"

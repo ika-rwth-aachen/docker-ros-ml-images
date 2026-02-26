@@ -239,11 +239,8 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
             apt-get install -y libcusparselt0 libcusparselt-dev cuda-cupti-12-6 && \
             rm -rf /var/lib/apt/lists/* && \
             # install torch 2.8.0, as 2.5.0 only available on pypi.jetson-ai-lab.dev (currently not working)
-            wget -q -O /tmp/torch-2.8.0-cp310-cp310-linux_aarch64.whl https://pypi.jetson-ai-lab.io/jp6/cu126/+f/62a/1beee9f2f1470/torch-2.8.0-cp310-cp310-linux_aarch64.whl && \
-            wget -q -O /tmp/torchvision-0.23.0-cp310-cp310-linux_aarch64.whl https://pypi.jetson-ai-lab.io/jp6/cu126/+f/907/c4c1933789645/torchvision-0.23.0-cp310-cp310-linux_aarch64.whl && \
-            python3 -m pip install numpy=="1.26.1" && \
-            python3 -m pip install --ignore-installed --no-cache /tmp/torch*.whl && \
-            rm -f /tmp/torch*.whl; \
+            python3 -m pip install --ignore-installed torch==2.8.0 --index-url https://pypi.jetson-ai-lab.io/jp6/cu126 && \
+            python3 -m pip install --ignore-installed torchvision==0.23.0 --index-url https://pypi.jetson-ai-lab.io/jp6/cu126; \
         fi; \
     fi
 
