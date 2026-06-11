@@ -7,6 +7,9 @@ gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2:jazzy-desktop
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2:kilted-ros-core
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2:kilted-ros-base
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2:kilted-desktop-full
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2:lyrical-ros-core
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2:lyrical-ros-base
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2:lyrical-desktop-full
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2:rolling-ros-core
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2:rolling-ros-base
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2:rolling-desktop-full
@@ -19,6 +22,9 @@ gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-cuda:jazzy-de
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-cuda:kilted-ros-core
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-cuda:kilted-ros-base
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-cuda:kilted-desktop-full
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-cuda:lyrical-ros-core
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-cuda:lyrical-ros-base
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-cuda:lyrical-desktop-full
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-cuda:rolling-ros-core
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-cuda:rolling-ros-base
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-cuda:rolling-desktop-full
@@ -31,6 +37,9 @@ gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tensorrt:jazz
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tensorrt:kilted-ros-core
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tensorrt:kilted-ros-base
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tensorrt:kilted-desktop-full
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tensorrt:lyrical-ros-core
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tensorrt:lyrical-ros-base
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tensorrt:lyrical-desktop-full
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tensorrt:rolling-ros-core
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tensorrt:rolling-ros-base
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tensorrt:rolling-desktop-full
@@ -43,6 +52,9 @@ gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-triton:jazzy-
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-triton:kilted-ros-core-triton2.52.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-triton:kilted-ros-base-triton2.52.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-triton:kilted-desktop-full-triton2.52.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-triton:lyrical-ros-core-triton2.52.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-triton:lyrical-ros-base-triton2.52.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-triton:lyrical-desktop-full-triton2.52.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-triton:rolling-ros-core-triton2.52.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-triton:rolling-ros-base-triton2.52.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-triton:rolling-desktop-full-triton2.52.0
@@ -55,6 +67,9 @@ gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-torch:jazzy-d
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-torch:kilted-ros-core-torch2.5.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-torch:kilted-ros-base-torch2.5.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-torch:kilted-desktop-full-torch2.5.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-torch:lyrical-ros-core-torch2.5.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-torch:lyrical-ros-base-torch2.5.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-torch:lyrical-desktop-full-torch2.5.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-torch:rolling-ros-core-torch2.5.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-torch:rolling-ros-base-torch2.5.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-torch:rolling-desktop-full-torch2.5.0
@@ -67,6 +82,9 @@ gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tf:jazzy-desk
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tf:kilted-ros-core-tf2.18.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tf:kilted-ros-base-tf2.18.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tf:kilted-desktop-full-tf2.18.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tf:lyrical-ros-core-tf2.18.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tf:lyrical-ros-base-tf2.18.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tf:lyrical-desktop-full-tf2.18.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tf:rolling-ros-core-tf2.18.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tf:rolling-ros-base-tf2.18.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-tf:rolling-desktop-full-tf2.18.0
@@ -79,6 +97,9 @@ gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-ml:jazzy-desk
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-ml:kilted-ros-core-tf2.18.0-torch2.5.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-ml:kilted-ros-base-tf2.18.0-torch2.5.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-ml:kilted-desktop-full-tf2.18.0-torch2.5.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-ml:lyrical-ros-core-tf2.18.0-torch2.5.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-ml:lyrical-ros-base-tf2.18.0-torch2.5.0
+gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-ml:lyrical-desktop-full-tf2.18.0-torch2.5.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-ml:rolling-ros-core-tf2.18.0-torch2.5.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-ml:rolling-ros-base-tf2.18.0-torch2.5.0
 gitlab.ika.rwth-aachen.de:5050/fb-fi/ops/docker-ros-ml-images/ros2-ml:rolling-desktop-full-tf2.18.0-torch2.5.0

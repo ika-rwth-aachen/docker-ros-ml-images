@@ -20,23 +20,27 @@ ARG UBUNTU_VERSION="24.04"
 # === ubuntu base images ==========================================================================
 FROM --platform=amd64 ubuntu:22.04 AS base-ubuntu22.04-amd64
 FROM --platform=amd64 ubuntu:24.04 AS base-ubuntu24.04-amd64
+FROM --platform=amd64 ubuntu:26.04 AS base-ubuntu26.04-amd64
 
 FROM --platform=arm64 ubuntu:22.04 AS base-ubuntu22.04-arm64
 FROM --platform=arm64 ubuntu:24.04 AS base-ubuntu24.04-arm64
+FROM --platform=arm64 ubuntu:26.04 AS base-ubuntu26.04-arm64
 
 # === cuda base images ============================================================================
 FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu22.04 AS base-cuda-ubuntu22.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/cuda:13.3.0-runtime-ubuntu26.04 AS base-cuda-ubuntu26.04-amd64
 
 FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.6.11-runtime AS base-cuda-ubuntu22.04-arm64
-# no l4t-cuda image for ubuntu24 available
+# no l4t-cuda image for ubuntu24/26 available
 
 # === tensorrt base images ========================================================================
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.08-py3 AS base-tensorrt-ubuntu22.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.11-py3 AS base-tensorrt-ubuntu24.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/tensorrt:26.04-py3 AS base-tensorrt-ubuntu26.04-amd64
 
 FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime AS base-tensorrt-ubuntu22.04-arm64
-# no l4t-tensorrt image for ubuntu24 available
+# no l4t-tensorrt image for ubuntu24/26 available
 
 # ================================================================================================
 FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}"
@@ -108,8 +112,8 @@ RUN apt-get update && \
         x11-apps \
         zip \
     && rm -rf /var/lib/apt/lists/*
-RUN if [[ $UBUNTU_VERSION == "24.04" ]]; then python -m pip config --global set global.break-system-packages true; \
-    else python -m pip install --upgrade pip; fi
+RUN if [[ $UBUNTU_VERSION == "22.04" ]]; then python -m pip install --upgrade pip; \
+    else python -m pip config --global set global.break-system-packages true; fi
 
 # enable bash completion
 RUN sed -i '/^#if \[ -f \/etc\/bash_completion \]/,/^#fi/ s/^#//' ~/.bashrc
