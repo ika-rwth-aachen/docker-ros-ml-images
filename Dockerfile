@@ -37,7 +37,8 @@ FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.6.11-runtime AS base-cuda-ubunt
 # === tensorrt base images ========================================================================
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.08-py3 AS base-tensorrt-ubuntu22.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.11-py3 AS base-tensorrt-ubuntu24.04-amd64
-FROM --platform=amd64 nvcr.io/nvidia/tensorrt:26.04-py3 AS base-tensorrt-ubuntu26.04-amd64
+# no usable NVIDIA TensorRT base image is currently available for Ubuntu 26.04 / ROS 2 Lyrical
+# FROM --platform=amd64 nvcr.io/nvidia/tensorrt:26.04-py3 AS base-tensorrt-ubuntu26.04-amd64
 
 FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime AS base-tensorrt-ubuntu22.04-arm64
 # no l4t-tensorrt image for ubuntu24/26 available
