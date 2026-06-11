@@ -119,9 +119,15 @@ RUN if [[ $UBUNTU_VERSION == "22.04" ]]; then python -m pip install --upgrade pi
 RUN sed -i '/^#if \[ -f \/etc\/bash_completion \]/,/^#fi/ s/^#//' ~/.bashrc
 
 # install more essentials
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
-    apt-get update && \
-    apt-get install git-lfs && \
+RUN if [[ $UBUNTU_VERSION == "26.04" ]]; then \
+        add-apt-repository universe && \
+        apt-get update && \
+        apt-get install -y git-lfs; \
+    else \
+        curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
+        apt-get update && \
+        apt-get install -y git-lfs; \
+    fi && \
     rm -rf /var/lib/apt/lists/*
 
 # --- install and setup ROS ----------------------------------------------------------------------
