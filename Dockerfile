@@ -113,22 +113,16 @@ RUN apt-get update && \
         x11-apps \
         zip \
     && rm -rf /var/lib/apt/lists/*
-RUN if [[ $UBUNTU_VERSION == "22.04" ]]; then python -m pip install --upgrade pip; \
-    else python -m pip config --global set global.break-system-packages true; fi
+RUN if [[ $UBUNTU_VERSION != "22.04" ]]; then python -m pip config --global set global.break-system-packages true; \
+else python -m pip install --upgrade pip; fi
 
 # enable bash completion
 RUN sed -i '/^#if \[ -f \/etc\/bash_completion \]/,/^#fi/ s/^#//' ~/.bashrc
 
 # install more essentials
-RUN if [[ $UBUNTU_VERSION == "26.04" ]]; then \
-        add-apt-repository universe && \
-        apt-get update && \
-        apt-get install -y git-lfs; \
-    else \
-        curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
-        apt-get update && \
-        apt-get install -y git-lfs; \
-    fi && \
+RUN add-apt-repository universe && \
+    apt-get update && \
+    apt-get install -y git-lfs && \
     rm -rf /var/lib/apt/lists/*
 
 # --- install and setup ROS ----------------------------------------------------------------------

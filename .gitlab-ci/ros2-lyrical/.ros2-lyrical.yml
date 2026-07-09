@@ -3,8 +3,3 @@ include:
 
 variables:
   ROS_DISTRO: lyrical
-  # Ubuntu 26 TensorRT base images are currently not usable for ROS 2 Lyrical builds.
-  DISABLE_TENSORRT: "true"
-  DISABLE_TORCH: "true"
-  DISABLE_TF: "true"
-  DISABLE_ML: "true"
