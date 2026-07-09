@@ -49,10 +49,10 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 | Architecture       | amd64, arm64                                                                          |
 
 > [!NOTE]
-> All images are targeted at NVIDIA GPUs and therefore base off of official [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). The arm64 images, in particular, target NVIDIA Jetson SoCs and are based off of [NVIDIA L4T base images](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base). Ubuntu 22 images are provided with JetPack 6, Ubuntu 20 images with JetPack 5.
+> All images are targeted at NVIDIA GPUs and therefore base off of official [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). The arm64 images, in particular, target NVIDIA Jetson SoCs and are based off of [NVIDIA L4T base images](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base). Since NVIDIA does not (yet) provide Ubuntu 24 L4T images, arm64 images of ROS distributions Jazzy and Kilted are built on Ubuntu 22 instead instead, including JetPack 6. arm64 images of ROS distributions Lyrical and Rolling are not provided at all, as those ROS distributions are targeting Ubuntu 26.
 
 > [!NOTE]
-> `lyrical` images in this repository use Ubuntu 26.04. NVIDIA-dependent `lyrical` image families are currently published for `amd64` only because NVIDIA Jetson/L4T images are not available for Ubuntu 26.04.
+> Since NVIDIA does not (yet) provide Ubuntu 26 TensorRT images, ML images (TensorRT, PyTorch, TensorFlow, ONNX RT) of ROS distributions Lyrical and Rolling are not built.
 
 > [!NOTE]
 > Since robotic applications are often implemented in C++ instead of Python for performance reasons, previous releases of our images also shipped with the C++ APIs of PyTorch and TensorFlow. Installing the C++ libraries often involves cumbersome building from source, so we have decided to drop PyTorch/TensorFlow C++ support for more frequent releases. You may still find those images with ML C++ support under the [23.08 release](https://hub.docker.com/r/rwthika/ros2-ml/tags?page=&page_size=&ordering=&name=-v23.08).
