@@ -119,7 +119,11 @@ else python -m pip install --upgrade pip; fi
 RUN sed -i '/^#if \[ -f \/etc\/bash_completion \]/,/^#fi/ s/^#//' ~/.bashrc
 
 # install more essentials
-RUN add-apt-repository universe && \
+RUN if [[ "$UBUNTU_VERSION" == "22.04" ]]; then \
+        curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash; \
+    else \
+        add-apt-repository universe; \
+    fi && \
     apt-get update && \
     apt-get install -y git-lfs && \
     rm -rf /var/lib/apt/lists/*
