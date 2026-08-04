@@ -164,7 +164,8 @@ RUN apt-get update && \
     pip install --ignore-installed ros2-pkg-create && \
     rm -rf /var/lib/apt/lists/*
 
-# install ROS
+# install ROS including alternative middleware implementations
+# TODO: also install cyclonedds-cpp/zenoh-cpp when building from source?
 ARG ROS_PACKAGE=ros-core
 ARG ROS_BUILD_FROM_SRC=false
 RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
@@ -199,6 +200,8 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
     else \
         apt-get update && \
         apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-${ROS_PACKAGE} && \
+        apt-get install -y ros-${ROS_DISTRO}-rmw-cyclonedds-cpp && \
+        apt-get install -y ros-${ROS_DISTRO}-rmw-zenoh-cpp && \
         rm -rf /var/lib/apt/lists/*; \
     fi
 
