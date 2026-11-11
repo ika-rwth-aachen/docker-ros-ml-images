@@ -17,4 +17,5 @@ variables:
   DISABLE_ML_AMD64: "true"
 
   ROS_DISTRO: jazzy
+  RMW_ZENOH_VERSION: "0.2.13"
   ROS_PACKAGE: desktop-full

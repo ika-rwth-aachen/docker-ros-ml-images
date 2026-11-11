@@ -3,3 +3,4 @@ include:
 
 variables:
   ROS_DISTRO: rolling
+  RMW_ZENOH_VERSION: "" # install latest from apt, as rolling packages for ubuntu 24 are not updated anymore

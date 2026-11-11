@@ -3,3 +3,4 @@ include:
 
 variables:
   ROS_DISTRO: humble
+  RMW_ZENOH_VERSION: "0.1.11"

@@ -3,3 +3,4 @@ include:
 
 variables:
   ROS_DISTRO: jazzy
+  RMW_ZENOH_VERSION: "0.2.13"

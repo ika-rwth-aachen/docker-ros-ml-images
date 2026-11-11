@@ -7,6 +7,7 @@
 #     --build-arg ROS_DISTRO=$ROS_DISTRO \
 #     --build-arg ROS_PACKAGE=$ROS_PACKAGE \
 #     --build-arg ROS_BUILD_FROM_SRC=$ROS_BUILD_FROM_SRC \
+#     --build-arg RMW_ZENOH_VERSION=$RMW_ZENOH_VERSION \
 #     --build-arg TORCH_VERSION=$TORCH_VERSION \
 #     --build-arg TF_VERSION=$TF_VERSION \
 #     --build-arg ONNX_RUNTIME_VERSION=$ONNX_RUNTIME_VERSION \
@@ -203,6 +204,33 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
         apt-get install -y ros-${ROS_DISTRO}-rmw-cyclonedds-cpp && \
         apt-get install -y ros-${ROS_DISTRO}-rmw-zenoh-cpp && \
         rm -rf /var/lib/apt/lists/*; \
+    fi
+
+# install fixed rmw_zenoh version (git tag of https://github.com/ros2/rmw_zenoh), if specified;
+# otherwise, the latest version available via apt (installed above) is used
+# build from source on top of the apt installation, as the ROS apt repository only provides the latest version;
+# the apt packages stay installed (and held) to provide dependencies and to prevent apt/rosdep from reinstalling them
+ARG RMW_ZENOH_VERSION
+RUN if [[ -n "$RMW_ZENOH_VERSION" && "$ROS_BUILD_FROM_SRC" != "true" ]]; then \
+        BUILD_DEPS=$(for p in cargo clang ros-${ROS_DISTRO}-ament-cmake-vendor-package; do \
+            dpkg-query -W -f='${Status}' $p 2> /dev/null | grep -q "install ok installed" || echo $p; \
+        done) && \
+        apt-get update && \
+        apt-get install -y --no-install-recommends $BUILD_DEPS && \
+        git clone --depth 1 --branch ${RMW_ZENOH_VERSION} https://github.com/ros2/rmw_zenoh.git /tmp/rmw_zenoh && \
+        export CARGO_HOME=/tmp/rmw_zenoh/.cargo && \
+        for pkg in zenoh_cpp_vendor rmw_zenoh_cpp; do \
+            source /opt/ros/${ROS_DISTRO}/setup.bash && \
+            cmake -S /tmp/rmw_zenoh/${pkg} -B /tmp/rmw_zenoh/build/${pkg} \
+                -DCMAKE_INSTALL_PREFIX=/opt/ros/${ROS_DISTRO} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && \
+            cmake --build /tmp/rmw_zenoh/build/${pkg} --target install --parallel $(nproc) || exit 1; \
+        done && \
+        apt-mark hold ros-${ROS_DISTRO}-rmw-zenoh-cpp ros-${ROS_DISTRO}-zenoh-cpp-vendor && \
+        if [[ -n "$BUILD_DEPS" ]]; then apt-get purge -y --auto-remove $BUILD_DEPS; fi && \
+        rm -rf /tmp/rmw_zenoh /var/lib/apt/lists/* && \
+        source /opt/ros/${ROS_DISTRO}/setup.bash && \
+        LDD=$(ldd /opt/ros/${ROS_DISTRO}/lib/librmw_zenoh_cpp.so) && \
+        ! grep "not found" <<< "$LDD"; \
     fi
 
 # source ROS
