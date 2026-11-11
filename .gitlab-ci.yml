@@ -6,8 +6,13 @@ workflow:
 
 variables:
   ROS_DISTROS:
-    value: humble,jazzy,kilted,lyrical,rolling
+    value: humble,jazzy,lyrical # TODO: test only, revert before merge
     description: Comma-separated list of ROS Distributions to build [humble,jazzy,kilted,lyrical,rolling]
+  # TODO: test only, revert before merge
+  DISABLE_TRITON: "true"
+  DISABLE_TORCH: "true"
+  DISABLE_TF: "true"
+  DISABLE_ML: "true"
 
 
 stages:
@@ -28,27 +33,27 @@ ros2-humble-ros-core:
     include: .gitlab-ci/ros2-humble/ros2-humble-ros-core.yml
     strategy: depend
 
-ros2-humble-ros-base:
-  stage: ROS 2 Humble
-  rules:
-    - if: $ROS_DISTROS =~ /.*humble.*/
-  needs:
-    - job: ros2-humble-ros-core
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-humble/ros2-humble-ros-base.yml
-    strategy: depend
+# ros2-humble-ros-base:
+#   stage: ROS 2 Humble
+#   rules:
+#     - if: $ROS_DISTROS =~ /.*humble.*/
+#   needs:
+#     - job: ros2-humble-ros-core
+#       optional: true
+#   trigger:
+#     include: .gitlab-ci/ros2-humble/ros2-humble-ros-base.yml
+#     strategy: depend
 
-ros2-humble-desktop-full:
-  stage: ROS 2 Humble
-  rules:
-    - if: $ROS_DISTROS =~ /.*humble.*/
-  needs:
-    - job: ros2-humble-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-humble/ros2-humble-desktop-full.yml
-    strategy: depend
+# ros2-humble-desktop-full:
+#   stage: ROS 2 Humble
+#   rules:
+#     - if: $ROS_DISTROS =~ /.*humble.*/
+#   needs:
+#     - job: ros2-humble-ros-base
+#       optional: true
+#   trigger:
+#     include: .gitlab-ci/ros2-humble/ros2-humble-desktop-full.yml
+#     strategy: depend
 
 
 ros2-jazzy-ros-core:
@@ -80,71 +85,71 @@ post-jazzy-ros-core:
     include: .gitlab-ci/postprocessing/ros2-jazzy-ros-core.yml
     strategy: depend
 
-ros2-jazzy-ros-base:
-  stage: ROS 2 Jazzy
-  rules:
-    - if: $ROS_DISTROS =~ /.*jazzy.*/
-  needs:
-    - job: ros2-jazzy-ros-core
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-jazzy/ros2-jazzy-ros-base.yml
-    strategy: depend
+# ros2-jazzy-ros-base:
+#   stage: ROS 2 Jazzy
+#   rules:
+#     - if: $ROS_DISTROS =~ /.*jazzy.*/
+#   needs:
+#     - job: ros2-jazzy-ros-core
+#       optional: true
+#   trigger:
+#     include: .gitlab-ci/ros2-jazzy/ros2-jazzy-ros-base.yml
+#     strategy: depend
 
-ros2-jazzy-ubuntu22-ros-base:
-  stage: ROS 2 Jazzy
-  rules:
-    - if: $ROS_DISTROS =~ /.*jazzy.*/
-  needs:
-    - job: ros2-jazzy-ubuntu22-ros-core
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-jazzy-ubuntu22/ros2-jazzy-ubuntu22-ros-base.yml
-    strategy: depend
+# ros2-jazzy-ubuntu22-ros-base:
+#   stage: ROS 2 Jazzy
+#   rules:
+#     - if: $ROS_DISTROS =~ /.*jazzy.*/
+#   needs:
+#     - job: ros2-jazzy-ubuntu22-ros-core
+#       optional: true
+#   trigger:
+#     include: .gitlab-ci/ros2-jazzy-ubuntu22/ros2-jazzy-ubuntu22-ros-base.yml
+#     strategy: depend
 
-post-ros2-jazzy-ros-base:
-  stage: Postprocessing
-  rules:
-    - if: $ROS_DISTROS =~ /.*jazzy.*/ && $CI_COMMIT_TAG
-  needs:
-    - ros2-jazzy-ros-base
-    - ros2-jazzy-ubuntu22-ros-base
-  trigger:
-    include: .gitlab-ci/postprocessing/ros2-jazzy-ros-base.yml
-    strategy: depend
+# post-ros2-jazzy-ros-base:
+#   stage: Postprocessing
+#   rules:
+#     - if: $ROS_DISTROS =~ /.*jazzy.*/ && $CI_COMMIT_TAG
+#   needs:
+#     - ros2-jazzy-ros-base
+#     - ros2-jazzy-ubuntu22-ros-base
+#   trigger:
+#     include: .gitlab-ci/postprocessing/ros2-jazzy-ros-base.yml
+#     strategy: depend
 
-ros2-jazzy-desktop-full:
-  stage: ROS 2 Jazzy
-  rules:
-    - if: $ROS_DISTROS =~ /.*jazzy.*/
-  needs:
-    - job: ros2-jazzy-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-jazzy/ros2-jazzy-desktop-full.yml
-    strategy: depend
+# ros2-jazzy-desktop-full:
+#   stage: ROS 2 Jazzy
+#   rules:
+#     - if: $ROS_DISTROS =~ /.*jazzy.*/
+#   needs:
+#     - job: ros2-jazzy-ros-base
+#       optional: true
+#   trigger:
+#     include: .gitlab-ci/ros2-jazzy/ros2-jazzy-desktop-full.yml
+#     strategy: depend
 
-ros2-jazzy-ubuntu22-desktop-full:
-  stage: ROS 2 Jazzy
-  rules:
-    - if: $ROS_DISTROS =~ /.*jazzy.*/
-  needs:
-    - job: ros2-jazzy-ubuntu22-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-jazzy-ubuntu22/ros2-jazzy-ubuntu22-desktop-full.yml
-    strategy: depend
+# ros2-jazzy-ubuntu22-desktop-full:
+#   stage: ROS 2 Jazzy
+#   rules:
+#     - if: $ROS_DISTROS =~ /.*jazzy.*/
+#   needs:
+#     - job: ros2-jazzy-ubuntu22-ros-base
+#       optional: true
+#   trigger:
+#     include: .gitlab-ci/ros2-jazzy-ubuntu22/ros2-jazzy-ubuntu22-desktop-full.yml
+#     strategy: depend
 
-post-ros2-jazzy-desktop-full:
-  stage: Postprocessing
-  rules:
-    - if: $ROS_DISTROS =~ /.*jazzy.*/ && $CI_COMMIT_TAG
-  needs:
-    - ros2-jazzy-desktop-full
-    - ros2-jazzy-ubuntu22-desktop-full
-  trigger:
-    include: .gitlab-ci/postprocessing/ros2-jazzy-desktop-full.yml
-    strategy: depend
+# post-ros2-jazzy-desktop-full:
+#   stage: Postprocessing
+#   rules:
+#     - if: $ROS_DISTROS =~ /.*jazzy.*/ && $CI_COMMIT_TAG
+#   needs:
+#     - ros2-jazzy-desktop-full
+#     - ros2-jazzy-ubuntu22-desktop-full
+#   trigger:
+#     include: .gitlab-ci/postprocessing/ros2-jazzy-desktop-full.yml
+#     strategy: depend
 
 
 ros2-kilted-ros-core:
@@ -179,33 +184,34 @@ ros2-kilted-desktop-full:
     strategy: depend
 
 
-ros2-lyrical-ros-core:
-  stage: ROS 2 Lyrical
-  rules:
-    - if: $ROS_DISTROS =~ /.*lyrical.*/
-  needs: []
-  trigger:
-    include: .gitlab-ci/ros2-lyrical/ros2-lyrical-ros-core.yml
-    strategy: depend
+# ros2-lyrical-ros-core:
+#   stage: ROS 2 Lyrical
+#   rules:
+#     - if: $ROS_DISTROS =~ /.*lyrical.*/
+#   needs: []
+#   trigger:
+#     include: .gitlab-ci/ros2-lyrical/ros2-lyrical-ros-core.yml
+#     strategy: depend
 
-ros2-lyrical-ros-base:
-  stage: ROS 2 Lyrical
-  rules:
-    - if: $ROS_DISTROS =~ /.*lyrical.*/
-  needs:
-    - job: ros2-lyrical-ros-core
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-lyrical/ros2-lyrical-ros-base.yml
-    strategy: depend
+# ros2-lyrical-ros-base:
+#   stage: ROS 2 Lyrical
+#   rules:
+#     - if: $ROS_DISTROS =~ /.*lyrical.*/
+#   needs:
+#     - job: ros2-lyrical-ros-core
+#       optional: true
+#   trigger:
+#     include: .gitlab-ci/ros2-lyrical/ros2-lyrical-ros-base.yml
+#     strategy: depend
 
 ros2-lyrical-desktop-full:
   stage: ROS 2 Lyrical
   rules:
     - if: $ROS_DISTROS =~ /.*lyrical.*/
-  needs:
-    - job: ros2-lyrical-ros-base
-      optional: true
+#   needs:
+#     - job: ros2-lyrical-ros-base
+#       optional: true
+  needs: []
   trigger:
     include: .gitlab-ci/ros2-lyrical/ros2-lyrical-desktop-full.yml
     strategy: depend
