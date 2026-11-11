@@ -219,6 +219,7 @@ RUN if [[ -n "$RMW_ZENOH_VERSION" && "$ROS_BUILD_FROM_SRC" != "true" ]]; then \
         apt-get install -y --no-install-recommends $BUILD_DEPS && \
         git clone --depth 1 --branch ${RMW_ZENOH_VERSION} https://github.com/ros2/rmw_zenoh.git /tmp/rmw_zenoh && \
         export CARGO_HOME=/tmp/rmw_zenoh/.cargo && \
+        export CARGO_BUILD_JOBS=$(( $(nproc) < 32 ? $(nproc) : 32 )) && \
         for pkg in zenoh_cpp_vendor rmw_zenoh_cpp; do \
             source /opt/ros/${ROS_DISTRO}/setup.bash && \
             cmake -S /tmp/rmw_zenoh/${pkg} -B /tmp/rmw_zenoh/build/${pkg} \
