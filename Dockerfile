@@ -167,7 +167,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # install ROS including alternative middleware implementations
-# TODO: also install cyclonedds-cpp/zenoh-cpp when building from source?
 ARG ROS_PACKAGE=ros-core
 ARG ROS_BUILD_FROM_SRC=false
 RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
