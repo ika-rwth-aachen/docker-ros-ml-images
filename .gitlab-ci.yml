@@ -231,13 +231,14 @@ ros2-rolling-ros-base:
     include: .gitlab-ci/ros2-rolling/ros2-rolling-ros-base.yml
     strategy: depend
 
-ros2-rolling-desktop-full:
-  stage: ROS 2 Rolling
-  rules:
-    - if: $ROS_DISTROS =~ /.*rolling.*/
-  needs:
-    - job: ros2-rolling-ros-base
-      optional: true
-  trigger:
-    include: .gitlab-ci/ros2-rolling/ros2-rolling-desktop-full.yml
-    strategy: depend
+# disabled, as ros-rolling-desktop-full is no longer available for Ubuntu 24
+# ros2-rolling-desktop-full:
+#   stage: ROS 2 Rolling
+#   rules:
+#     - if: $ROS_DISTROS =~ /.*rolling.*/
+#   needs:
+#     - job: ros2-rolling-ros-base
+#       optional: true
+#   trigger:
+#     include: .gitlab-ci/ros2-rolling/ros2-rolling-desktop-full.yml
+#     strategy: depend
