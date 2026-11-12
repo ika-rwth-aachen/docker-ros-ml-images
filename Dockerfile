@@ -209,7 +209,8 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
 # install fixed rmw_zenoh version (git tag of https://github.com/ros2/rmw_zenoh), if specified;
 # otherwise, the latest version available via apt (installed above) is used
 # build from source on top of the apt installation, as the ROS apt repository only provides the latest version;
-# the apt packages stay installed (and held) to provide dependencies and to prevent apt/rosdep from reinstalling them
+# the apt packages stay installed to provide dependencies and to prevent apt/rosdep from reinstalling them;
+# they are pinned to their installed version, so that apt neither upgrades them (overwriting the source build) nor fails
 ARG RMW_ZENOH_VERSION
 RUN if [[ -n "$RMW_ZENOH_VERSION" && "$ROS_BUILD_FROM_SRC" != "true" ]]; then \
         BUILD_DEPS=$(for p in cargo clang nlohmann-json3-dev ros-${ROS_DISTRO}-ament-cmake-vendor-package; do \
@@ -226,7 +227,9 @@ RUN if [[ -n "$RMW_ZENOH_VERSION" && "$ROS_BUILD_FROM_SRC" != "true" ]]; then \
                 -DCMAKE_INSTALL_PREFIX=/opt/ros/${ROS_DISTRO} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && \
             cmake --build /tmp/rmw_zenoh/build/${pkg} --target install --parallel $(nproc) || exit 1; \
         done && \
-        apt-mark hold ros-${ROS_DISTRO}-rmw-zenoh-cpp ros-${ROS_DISTRO}-zenoh-cpp-vendor && \
+        for p in ros-${ROS_DISTRO}-rmw-zenoh-cpp ros-${ROS_DISTRO}-zenoh-cpp-vendor; do \
+            printf "Package: %s\nPin: version %s\nPin-Priority: 1001\n\n" $p "$(dpkg-query -W -f='${Version}' $p)" >> /etc/apt/preferences.d/rmw-zenoh; \
+        done && \
         if [[ -n "$BUILD_DEPS" ]]; then apt-get purge -y --auto-remove $BUILD_DEPS; fi && \
         rm -rf /tmp/rmw_zenoh /var/lib/apt/lists/* && \
         source /opt/ros/${ROS_DISTRO}/setup.bash && \
