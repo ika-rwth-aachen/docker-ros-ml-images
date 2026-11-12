@@ -55,9 +55,6 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 > Since NVIDIA does not (yet) provide Ubuntu 26 TensorRT images, TensorRT and ML images (PyTorch, TensorFlow, ONNX RT) of ROS distribution Lyrical are not built.
 
 > [!NOTE]
-> Since `ros-rolling-desktop-full` is no longer available for Ubuntu 24, `rolling-desktop-full` images are no longer built. The images of the last build remain available.
-
-> [!NOTE]
 > The NVIDIA Triton Client libraries (2.52.0) are only provided for Ubuntu 24 and require a newer glibc than Ubuntu 22 provides. They can therefore not be loaded in Ubuntu 22 based images, i.e., `ros2-triton` and `ros2-ml` images of ROS distribution Humble and arm64 `ros2-ml` images of ROS distribution Jazzy.
 
 > [!NOTE]
@@ -105,7 +102,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `lyrical-desktop-full`              | amd64<br>arm64 | 26.04.1 |      -       | 3.14.4  | lyrical | desktop-full |  0.10.8   | 4.2.3  |  -   |   -   |    -     |   -    |    -    |     -      |    -    |
 | `rolling-ros-core`                  | amd64<br>arm64 | 24.04.5 |      -       | 3.12.3  | rolling |   ros-core   |  0.10.3   | 3.28.3 |  -   |   -   |    -     |   -    |    -    |     -      |    -    |
 | `rolling`, `rolling-ros-base`       | amd64<br>arm64 | 24.04.5 |      -       | 3.12.3  | rolling |   ros-base   |  0.10.3   | 3.28.3 |  -   |   -   |    -     |   -    |    -    |     -      |    -    |
-| `rolling-desktop-full`              | amd64<br>arm64 | 24.04.4 |      -       | 3.12.3  | rolling | desktop-full |     -     | 3.28.3 |  -   |   -   |    -     |   -    |    -    |     -      |    -    |
 
 </details>
 </blockquote>
@@ -134,7 +130,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `lyrical-desktop-full`              |     amd64      |       26.04        |      -       |      3.14.4       | lyrical | desktop-full |  0.10.8   |      4.2.3       | 13.3.29 |   -   |    -     |   -    |    -    |     -      |    -    |
 | `rolling-ros-core`                  |     amd64      |       24.04        |      -       |      3.12.3       | rolling |   ros-core   |  0.10.3   |      3.28.3      | 12.6.68 |   -   |    -     |   -    |    -    |     -      |    -    |
 | `rolling`, `rolling-ros-base`       |     amd64      |       24.04        |      -       |      3.12.3       | rolling |   ros-base   |  0.10.3   |      3.28.3      | 12.6.68 |   -   |    -     |   -    |    -    |     -      |    -    |
-| `rolling-desktop-full`              |     amd64      |       24.04        |      -       |      3.12.3       | rolling | desktop-full |     -     |      3.28.3      | 12.6.68 |   -   |    -     |   -    |    -    |     -      |    -    |
 
 </details>
 </blockquote>
@@ -160,7 +155,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `kilted-desktop-full`               |     amd64      |      24.04.1       |      -       |      3.12.3       | kilted  | desktop-full |  0.6.10   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |     -      |    -    |
 | `rolling-ros-core`                  |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling |   ros-core   |  0.10.3   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |     -      |    -    |
 | `rolling`, `rolling-ros-base`       |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling |   ros-base   |  0.10.3   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |     -      |    -    |
-| `rolling-desktop-full`              |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling | desktop-full |     -     |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |     -      |    -    |
 
 </details>
 </blockquote>
@@ -189,7 +183,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `lyrical-desktop-full-triton2.52.0`              | amd64<br>arm64 | 26.04.1 |      -       | 3.14.4  | lyrical | desktop-full |  0.10.8   | 4.2.3  |  -   |   -   |    -     | 2.52.0 |    -    |     -      |    -    |
 | `rolling-ros-core-triton2.52.0`                  | amd64<br>arm64 | 24.04.5 |      -       | 3.12.3  | rolling |   ros-core   |  0.10.3   | 3.28.3 |  -   |   -   |    -     | 2.52.0 |    -    |     -      |    -    |
 | `rolling`, `rolling-ros-base-triton2.52.0`       | amd64<br>arm64 | 24.04.5 |      -       | 3.12.3  | rolling |   ros-base   |  0.10.3   | 3.28.3 |  -   |   -   |    -     | 2.52.0 |    -    |     -      |    -    |
-| `rolling-desktop-full-triton2.52.0`              | amd64<br>arm64 | 24.04.4 |      -       | 3.12.3  | rolling | desktop-full |     -     | 3.28.3 |  -   |   -   |    -     | 2.52.0 |    -    |     -      |    -    |
 
 </details>
 </blockquote>
@@ -215,7 +208,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `kilted-desktop-full-torch2.5.0`               |     amd64      |      24.04.1       |      -       |      3.12.3       | kilted  | desktop-full |  0.6.10   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |     2.5.0      |     -      |    -    |
 | `rolling-ros-core-torch2.5.0`                  |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling |   ros-core   |  0.10.3   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |     2.5.0      |     -      |    -    |
 | `rolling`, `rolling-ros-base-torch2.5.0`       |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling |   ros-base   |  0.10.3   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |     2.5.0      |     -      |    -    |
-| `rolling-desktop-full-torch2.5.0`              |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling | desktop-full |     -     |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |     2.5.0      |     -      |    -    |
 
 </details>
 </blockquote>
@@ -241,7 +233,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `kilted-desktop-full-tf2.18.0`               |     amd64      |      24.04.1       |      -       |      3.12.3       | kilted  | desktop-full |  0.6.10   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |      2.18.0      |    -    |
 | `rolling-ros-core-tf2.18.0`                  |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling |   ros-core   |  0.10.3   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |      2.18.0      |    -    |
 | `rolling`, `rolling-ros-base-tf2.18.0`       |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling |   ros-base   |  0.10.3   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |      2.18.0      |    -    |
-| `rolling-desktop-full-tf2.18.0`              |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling | desktop-full |     -     |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        |   -    |    -    |      2.18.0      |    -    |
 
 </details>
 </blockquote>
@@ -267,10 +258,12 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 | `kilted-desktop-full-tf2.18.0-torch2.5.0`               |     amd64      |      24.04.1       |      -       |      3.12.3       | kilted  | desktop-full |  0.6.10   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        | 2.52.0 |     2.5.0      |      2.18.0      |   1.20.2    |
 | `rolling-ros-core-tf2.18.0-torch2.5.0`                  |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling |   ros-core   |  0.10.3   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        | 2.52.0 |     2.5.0      |      2.18.0      |   1.20.2    |
 | `rolling`, `rolling-ros-base-tf2.18.0-torch2.5.0`       |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling |   ros-base   |  0.10.3   |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        | 2.52.0 |     2.5.0      |      2.18.0      |   1.20.2    |
-| `rolling-desktop-full-tf2.18.0-torch2.5.0`              |     amd64      |      24.04.1       |      -       |      3.12.3       | rolling | desktop-full |     -     |      3.24.0      |      12.6.77       |       9.5.1.17       |       10.6.0.26        | 2.52.0 |     2.5.0      |      2.18.0      |   1.20.1    |
 
 </details>
 </blockquote>
+
+> [!NOTE]
+> Since `ros-rolling-desktop-full` is no longer available for Ubuntu 24, `rolling-desktop-full` images are no longer built. The last release of *docker-ros-ml-images* to include these images is [release 26.04](https://github.com/ika-rwth-aachen/docker-ros-ml-images/tree/26.04). These images will remain available.
 
 ### ROS
 
