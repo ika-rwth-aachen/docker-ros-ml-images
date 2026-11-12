@@ -250,7 +250,9 @@ RUN if [[ -n $TRITON_VERSION ]]; then \
         mkdir -p ${TRITON_CLIENT_DIR} && \
         tar -xzf /tmp/tritonclient.tar.gz -C ${TRITON_CLIENT_DIR} && \
         rm /tmp/tritonclient.tar.gz && \
-        echo "export LD_LIBRARY_PATH=$TRITON_CLIENT_DIR/lib:\$LD_LIBRARY_PATH" >> ~/.bashrc ; \
+        # client libraries are located in lib (amd64) or tritonserver/clients/lib (arm64)
+        TRITON_CLIENT_LIB_DIR=$(dirname $(find ${TRITON_CLIENT_DIR} -name libgrpcclient.so -print -quit)) && \
+        echo "export LD_LIBRARY_PATH=$TRITON_CLIENT_LIB_DIR:\$LD_LIBRARY_PATH" >> ~/.bashrc ; \
     fi
 
 # install libcudnn as it is not installed in nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime
@@ -289,7 +291,9 @@ ARG TF_VERSION
 RUN if [[ -n $TF_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
             if [[ $UBUNTU_VERSION == "22.04" ]]; then pip install opencv-python matplotlib; fi && \
-            pip3 install tensorflow==${TF_VERSION}; \
+            pip3 install tensorflow==${TF_VERSION} && \
+            # PyTorch installs cuDNN 9.1 via pip, which TensorFlow would load instead of the cuDNN 9.3 it is built against
+            if [[ -n $TORCH_VERSION ]]; then pip3 install nvidia-cudnn-cu12==9.3.0.75; fi; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             apt-get update && \
             apt-get install -y libhdf5-dev && \

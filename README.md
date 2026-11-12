@@ -58,6 +58,9 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 > Since `ros-rolling-desktop-full` is no longer available for Ubuntu 24, `rolling-desktop-full` images are no longer built. The images of the last build remain available.
 
 > [!NOTE]
+> The NVIDIA Triton Client libraries (2.52.0) are only provided for Ubuntu 24 and require a newer glibc than Ubuntu 22 provides. They can therefore not be loaded in Ubuntu 22 based images, i.e., `ros2-triton` and `ros2-ml` images of ROS distribution Humble and arm64 `ros2-ml` images of ROS distribution Jazzy.
+
+> [!NOTE]
 > Since robotic applications are often implemented in C++ instead of Python for performance reasons, previous releases of our images also shipped with the C++ APIs of PyTorch and TensorFlow. Installing the C++ libraries often involves cumbersome building from source, so we have decided to drop PyTorch/TensorFlow C++ support for more frequent releases. You may still find those images with ML C++ support under the [23.08 release](https://hub.docker.com/r/rwthika/ros2-ml/tags?page=&page_size=&ordering=&name=-v23.08).
 
 
