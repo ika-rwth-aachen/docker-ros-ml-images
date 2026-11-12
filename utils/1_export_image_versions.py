@@ -15,6 +15,7 @@ VERSION_GETTER_COMMANDS = {
     "Python": "python --version | awk '{print \\$2}'",
     "ROS": "echo \\$ROS_DISTRO",
     "ROS Package": "(dpkg -l | grep ros-\\$ROS_DISTRO-desktop-full || dpkg -l | grep ros-\\$ROS_DISTRO-ros-base || dpkg -l | grep ros-\\$ROS_DISTRO-ros-core) | awk '{print \\$2}' | cut -d- -f3-",
+    "RMW Zenoh": "f=/opt/ros/\\$ROS_DISTRO/share/rmw_zenoh_cpp/package.xml; if [[ -f \\$f ]]; then grep -oP '(?<=<version>)[^<]+' \\$f; fi",
     "CMake": "cmake --version | grep version | awk '{print \\$3}'",
     "CUDA": "dpkg -l 2> /dev/null | grep -E 'cuda-cudart-[0-9]' | awk '{ print \\$3 }' | head -n 1 | cut -d+ -f1 | cut -d- -f1",
     "cuDNN": "dpkg -l 2> /dev/null | grep -E 'libcudnn[0-9]' | awk '{ print \\$3 }' | head -n 1 | cut -d+ -f1 | cut -d- -f1",
@@ -46,13 +47,13 @@ def get_tool_versions(image_name, arch):
             output = subprocess.check_output(
                 f"docker run --rm {gpu_flag} {image_name} bash -c \"{command}\"",
                 shell=True,
-                stderr=subprocess.STDOUT
+                stderr=subprocess.PIPE # only stdout is the version, stderr may contain warnings (e.g. TF logs, ROS Rolling warning)
             )
             single_line_output = "\\n".join(output.decode("utf-8").strip().splitlines())
             if single_line_output:
                 result[tool] = single_line_output
         except subprocess.CalledProcessError as e:
-            result[tool] = f"Error: {e.output.decode('utf-8').strip()}"
+            result[tool] = f"Error: {(e.output + e.stderr).decode('utf-8').strip()}"
     return result
 
 def export_to_csv(data, file_path, arch):

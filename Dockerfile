@@ -7,6 +7,7 @@
 #     --build-arg ROS_DISTRO=$ROS_DISTRO \
 #     --build-arg ROS_PACKAGE=$ROS_PACKAGE \
 #     --build-arg ROS_BUILD_FROM_SRC=$ROS_BUILD_FROM_SRC \
+#     --build-arg RMW_ZENOH_VERSION=$RMW_ZENOH_VERSION \
 #     --build-arg TORCH_VERSION=$TORCH_VERSION \
 #     --build-arg TF_VERSION=$TF_VERSION \
 #     --build-arg ONNX_RUNTIME_VERSION=$ONNX_RUNTIME_VERSION \
@@ -20,23 +21,27 @@ ARG UBUNTU_VERSION="24.04"
 # === ubuntu base images ==========================================================================
 FROM --platform=amd64 ubuntu:22.04 AS base-ubuntu22.04-amd64
 FROM --platform=amd64 ubuntu:24.04 AS base-ubuntu24.04-amd64
+FROM --platform=amd64 ubuntu:26.04 AS base-ubuntu26.04-amd64
 
 FROM --platform=arm64 ubuntu:22.04 AS base-ubuntu22.04-arm64
 FROM --platform=arm64 ubuntu:24.04 AS base-ubuntu24.04-arm64
+FROM --platform=arm64 ubuntu:26.04 AS base-ubuntu26.04-arm64
 
 # === cuda base images ============================================================================
 FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu22.04 AS base-cuda-ubuntu22.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-amd64
+FROM --platform=amd64 nvcr.io/nvidia/cuda:13.3.0-runtime-ubuntu26.04 AS base-cuda-ubuntu26.04-amd64
 
 FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.6.11-runtime AS base-cuda-ubuntu22.04-arm64
-# no l4t-cuda image for ubuntu24 available
+# no l4t-cuda image for ubuntu24/26 available
 
 # === tensorrt base images ========================================================================
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.08-py3 AS base-tensorrt-ubuntu22.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.11-py3 AS base-tensorrt-ubuntu24.04-amd64
+# no tensorrt image for ubuntu26 available
 
 FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime AS base-tensorrt-ubuntu22.04-arm64
-# no l4t-tensorrt image for ubuntu24 available
+# no l4t-tensorrt image for ubuntu24/26 available
 
 # ================================================================================================
 FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}"
@@ -108,16 +113,20 @@ RUN apt-get update && \
         x11-apps \
         zip \
     && rm -rf /var/lib/apt/lists/*
-RUN if [[ $UBUNTU_VERSION == "24.04" ]]; then python -m pip config --global set global.break-system-packages true; \
-    else python -m pip install --upgrade pip; fi
+RUN if [[ $UBUNTU_VERSION != "22.04" ]]; then python -m pip config --global set global.break-system-packages true; \
+else python -m pip install --upgrade pip; fi
 
 # enable bash completion
 RUN sed -i '/^#if \[ -f \/etc\/bash_completion \]/,/^#fi/ s/^#//' ~/.bashrc
 
 # install more essentials
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
+RUN if [[ "$UBUNTU_VERSION" == "22.04" ]]; then \
+        curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash; \
+    else \
+        add-apt-repository universe; \
+    fi && \
     apt-get update && \
-    apt-get install git-lfs && \
+    apt-get install -y git-lfs && \
     rm -rf /var/lib/apt/lists/*
 
 # --- install and setup ROS ----------------------------------------------------------------------
@@ -138,9 +147,10 @@ RUN apt-get update && \
 ARG ROS_DISTRO
 ENV ROS_DISTRO=${ROS_DISTRO}
 # set up 3rd party ROS deb sources for arm64 | Ubuntu 22 | Jazzy (required due to NVIDIA base images being stuck at Ubuntu 22)
+# key is pinned to commit aebb1c4: upstream rotated the key on main (2026-11-05), but the jammy repo is still signed with the old key
 RUN if [[ "$ROS_DISTRO" == "jazzy" && $UBUNTU_VERSION == "22.04" ]]; then \
         add-apt-repository universe && \
-        wget -O /etc/apt/keyrings/ros2-tier3-pkgs-pub.gpg.key https://raw.githubusercontent.com/meetgandhi-dev/ros2_tier3_packages/main/ros2-tier3-pkgs-pub.gpg.key && \
+        wget -O /etc/apt/keyrings/ros2-tier3-pkgs-pub.gpg.key https://raw.githubusercontent.com/meetgandhi-dev/ros2_tier3_packages/aebb1c48c28c4690838d95c84ebbef727f275e70/ros2-tier3-pkgs-pub.gpg.key && \
         echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/ros2-tier3-pkgs-pub.gpg.key] https://raw.githubusercontent.com/meetgandhi-dev/ros2_tier3_packages/main/debian_packages $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2-tier3-pkgs.list > /dev/null && \
         apt-get update && \
         apt-get install -y ros-jazzy-rosdep-jammy && \
@@ -156,7 +166,7 @@ RUN apt-get update && \
     pip install --ignore-installed ros2-pkg-create && \
     rm -rf /var/lib/apt/lists/*
 
-# install ROS
+# install ROS including alternative middleware implementations
 ARG ROS_PACKAGE=ros-core
 ARG ROS_BUILD_FROM_SRC=false
 RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
@@ -191,7 +201,40 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
     else \
         apt-get update && \
         apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-${ROS_PACKAGE} && \
+        apt-get install -y ros-${ROS_DISTRO}-rmw-cyclonedds-cpp && \
+        apt-get install -y ros-${ROS_DISTRO}-rmw-zenoh-cpp && \
         rm -rf /var/lib/apt/lists/*; \
+    fi
+
+# install fixed rmw_zenoh version (git tag of https://github.com/ros2/rmw_zenoh), if specified;
+# otherwise, the latest version available via apt (installed above) is used
+# build from source on top of the apt installation, as the ROS apt repository only provides the latest version;
+# the apt packages stay installed to provide dependencies and to prevent apt/rosdep from reinstalling them;
+# they are pinned to their installed version, so that apt neither upgrades them (overwriting the source build) nor fails
+ARG RMW_ZENOH_VERSION
+RUN if [[ -n "$RMW_ZENOH_VERSION" && "$ROS_BUILD_FROM_SRC" != "true" ]]; then \
+        BUILD_DEPS=$(for p in cargo clang nlohmann-json3-dev ros-${ROS_DISTRO}-ament-cmake-vendor-package; do \
+            dpkg-query -W -f='${Status}' $p 2> /dev/null | grep -q "install ok installed" || echo $p; \
+        done) && \
+        apt-get update && \
+        apt-get install -y --no-install-recommends $BUILD_DEPS && \
+        git clone --depth 1 --branch ${RMW_ZENOH_VERSION} https://github.com/ros2/rmw_zenoh.git /tmp/rmw_zenoh && \
+        export CARGO_HOME=/tmp/rmw_zenoh/.cargo && \
+        export CARGO_BUILD_JOBS=$(( $(nproc) < 32 ? $(nproc) : 32 )) && \
+        for pkg in zenoh_cpp_vendor rmw_zenoh_cpp; do \
+            source /opt/ros/${ROS_DISTRO}/setup.bash && \
+            cmake -S /tmp/rmw_zenoh/${pkg} -B /tmp/rmw_zenoh/build/${pkg} \
+                -DCMAKE_INSTALL_PREFIX=/opt/ros/${ROS_DISTRO} -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && \
+            cmake --build /tmp/rmw_zenoh/build/${pkg} --target install --parallel $(nproc) || exit 1; \
+        done && \
+        for p in ros-${ROS_DISTRO}-rmw-zenoh-cpp ros-${ROS_DISTRO}-zenoh-cpp-vendor; do \
+            printf "Package: %s\nPin: version %s\nPin-Priority: 1001\n\n" $p "$(dpkg-query -W -f='${Version}' $p)" >> /etc/apt/preferences.d/rmw-zenoh; \
+        done && \
+        if [[ -n "$BUILD_DEPS" ]]; then apt-get purge -y --auto-remove $BUILD_DEPS; fi && \
+        rm -rf /tmp/rmw_zenoh /var/lib/apt/lists/* && \
+        source /opt/ros/${ROS_DISTRO}/setup.bash && \
+        LDD=$(ldd /opt/ros/${ROS_DISTRO}/lib/librmw_zenoh_cpp.so) && \
+        ! grep "not found" <<< "$LDD"; \
     fi
 
 # source ROS
@@ -210,7 +253,9 @@ RUN if [[ -n $TRITON_VERSION ]]; then \
         mkdir -p ${TRITON_CLIENT_DIR} && \
         tar -xzf /tmp/tritonclient.tar.gz -C ${TRITON_CLIENT_DIR} && \
         rm /tmp/tritonclient.tar.gz && \
-        echo "export LD_LIBRARY_PATH=$TRITON_CLIENT_DIR/lib:\$LD_LIBRARY_PATH" >> ~/.bashrc ; \
+        # client libraries are located in lib (amd64) or tritonserver/clients/lib (arm64)
+        TRITON_CLIENT_LIB_DIR=$(dirname $(find ${TRITON_CLIENT_DIR} -name libgrpcclient.so -print -quit)) && \
+        echo "export LD_LIBRARY_PATH=$TRITON_CLIENT_LIB_DIR:\$LD_LIBRARY_PATH" >> ~/.bashrc ; \
     fi
 
 # install libcudnn as it is not installed in nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime
@@ -249,7 +294,9 @@ ARG TF_VERSION
 RUN if [[ -n $TF_VERSION ]]; then \
         if [[ "$TARGETARCH" == "amd64" ]]; then \
             if [[ $UBUNTU_VERSION == "22.04" ]]; then pip install opencv-python matplotlib; fi && \
-            pip3 install tensorflow==${TF_VERSION}; \
+            pip3 install tensorflow==${TF_VERSION} && \
+            # PyTorch installs cuDNN 9.1 via pip, which TensorFlow would load instead of the cuDNN 9.3 it is built against
+            if [[ -n $TORCH_VERSION ]]; then pip3 install nvidia-cudnn-cu12==9.3.0.75; fi; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             apt-get update && \
             apt-get install -y libhdf5-dev && \

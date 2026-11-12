@@ -1,0 +1,6 @@
+include:
+  - .gitlab-ci/os/.ubuntu26.yml
+
+variables:
+  ROS_DISTRO: lyrical
+  RMW_ZENOH_VERSION: "0.10.8"
