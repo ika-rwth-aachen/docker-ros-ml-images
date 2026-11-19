@@ -42,7 +42,8 @@ FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.11-py3 AS base-tensorrt-ubuntu2
 # no tensorrt image for ubuntu26 available
 
 FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime AS base-tensorrt-ubuntu22.04-arm64
-# no l4t-tensorrt image for ubuntu24/26 available
+FROM --platform=arm64 nvcr.io/nvidia/tensorrt:25.08-py3 AS base-tensorrt-ubuntu24.04-arm64
+# no Jetson TensorRT base configured for ubuntu26
 
 # ================================================================================================
 FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}"
