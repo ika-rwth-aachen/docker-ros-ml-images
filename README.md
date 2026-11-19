@@ -49,7 +49,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 | Architecture       | amd64, arm64                                                                          |
 
 > [!NOTE]
-> All images are targeted at NVIDIA GPUs and therefore base off of official [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). The arm64 images, in particular, target NVIDIA Jetson SoCs and are based off of [NVIDIA L4T base images](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base). Since NVIDIA does not (yet) provide Ubuntu 24 or Ubuntu 26 L4T images, arm64 images with CUDA (CUDA, TensorRT, PyTorch, TensorFlow, ML) are only provided for ROS distributions Humble and Jazzy, with Jazzy being built on Ubuntu 22 instead, including JetPack 6. For ROS distributions Kilted, Lyrical and Rolling, only the plain ROS and Triton images are provided for arm64.
+> GPU-enabled images use official [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). ARM64 `ros2-cuda` images on Ubuntu 24.04 (Jazzy, Kilted and Rolling) target Jetson Thor / JetPack 7 with the standard SBSA CUDA 13.0 runtime. Humble CUDA images and ARM64 TensorRT, PyTorch, TensorFlow and ML images use [NVIDIA L4T base images](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base) on Ubuntu 22.04 / JetPack 6; Jazzy remains on Ubuntu 22.04 for those ML variants. ARM64 CUDA images on Ubuntu 26.04 are not provided.
 
 > [!NOTE]
 > Since NVIDIA does not (yet) provide Ubuntu 26 TensorRT images, TensorRT and ML images (PyTorch, TensorFlow, ONNX RT) of ROS distribution Lyrical are not built.

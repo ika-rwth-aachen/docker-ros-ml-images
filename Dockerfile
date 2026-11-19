@@ -33,7 +33,8 @@ FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu24.04 AS base-cud
 FROM --platform=amd64 nvcr.io/nvidia/cuda:13.3.0-runtime-ubuntu26.04 AS base-cuda-ubuntu26.04-amd64
 
 FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.6.11-runtime AS base-cuda-ubuntu22.04-arm64
-# no l4t-cuda image for ubuntu24/26 available
+FROM --platform=arm64 nvcr.io/nvidia/cuda:13.0.0-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-arm64
+# no Jetson CUDA base configured for ubuntu26
 
 # === tensorrt base images ========================================================================
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.08-py3 AS base-tensorrt-ubuntu22.04-amd64
