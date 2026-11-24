@@ -49,13 +49,13 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 | Architecture       | amd64, arm64                                                                          |
 
 > [!NOTE]
-> GPU-enabled images use official [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). ARM64 `ros2-cuda` and `ros2-tensorrt` images on Ubuntu 24.04 (Jazzy, Kilted and Rolling) target Jetson Thor / JetPack 7 with CUDA 13.0; the TensorRT images use TensorRT 10.13.2. Humble CUDA/TensorRT images and ARM64 PyTorch, TensorFlow and ML images use [NVIDIA L4T base images](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base) on Ubuntu 22.04 / JetPack 6; Jazzy remains on Ubuntu 22.04 for those ML variants. ARM64 CUDA/TensorRT images on Ubuntu 26.04 are not provided.
+> GPU-enabled images use standard [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). ARM64 CUDA and TensorRT builds on Ubuntu 24.04 (Jazzy, Kilted and Rolling) target JetPack 7 with CUDA 13.0 and TensorRT 10.13.2. Humble keeps Ubuntu 22.04 with standard ARM64 SBSA bases. ARM64 PyTorch, TensorFlow and combined ML CI builds remain disabled pending compatible GPU packages and local validation; Ubuntu 26.04 ARM64 CUDA/TensorRT builds are not configured.
 
 > [!NOTE]
 > Since NVIDIA does not (yet) provide Ubuntu 26 TensorRT images, TensorRT and ML images (PyTorch, TensorFlow, ONNX RT) of ROS distribution Lyrical are not built.
 
 > [!NOTE]
-> The NVIDIA Triton Client libraries (2.52.0) are only provided for Ubuntu 24 and require a newer glibc than Ubuntu 22 provides. They can therefore not be loaded in Ubuntu 22 based images, i.e., `ros2-triton` and `ros2-ml` images of ROS distribution Humble and arm64 `ros2-ml` images of ROS distribution Jazzy.
+> The NVIDIA Triton Client libraries (2.52.0) are only provided for Ubuntu 24 and require a newer glibc than Ubuntu 22 provides. They can therefore not be loaded in Ubuntu 22 based images, i.e., `ros2-triton` and `ros2-ml` images of ROS distribution Humble and previously published arm64 `ros2-ml` images of ROS distribution Jazzy.
 
 > [!NOTE]
 > Since robotic applications are often implemented in C++ instead of Python for performance reasons, previous releases of our images also shipped with the C++ APIs of PyTorch and TensorFlow. Installing the C++ libraries often involves cumbersome building from source, so we have decided to drop PyTorch/TensorFlow C++ support for more frequent releases. You may still find those images with ML C++ support under the [23.08 release](https://hub.docker.com/r/rwthika/ros2-ml/tags?page=&page_size=&ordering=&name=-v23.08).
@@ -275,6 +275,7 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 ```
 docker buildx build \
+  --load \
   --pull \
   --platform $PLATFORM \
   --build-arg IMAGE_VERSION=$CI_COMMIT_TAG \
