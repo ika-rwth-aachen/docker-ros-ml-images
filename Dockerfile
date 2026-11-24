@@ -262,7 +262,7 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
             # --ignore-installed, because of dependency conflicts
             pip3 install --ignore-installed torch==${TORCH_VERSION} && \
             if [[ "$TORCH_VERSION" == "2.5.0" ]]; then pip3 install torchvision==0.20.0; fi; \
-        elif [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "22.04" ]]; then \
+        elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
             # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
             apt-get update && \
@@ -276,12 +276,6 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
             # install torch 2.8.0, as 2.5.0 only available on pypi.jetson-ai-lab.dev (currently not working)
             python3 -m pip install --ignore-installed torch==2.8.0 --index-url https://pypi.jetson-ai-lab.io/jp6/cu126 && \
             python3 -m pip install --ignore-installed torchvision==0.23.0 --index-url https://pypi.jetson-ai-lab.io/jp6/cu126; \
-        elif [[ "$TARGETARCH" == "arm64" ]]; then \
-            # Official ARM64 GPU wheels require a CUDA 13-compatible PyTorch release.
-            pip3 install --only-binary=:all: torch==${TORCH_VERSION} --index-url https://download.pytorch.org/whl/cu130 && \
-            if [[ "$TORCH_VERSION" == "2.9.1" ]]; then \
-                pip3 install --only-binary=:all: torchvision==0.24.1 --index-url https://download.pytorch.org/whl/cu130; \
-            fi; \
         fi; \
     fi
 
@@ -293,14 +287,11 @@ RUN if [[ -n $TF_VERSION ]]; then \
             pip3 install tensorflow==${TF_VERSION} && \
             # PyTorch installs cuDNN 9.1 via pip, which TensorFlow would load instead of the cuDNN 9.3 it is built against
             if [[ -n $TORCH_VERSION ]]; then pip3 install nvidia-cudnn-cu12==9.3.0.75; fi; \
-        elif [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "22.04" ]]; then \
+        elif [[ "$TARGETARCH" == "arm64" ]]; then \
             apt-get update && \
             apt-get install -y libhdf5-dev && \
             rm -rf /var/lib/apt/lists/* && \
             pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v61 tensorflow==2.16.1+nv24.08; \
-        elif [[ "$TARGETARCH" == "arm64" ]]; then \
-            echo "No ARM64 TensorFlow GPU package is configured for the standard NVIDIA bases." >&2; \
-            exit 1; \
         fi; \
     fi
 

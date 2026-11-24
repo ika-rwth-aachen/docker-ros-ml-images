@@ -49,7 +49,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 | Architecture       | amd64, arm64                                                                          |
 
 > [!NOTE]
-> GPU-enabled images use official [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). ARM64 CUDA and TensorRT builds on Ubuntu 24.04 (Jazzy, Kilted and Rolling) target JetPack 7 with CUDA 13.0 and TensorRT 10.13.2. Humble retains Ubuntu 22.04 / JetPack 6 and its [NVIDIA L4T base images](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base). ARM64 PyTorch, TensorFlow and combined ML CI builds on Ubuntu 24.04 remain disabled pending compatible GPU packages and local validation; Ubuntu 26.04 ARM64 CUDA/TensorRT builds are not configured.
+> GPU-enabled images use official [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). Jazzy images use Ubuntu 24.04; ARM64 CUDA/TensorRT builds use CUDA 13.0 and TensorRT 10.13.2 for JetPack 7. Humble retains Ubuntu 22.04 and its ARM64 JetPack 6 [NVIDIA L4T base images](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base). ARM64 PyTorch, TensorFlow and ML builds on Ubuntu 24.04 remain disabled pending migration.
 
 > [!NOTE]
 > Since NVIDIA does not (yet) provide Ubuntu 26 TensorRT images, TensorRT and ML images (PyTorch, TensorFlow, ONNX RT) of ROS distribution Lyrical are not built.
@@ -275,7 +275,6 @@ The password of the custom user is set to its username (`dockeruser:dockeruser` 
 
 ```
 docker buildx build \
-  --load \
   --pull \
   --platform $PLATFORM \
   --build-arg IMAGE_VERSION=$CI_COMMIT_TAG \
