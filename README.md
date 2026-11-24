@@ -49,7 +49,7 @@ With *docker-ros-ml-images*, we provide a variety of lightweight multi-arch mach
 | Architecture       | amd64, arm64                                                                          |
 
 > [!NOTE]
-> GPU-enabled images use standard [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). ARM64 CUDA and TensorRT builds on Ubuntu 24.04 (Jazzy, Kilted and Rolling) target JetPack 7 with CUDA 13.0 and TensorRT 10.13.2. Humble keeps Ubuntu 22.04 with standard ARM64 SBSA bases. ARM64 PyTorch, TensorFlow and combined ML CI builds remain disabled pending compatible GPU packages and local validation; Ubuntu 26.04 ARM64 CUDA/TensorRT builds are not configured.
+> GPU-enabled images use official [NVIDIA base images](https://catalog.ngc.nvidia.com/containers). ARM64 CUDA and TensorRT builds on Ubuntu 24.04 (Jazzy, Kilted and Rolling) target JetPack 7 with CUDA 13.0 and TensorRT 10.13.2. Humble retains Ubuntu 22.04 / JetPack 6 and its [NVIDIA L4T base images](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-base). ARM64 PyTorch, TensorFlow and combined ML CI builds on Ubuntu 24.04 remain disabled pending compatible GPU packages and local validation; Ubuntu 26.04 ARM64 CUDA/TensorRT builds are not configured.
 
 > [!NOTE]
 > Since NVIDIA does not (yet) provide Ubuntu 26 TensorRT images, TensorRT and ML images (PyTorch, TensorFlow, ONNX RT) of ROS distribution Lyrical are not built.

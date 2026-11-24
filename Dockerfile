@@ -32,7 +32,7 @@ FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu22.04 AS base-cud
 FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-amd64
 FROM --platform=amd64 nvcr.io/nvidia/cuda:13.3.0-runtime-ubuntu26.04 AS base-cuda-ubuntu26.04-amd64
 
-FROM --platform=arm64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu22.04 AS base-cuda-ubuntu22.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.6.11-runtime AS base-cuda-ubuntu22.04-arm64
 FROM --platform=arm64 nvcr.io/nvidia/cuda:13.0.0-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-arm64
 # no Jetson CUDA base configured for ubuntu26
 
@@ -41,7 +41,7 @@ FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.08-py3 AS base-tensorrt-ubuntu2
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.11-py3 AS base-tensorrt-ubuntu24.04-amd64
 # no tensorrt image for ubuntu26 available
 
-FROM --platform=arm64 nvcr.io/nvidia/tensorrt:24.08-py3 AS base-tensorrt-ubuntu22.04-arm64
+FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime AS base-tensorrt-ubuntu22.04-arm64
 FROM --platform=arm64 nvcr.io/nvidia/tensorrt:25.08-py3 AS base-tensorrt-ubuntu24.04-arm64
 # no Jetson TensorRT base configured for ubuntu26
 
@@ -72,7 +72,15 @@ ENV LC_IDENTIFICATION="C.utf8"
 ARG BASE_IMAGE_TYPE
 ARG TARGETARCH
 ARG UBUNTU_VERSION
-RUN if [[ $TARGETARCH == "amd64" && $BASE_IMAGE_TYPE == "-tensorrt" ]]; then \
+RUN if [[ $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" && $BASE_IMAGE_TYPE != "" ]]; then \
+        # add nvidia apt repositories for l4t base images
+        # touch: https://forums.balena.io/t/getting-linux-for-tegra-into-a-container-on-balena-os/179421/20
+        apt-key adv --fetch-key http://repo.download.nvidia.com/jetson/jetson-ota-public.asc && \
+        echo "deb https://repo.download.nvidia.com/jetson/common r36.4 main" >> /etc/apt/sources.list && \
+        echo "deb https://repo.download.nvidia.com/jetson/t234 r36.4 main" >> /etc/apt/sources.list && \
+        mkdir -p /opt/nvidia/l4t-packages/ && \
+        touch /opt/nvidia/l4t-packages/.nv-l4t-disable-boot-fw-update-in-preinstall; \
+    elif [[ $TARGETARCH == "amd64" && $BASE_IMAGE_TYPE == "-tensorrt" ]]; then \
         # add cuda apt repository for tensorrt base images
         wget -q -O /tmp/cuda-keyring_1.1-1_all.deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu${UBUNTU_VERSION/./}/x86_64/cuda-keyring_1.1-1_all.deb && \
         dpkg -i /tmp/cuda-keyring_1.1-1_all.deb && \
@@ -167,6 +175,9 @@ RUN if [[ "$ROS_BUILD_FROM_SRC" == "true" ]]; then \
             python3-pytest-runner \
             python3-pytest-timeout \
             ros-dev-tools && \
+        if [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "22.04" && "$BASE_IMAGE_TYPE" != "" ]]; then \
+            apt-get install -y libopencv; \
+        fi && \
         mkdir -p /ros2_${ROS_DISTRO}/src && \
         cd /ros2_${ROS_DISTRO} && \
         vcs import --input https://raw.githubusercontent.com/ros2/ros2/${ROS_DISTRO}/ros2.repos src && \
@@ -237,6 +248,13 @@ RUN if [[ -n $TRITON_VERSION ]]; then \
         echo "export LD_LIBRARY_PATH=$TRITON_CLIENT_LIB_DIR:\$LD_LIBRARY_PATH" >> ~/.bashrc ; \
     fi
 
+# install libcudnn as it is not installed in nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime
+RUN if [[ $BASE_IMAGE_TYPE == "-tensorrt" && $TARGETARCH == "arm64" && $UBUNTU_VERSION == "22.04" ]]; then \
+        apt-get update && \
+        apt-get install -y cudnn9-cuda-12-6 && \
+        rm -rf /var/lib/apt/lists/*; \
+    fi
+
 # install PyTorch
 ARG TORCH_VERSION
 RUN if [[ -n $TORCH_VERSION ]]; then \
@@ -244,6 +262,20 @@ RUN if [[ -n $TORCH_VERSION ]]; then \
             # --ignore-installed, because of dependency conflicts
             pip3 install --ignore-installed torch==${TORCH_VERSION} && \
             if [[ "$TORCH_VERSION" == "2.5.0" ]]; then pip3 install torchvision==0.20.0; fi; \
+        elif [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "22.04" ]]; then \
+            # from: https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
+            # and: https://docs.nvidia.com/deeplearning/frameworks/install-pytorch-jetson-platform/index.html#prereqs-install
+            apt-get update && \
+            apt-get install -y libopenblas-base libopenmpi-dev libomp-dev && \
+            rm -rf /var/lib/apt/lists/* && \
+            wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/${TARGETARCH}/cuda-keyring_1.1-1_all.deb && \
+            dpkg -i cuda-keyring_1.1-1_all.deb && \
+            apt-get update && \
+            apt-get install -y libcusparselt0 libcusparselt-dev cuda-cupti-12-6 && \
+            rm -rf /var/lib/apt/lists/* && \
+            # install torch 2.8.0, as 2.5.0 only available on pypi.jetson-ai-lab.dev (currently not working)
+            python3 -m pip install --ignore-installed torch==2.8.0 --index-url https://pypi.jetson-ai-lab.io/jp6/cu126 && \
+            python3 -m pip install --ignore-installed torchvision==0.23.0 --index-url https://pypi.jetson-ai-lab.io/jp6/cu126; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             # Official ARM64 GPU wheels require a CUDA 13-compatible PyTorch release.
             pip3 install --only-binary=:all: torch==${TORCH_VERSION} --index-url https://download.pytorch.org/whl/cu130 && \
@@ -261,6 +293,11 @@ RUN if [[ -n $TF_VERSION ]]; then \
             pip3 install tensorflow==${TF_VERSION} && \
             # PyTorch installs cuDNN 9.1 via pip, which TensorFlow would load instead of the cuDNN 9.3 it is built against
             if [[ -n $TORCH_VERSION ]]; then pip3 install nvidia-cudnn-cu12==9.3.0.75; fi; \
+        elif [[ "$TARGETARCH" == "arm64" && "$UBUNTU_VERSION" == "22.04" ]]; then \
+            apt-get update && \
+            apt-get install -y libhdf5-dev && \
+            rm -rf /var/lib/apt/lists/* && \
+            pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v61 tensorflow==2.16.1+nv24.08; \
         elif [[ "$TARGETARCH" == "arm64" ]]; then \
             echo "No ARM64 TensorFlow GPU package is configured for the standard NVIDIA bases." >&2; \
             exit 1; \
