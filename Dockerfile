@@ -33,7 +33,8 @@ FROM --platform=amd64 nvcr.io/nvidia/cuda:12.6.1-runtime-ubuntu24.04 AS base-cud
 FROM --platform=amd64 nvcr.io/nvidia/cuda:13.3.0-runtime-ubuntu26.04 AS base-cuda-ubuntu26.04-amd64
 
 FROM --platform=arm64 nvcr.io/nvidia/l4t-cuda:12.6.11-runtime AS base-cuda-ubuntu22.04-arm64
-# no l4t-cuda image for ubuntu24/26 available
+FROM --platform=arm64 nvcr.io/nvidia/cuda:13.0.0-runtime-ubuntu24.04 AS base-cuda-ubuntu24.04-arm64
+# no Jetson CUDA base configured for ubuntu26
 
 # === tensorrt base images ========================================================================
 FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.08-py3 AS base-tensorrt-ubuntu22.04-amd64
@@ -41,7 +42,8 @@ FROM --platform=amd64 nvcr.io/nvidia/tensorrt:24.11-py3 AS base-tensorrt-ubuntu2
 # no tensorrt image for ubuntu26 available
 
 FROM --platform=arm64 nvcr.io/nvidia/l4t-tensorrt:r10.3.0-runtime AS base-tensorrt-ubuntu22.04-arm64
-# no l4t-tensorrt image for ubuntu24/26 available
+FROM --platform=arm64 nvcr.io/nvidia/tensorrt:25.08-py3 AS base-tensorrt-ubuntu24.04-arm64
+# no Jetson TensorRT base configured for ubuntu26
 
 # ================================================================================================
 FROM "base${BASE_IMAGE_TYPE}-ubuntu${UBUNTU_VERSION}-${TARGETARCH}"
@@ -146,18 +148,6 @@ RUN apt-get update && \
 
 ARG ROS_DISTRO
 ENV ROS_DISTRO=${ROS_DISTRO}
-# set up 3rd party ROS deb sources for arm64 | Ubuntu 22 | Jazzy (required due to NVIDIA base images being stuck at Ubuntu 22)
-# key is pinned to commit aebb1c4: upstream rotated the key on main (2026-11-05), but the jammy repo is still signed with the old key
-RUN if [[ "$ROS_DISTRO" == "jazzy" && $UBUNTU_VERSION == "22.04" ]]; then \
-        add-apt-repository universe && \
-        wget -O /etc/apt/keyrings/ros2-tier3-pkgs-pub.gpg.key https://raw.githubusercontent.com/meetgandhi-dev/ros2_tier3_packages/aebb1c48c28c4690838d95c84ebbef727f275e70/ros2-tier3-pkgs-pub.gpg.key && \
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/ros2-tier3-pkgs-pub.gpg.key] https://raw.githubusercontent.com/meetgandhi-dev/ros2_tier3_packages/main/debian_packages $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2-tier3-pkgs.list > /dev/null && \
-        apt-get update && \
-        apt-get install -y ros-jazzy-rosdep-jammy && \
-        rosdep update --rosdistro ${ROS_DISTRO} && \
-        rm -rf /var/lib/apt/lists/* ; \
-    fi
-
 # install essential ROS CLI tools
 RUN apt-get update && \
     apt-get install -y \
