@@ -33,16 +33,6 @@ if [[ $DOCKER_UID && $DOCKER_GID ]]; then
         echo -e "\e[33mWARNING | Cannot create user '$DOCKER_USER' with UID $DOCKER_UID, another user '$(getent passwd $DOCKER_UID | cut -d: -f1)' with same UID is already existing\e[0m"
     fi
     [[ $(pwd) == "$WORKSPACE" ]] && cd /home/$DOCKER_USER/ws
-    
-    # Grant access to GPU render devices
-    for device in /dev/dri/renderD*; do
-        [[ -c "$device" ]] || continue
-        gid=$(stat -c '%g' "$device")
-        [[ "$gid" == "0" ]] && continue
-        getent group "$gid" >/dev/null || groupadd -g "$gid" "gpu-$gid"
-        usermod -aG "$gid" "$DOCKER_USER"
-    done
-    
     exec gosu $DOCKER_USER "$@"
 else
     exec "$@"
